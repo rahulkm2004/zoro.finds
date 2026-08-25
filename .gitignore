@@ -1,0 +1,71 @@
+# ─── Environment & Secrets ───────────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.pem
+*.key
+*.cert
+*.p12
+*.pfx
+service-account*.json
+credentials.json
+secrets/
+
+# ─── Node (if ever added) ─────────────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnp
+.pnp.js
+
+# ─── Build outputs ────────────────────────────────────────────────────────────
+dist/
+build/
+.next/
+out/
+.nuxt/
+.vuepress/dist
+.cache/
+
+# ─── Logs ─────────────────────────────────────────────────────────────────────
+*.log
+logs/
+
+# ─── Coverage ─────────────────────────────────────────────────────────────────
+coverage/
+*.lcov
+.nyc_output/
+
+# ─── OS generated ─────────────────────────────────────────────────────────────
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# ─── Editor / IDE ─────────────────────────────────────────────────────────────
+.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.swp
+*.swo
+*~
+
+# ─── Temp / scratch files ─────────────────────────────────────────────────────
+*.tmp
+*.temp
+*.bak
+*.orig
+
+# ─── Local duplicate HTML (the renamed copy is index.html) ────────────────────
+zoro-finds-archive*.html

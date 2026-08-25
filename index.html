@@ -1,0 +1,1076 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZORO FINDS — One-of-One Vintage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* =========================================================================
+   SECTION 3 — GLOBAL STYLES
+========================================================================= */
+:root {
+  --black: #141313;
+  --white: #fdfcfa;
+  --offwhite: #f1efea;
+  --stone: #b9b3a8;
+  --stone-dark: #6b665c;
+  --line: #dad5cb;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--white);
+  color: var(--black);
+  font-family: 'Inter', sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
+
+/* ---------- HEADER ---------- */
+header {
+  padding: 48px 24px 28px;
+  text-align: center;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.6rem, 10vw, 4.4rem);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 0.95;
+}
+
+.tagline {
+  margin-top: 12px;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+}
+
+.subline {
+  margin-top: 6px;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--stone);
+}
+
+/* ---------- NAV ---------- */
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  padding: 20px 16px 8px;
+}
+
+.nav-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid var(--line);
+  padding: 8px 18px;
+  cursor: pointer;
+  color: var(--stone-dark);
+  transition: all 0.15s ease;
+}
+
+.nav-btn.active { background: var(--black); border-color: var(--black); color: var(--white); }
+.nav-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+
+/* ---------- GRID ---------- */
+.grid {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 24px 20px 100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 2px;
+  background: var(--line);
+}
+
+.empty-state {
+  grid-column: 1 / -1;
+  background: var(--white);
+  text-align: center;
+  padding: 60px 20px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+}
+
+@media (max-width: 620px) {
+  header { padding: 18px 16px 10px; }
+  .brand { font-size: 1.7rem; }
+  .tagline, .subline { display: none; }
+  nav { padding: 8px 12px 4px; gap: 4px; }
+  .nav-btn { padding: 5px 12px; font-size: 0.6rem; }
+  .grid { grid-template-columns: repeat(2, 1fr); padding: 10px 8px 60px; gap: 1px; }
+  .card-img-wrap { aspect-ratio: 1 / 1; }
+  .card-info { padding: 6px 3px 14px; }
+  .card-name { font-size: 0.7rem; }
+  .card-meta { font-size: 0.58rem; margin-top: 3px; }
+  .card-id { font-size: 0.5rem; padding: 2px 5px; }
+  .sold-tag { font-size: 0.48rem; padding: 3px 6px; }
+}
+
+/* ---------- CARD ---------- */
+.card {
+  background: var(--white);
+  cursor: pointer;
+  position: relative;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
+  border: none;
+  text-align: left;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+}
+
+.card:focus-visible { outline: 2px solid var(--black); outline-offset: -2px; }
+
+@keyframes fadeIn { to { opacity: 1; } }
+
+.card-img-wrap {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background: var(--offwhite);
+}
+
+.card-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s ease;
+}
+
+.card:hover .card-img-wrap img { transform: scale(1.03); }
+
+.card-id {
+  position: absolute; top: 10px; left: 10px;
+  font-size: 0.62rem; letter-spacing: 0.1em;
+  background: var(--white); color: var(--black);
+  padding: 3px 7px;
+}
+
+.sold-tag {
+  position: absolute; top: 10px; right: 10px;
+  font-size: 0.6rem; letter-spacing: 0.14em;
+  text-transform: uppercase;
+  background: var(--black); color: var(--white);
+  padding: 4px 8px;
+}
+
+.card.is-sold .card-img-wrap img { filter: grayscale(1) opacity(0.55); }
+
+.card-info { padding: 12px 4px 30px; }
+
+.card-name {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 600; font-size: 1rem;
+  text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.15;
+}
+
+.card-meta {
+  margin-top: 6px; display: flex; justify-content: space-between;
+  font-size: 0.72rem; color: var(--stone-dark);
+}
+
+/* ---------- INFO PANEL ---------- */
+.info-panel {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 12px 24px 100px;
+}
+
+.info-block { padding: 22px 0; border-bottom: 1px solid var(--line); }
+.info-block:last-child { border-bottom: none; }
+
+.info-heading {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-weight: 600; font-size: 1rem;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin-bottom: 10px;
+}
+
+.info-text { font-size: 0.85rem; line-height: 1.7; color: #3a3733; }
+.info-list { list-style: none; counter-reset: step; }
+.info-list li {
+  font-size: 0.85rem; line-height: 1.8; color: #3a3733;
+  padding-left: 20px; position: relative;
+}
+.info-list li::before {
+  content: counter(step); counter-increment: step;
+  position: absolute; left: 0;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--stone-dark);
+}
+.info-bullets { list-style: none; padding: 0; margin: 0; }
+.info-bullets li {
+  font-size: 0.85rem; line-height: 1.8; color: #3a3733;
+  padding-left: 18px; position: relative;
+}
+.info-bullets li::before {
+  content: "•"; position: absolute; left: 2px;
+  color: var(--stone-dark); font-size: 0.9rem; line-height: 1.7;
+}
+
+.condition-row {
+  display: flex; justify-content: space-between;
+  font-size: 0.82rem; padding: 5px 0;
+}
+.condition-row span:first-child { font-family: 'IBM Plex Mono', monospace; }
+.condition-row span:last-child { color: var(--stone-dark); }
+
+/* ---------- MODAL ---------- */
+.modal-backdrop {
+  display: none; position: fixed; inset: 0;
+  background: rgba(20, 19, 19, 0.6); z-index: 50; padding: 0;
+}
+.modal-backdrop.open { display: flex; align-items: flex-end; justify-content: center; }
+
+.modal {
+  background: var(--white); width: 100%; max-width: 640px;
+  max-height: 92vh; overflow-y: auto; animation: slideUp 0.25s ease;
+}
+
+@media (min-width: 640px) {
+  .modal-backdrop.open { align-items: center; }
+  .modal { max-height: 88vh; }
+}
+
+@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+.modal-close {
+  position: sticky; top: 0; display: flex; justify-content: flex-end;
+  padding: 14px 16px 0; background: var(--white); z-index: 2;
+}
+.modal-close button {
+  background: none; border: none;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+  color: var(--stone-dark); padding: 6px;
+}
+.modal-close button:focus-visible { outline: 2px solid var(--black); }
+
+.modal-img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--offwhite); }
+
+.modal-thumbs { display: flex; gap: 6px; padding: 8px 24px 0; }
+.modal-thumbs button { border: none; background: none; padding: 0; cursor: pointer; }
+.modal-thumbs img { width: 52px; height: 65px; object-fit: cover; opacity: 0.55; display: block; }
+.modal-thumbs img.active { opacity: 1; outline: 1px solid var(--black); }
+
+.modal-body { padding: 22px 24px 32px; }
+.modal-id { font-size: 0.68rem; color: var(--stone-dark); margin-bottom: 8px; }
+.modal-name {
+  font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+  font-size: 1.7rem; text-transform: uppercase; line-height: 1; margin-bottom: 8px;
+}
+.modal-price { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; margin-bottom: 18px; }
+
+.modal-specs {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;
+  padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  margin-bottom: 14px;
+}
+.spec-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone); margin-bottom: 3px; }
+.spec-value { font-size: 0.85rem; }
+
+.sizing-note { font-size: 0.7rem; color: var(--stone-dark); line-height: 1.5; margin-bottom: 18px; font-style: italic; }
+
+.modal-desc { font-size: 0.88rem; line-height: 1.65; color: #3a3733; margin-bottom: 16px; }
+
+.scarcity-note {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
+  letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-dark);
+  margin-bottom: 18px;
+}
+
+.buy-row { display: flex; gap: 10px; }
+.buy-btn {
+  flex: 1; text-align: center; padding: 14px 8px;
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
+  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
+  border: 1px solid var(--black); cursor: pointer;
+  display: inline-block; box-sizing: border-box;
+  -webkit-appearance: none; appearance: none;
+}
+.buy-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+.buy-btn.wa { background: var(--black); color: var(--white); }
+.buy-btn.ig { background: var(--white); color: var(--black); }
+
+
+.modal-sold-note {
+  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
+  letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone-dark);
+  padding: 14px 0; text-align: center; border: 1px dashed var(--line);
+}
+
+footer {
+  text-align: center; padding: 28px 16px 50px;
+  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">ZORO FINDS</div>
+  <div class="tagline">One-of-One Vintage Pieces</div>
+  <div class="subline">Shipping Across India</div>
+</header>
+
+<nav id="nav" aria-label="Catalog sections"></nav>
+<main id="mainContent"></main>
+
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalNameHeading"></div>
+</div>
+
+<footer>@zoro.finds · Curated, never repeated.</footer>
+
+<script>
+/* =========================================================================
+   SECTION 1 — CONFIG
+   Edit these once. Every part of the site (payment info, shipping text,
+   buy buttons, archive visibility) updates automatically from here.
+========================================================================= */
+const CONFIG = {
+  instagramUsername: "zoro.finds",
+  whatsappNumber: "916362911551",
+
+  showSoldProducts: true,
+  showArchive: true,
+
+  prepaidAvailable: true,
+  codAvailable: true,
+
+  shippingPoints: [
+    "Shipping available all across India",
+    "Dispatches within 24 hours of order confirmation",
+    "Delivery within 24 hours for metro cities",
+    "Delivery within 2-4 days for rest of India"
+  ],
+
+  orderInstructions: [
+    "Select your piece",
+    "Tap Buy on WhatsApp or Buy on Instagram",
+    "Send us the Product ID",
+    "We confirm availability and payment details"
+  ],
+
+  returnPolicy: "No returns or exchanges. All pieces are one-of-one vintage. Please check all slides and measurements carefully before placing your order.",
+
+  conditionGuide: [
+    { rating: "10/10", label: "Like new" },
+    { rating: "9/10", label: "Excellent vintage condition" },
+    { rating: "8/10", label: "Visible wear, no major flaws" },
+    { rating: "7/10", label: "Noticeable wear, full character" }
+  ]
+};
+
+/* =========================================================================
+   SECTION 2 — PRODUCTS
+   Copy a block, change the values, paste it into the array.
+   Never delete a sold item — change its status to "sold" instead.
+   Measurements only support chest and length.
+========================================================================= */
+const PRODUCTS = [
+  { id: "ZF-001", name: "Vintage 90s Adidas Track Jacket — Navy & Grey", price: "₹1,399",
+    images: [
+      "images/zf001-1.jpg",
+      "images/zf001-2.jpg",
+      "images/zf001-3.jpg",
+      "images/zf001-4.jpg"
+    ],
+    size: "XL", measurements: { chest: "52\"", length: "29\"" }, condition: "10/10",
+    description: "Rare vintage 90s Adidas track jacket in two-tone navy and silver-grey colorblocking with iconic three-stripe accents across the collar, chest, and sleeves. Features embroidered classic Adidas logo and full-zip front. Pristine condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-002", name: "Vintage Lacoste Sport Striped Track Jacket — White", price: "₹1,499",
+    images: [
+      "images/zf002-1.jpg",
+      "images/zf002-2.jpg",
+      "images/zf002-3.jpg",
+      "images/zf002-4.jpg",
+      "images/zf002-5.jpg",
+      "images/zf002-6.jpg",
+      "images/zf002-7.jpg",
+      "images/zf002-8.jpg",
+      "images/zf002-9.jpg",
+      "images/zf002-10.jpg"
+    ],
+    size: "XL", measurements: { chest: "48\"", length: "29\"" }, condition: "9/10",
+    description: "Vintage Lacoste Sport full-zip track jacket in crisp white with subtle black horizontal pinstripes. Features signature embroidered green crocodile on the chest, embroidered Lacoste lettering on the back collar, branded zipper hardware, zippered hand pockets, and adjustable hem drawcord. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-003", name: "Vintage Adidas Trefoil Track Jacket — Black & White", price: "₹1,399",
+    images: [
+      "images/zf003-1.jpg",
+      "images/zf003-2.jpg",
+      "images/zf003-3.jpg",
+      "images/zf003-4.jpg",
+      "images/zf003-5.jpg"
+    ],
+    size: "L", measurements: { chest: "50\"", length: "27.5\"" }, condition: "9/10",
+    description: "Iconic vintage Adidas Trefoil track jacket in timeless black with contrast white three-stripe trim along the sleeves. Features embroidered white Trefoil logo on the chest, branded Adidas zipper hardware, zippered hand pockets, and elasticated hem. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-004", name: "Vintage Fila Biella Italia Track Jacket — Midnight Navy", price: "₹1,299",
+    images: [
+      "images/zf004-1.jpg",
+      "images/zf004-2.jpg",
+      "images/zf004-3.jpg",
+      "images/zf004-4.jpg",
+      "images/zf004-5.jpg",
+      "images/zf004-6.jpg",
+      "images/zf004-7.jpg"
+    ],
+    size: "L", measurements: { chest: "48\"", length: "27\"" }, condition: "9/10",
+    description: "Vintage Fila Biella Italia lightweight track jacket in deep midnight navy. Features embroidered FILA logo on the chest, embroidered F-box emblem on the back shoulder, custom enamel F-logo zipper hardware, structured collar, and elasticated cuffs & hem. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-005", name: "Official NFL Seattle Seahawks Track Jacket — Navy & Neon Green", price: "₹1,199",
+    images: [
+      "images/zf005-4.jpg",
+      "images/zf005-2.jpg",
+      "images/zf005-1.jpg",
+      "images/zf005-3.jpg",
+      "images/zf005-5.jpg"
+    ],
+    size: "L", measurements: { chest: "49\"", length: "28\"" }, condition: "10/10",
+    description: "Official NFL Seattle Seahawks performance track jacket in deep navy with vibrant Action Green side panels and contrast flatlock stitching. Features premium embroidered Seahawks logo on the chest, neon full front zip, and soft warm fleece lining. Pristine 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-006", name: "Vintage 90s Adidas Arc Track Jacket — Navy & Silver", price: "₹1,499",
+    images: [
+      "images/zf006-1.jpg",
+      "images/zf006-2.jpg",
+      "images/zf006-3.jpg",
+      "images/zf006-4.jpg",
+      "images/zf006-5.jpg",
+      "images/zf006-6.jpg",
+      "images/zf006-7.jpg"
+    ],
+    size: "L", measurements: { chest: "48\"", length: "30\"" }, condition: "9/10",
+    description: "Rare vintage 90s Adidas track jacket in deep navy with dynamic curved silver-grey chest and sleeve paneling. Features embroidered classic Adidas logo on the chest, custom rubberized pocket zipper pulls, full zip front, and vintage country flags collar tag. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-007", name: "Vintage Adidas \"Pleasant Valley Vikings\" Track Jacket — Navy", price: "₹1,299",
+    images: [
+      "images/zf007-3.jpg",
+      "images/zf007-2.jpg",
+      "images/zf007-5.jpg",
+      "images/zf007-4.jpg",
+      "images/zf007-1.jpg"
+    ],
+    size: "M", measurements: { chest: "44\"", length: "27\"" }, condition: "10/10",
+    description: "Vintage Adidas collegiate track jacket in midnight navy with bold white three-stripe sleeve panels. Features custom turquoise \"Pleasant Valley Vikings Basketball\" embroidery, embroidered Adidas chest logo, full front zip, breathable white mesh lining, and side pockets. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-008", name: "Vintage 80s/90s Adidas Trefoil Colorblock Track Jacket — Magenta & Teal", price: "₹1,299",
+    images: [
+      "images/zf008-1.jpg",
+      "images/zf008-2.jpg",
+      "images/zf008-3.jpg",
+      "images/zf008-4.jpg",
+      "images/zf008-5.jpg",
+      "images/zf008-6.jpg",
+      "images/zf008-7.jpg",
+      "images/zf008-8.jpg"
+    ],
+    size: "L", measurements: { chest: "50\"", length: "28\"" }, condition: "10/10",
+    description: "Statement vintage 80s/90s Adidas Trefoil shell track jacket in iconic magenta purple, vibrant teal green, and royal blue geometric colorblocking. Features embroidered teal Trefoil chest logo, turquoise three stripes across shoulders and sleeve cuffs, custom engraved Trefoil metal zipper pull, and high funnel neck. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-009", name: "Vintage 90s Reebok Vector Track Jacket — Electric Cyan", price: "₹1,299",
+    images: [
+      "images/zf009-1.jpg",
+      "images/zf009-2.jpg",
+      "images/zf009-3.jpg",
+      "images/zf009-4.jpg",
+      "images/zf009-5.jpg"
+    ],
+    size: "L", measurements: { chest: "48\"", length: "28\"" }, condition: "9/10",
+    description: "Vibrant vintage 90s Reebok shell track jacket in bright electric cyan blue. Features tonal embroidered Reebok Vector logo on the chest, vintage blue-banner collar tag, contrast white zipper hardware on side pockets, adjustable hem drawcord, and breathable back ventilation yoke. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-010", name: "Vintage 80s/90s Adidas Trefoil Track Jacket — Navy, Lavender & Emerald", price: "₹1,299",
+    images: [
+      "images/zf010-1.jpg",
+      "images/zf010-2.jpg",
+      "images/zf010-3.jpg",
+      "images/zf010-4.jpg",
+      "images/zf010-5.jpg"
+    ],
+    size: "XL", measurements: { chest: "52\"", length: "28\"" }, condition: "9/10",
+    description: "Rare vintage 80s/90s Adidas Trefoil track jacket featuring geometric colorblocking in midnight navy, soft lavender, emerald green, and crisp white. Features embroidered Trefoil chest logo, ribbed lavender collar, custom Trefoil metal zip pull, emerald three-stripe shoulder accents, and geometric back chevron paneling. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-011", name: "Vintage Adidas Performance Track Jacket — Red & Black", price: "₹999",
+    images: [
+      "images/zf011-1.jpg",
+      "images/zf011-2.jpg",
+      "images/zf011-3.jpg",
+      "images/zf011-4.jpg",
+      "images/zf011-5.jpg",
+      "images/zf011-6.jpg",
+      "images/zf011-7.jpg",
+      "images/zf011-8.jpg",
+      "images/zf011-9.jpg",
+      "images/zf011-10.jpg",
+      "images/zf011-11.jpg"
+    ],
+    size: "S", measurements: { chest: "40\"", length: "22\"" }, condition: "8/10",
+    description: "Vintage Adidas Performance shell jacket in scarlet red with black colorblock panels and white three-stripe trim. Features packable hood inside high collar, full red mesh lining, reflective contour piping, Adidas logo zipper pulls, storm flap closure, and zippered hand pockets. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-012", name: "Vintage JAKO Sport Performance Track Jacket — Navy & Royal Blue", price: "₹1,199",
+    images: [
+      "images/zf012-1.jpg",
+      "images/zf012-2.jpg",
+      "images/zf012-3.jpg",
+      "images/zf012-4.jpg",
+      "images/zf012-5.jpg",
+      "images/zf012-6.jpg",
+      "images/zf012-7.jpg",
+      "images/zf012-8.jpg",
+      "images/zf012-9.jpg",
+      "images/zf012-10.jpg",
+      "images/zf012-11.jpg",
+      "images/zf012-12.jpg"
+    ],
+    size: "M/L", measurements: { chest: "44\"", length: "26\"" }, condition: "9/10",
+    description: "Technical vintage JAKO sport track jacket in navy blue, royal blue, and white with dynamic curved colorblocking and \"Panos\" sponsor graphic. Features perforated breathable mesh side and underarm ventilation panels, embroidered JAKO chest emblem, custom rubberized zipper pulls, and adjustable interior hem drawcord. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-013", name: "Vintage K2 Technical Outdoor Shell Jacket — Hot Pink & Fuchsia", price: "₹1,199",
+    images: [
+      "images/zf013-1.jpg",
+      "images/zf013-2.jpg",
+      "images/zf013-3.jpg",
+      "images/zf013-4.jpg",
+      "images/zf013-5.jpg",
+      "images/zf013-6.jpg",
+      "images/zf013-7.jpg",
+      "images/zf013-8.jpg",
+      "images/zf013-9.jpg",
+      "images/zf013-10.jpg",
+      "images/zf013-11.jpg",
+      "images/zf013-12.jpg",
+      "images/zf013-13.jpg"
+    ],
+    size: "S/M", measurements: { chest: "40\"", length: "25\"" }, condition: "9/10",
+    description: "High-performance vintage K2 Technical Outdoor shell jacket in vibrant hot pink and deep fuchsia colorblocking. Features weatherproof shell, high storm collar with packable hood zip, reflective vertical pocket accents, velcro cuff adjusters, breathable mesh interior lining, and K2 jacquard satin hem lining. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-014", name: "Vintage 90s Adidas Trefoil Track Jacket — Midnight Navy & White", price: "₹1,299",
+    images: [
+      "images/zf014-1.jpg",
+      "images/zf014-2.jpg",
+      "images/zf014-3.jpg",
+      "images/zf014-4.jpg",
+      "images/zf014-5.jpg",
+      "images/zf014-6.jpg",
+      "images/zf014-7.jpg"
+    ],
+    size: "L", measurements: { chest: "50\"", length: "28\"" }, condition: "9/10",
+    description: "Iconic vintage 90s Adidas Trefoil track jacket in midnight navy with crisp white three-stripe shoulder and sleeve trim. Features embroidered white Trefoil chest logo, custom molded white Trefoil zipper pull, high stand collar with concealed packable hood zip, and contrast white zippered pockets. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-015", name: "Vintage Y2K Eckō Unltd. 3D Geometric Camo Bomber Jacket — Grey", price: "₹1,199",
+    images: [
+      "images/zf015-1.jpg",
+      "images/zf015-2.jpg",
+      "images/zf015-3.jpg",
+      "images/zf015-4.jpg",
+      "images/zf015-5.jpg",
+      "images/zf015-6.jpg",
+      "images/zf015-7.jpg"
+    ],
+    size: "XL", measurements: { chest: "54\"", length: "29\"" }, condition: "9/10",
+    description: "Vintage Y2K Eckō Unltd. bomber track jacket in a striking monochrome 3D isometric geometric cube camo pattern. Features bold embroidered \"ECKŌ UNLTD.\" chest appliqué, custom metal Rhino medallion zipper pull, chunky zipper, ribbed knit collar, cuffs, and hem with red contrast inner piping. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-016", name: "Vintage 80s/90s ASICS Colorblock Half-Zip Anorak — Neon Pink & Black", price: "₹1,199",
+    images: [
+      "images/zf016-1.jpg",
+      "images/zf016-2.jpg",
+      "images/zf016-3.jpg",
+      "images/zf016-4.jpg",
+      "images/zf016-5.jpg",
+      "images/zf016-6.jpg",
+      "images/zf016-7.jpg",
+      "images/zf016-8.jpg"
+    ],
+    size: "XL", measurements: { chest: "54\"", length: "29\"" }, condition: "9/10",
+    description: "Rare vintage 80s/90s ASICS half-zip pullover anorak windbreaker in bold black, neon hot pink, and white colorblocking. Features centered front kangaroo cargo flap pocket with ASICS graphic embroidery, neon pink zipper, large circular ASICS medallion back graphic, and elasticated cuffs & hem. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-017", name: "Vintage 90s Champion Duke Blue Devils Pullover Windbreaker — Royal Blue", price: "₹1,199",
+    images: [
+      "images/zf017-1.jpg",
+      "images/zf017-2.jpg",
+      "images/zf017-3.jpg",
+      "images/zf017-4.jpg",
+      "images/zf017-5.jpg",
+      "images/zf017-6.jpg",
+      "images/zf017-7.jpg"
+    ],
+    size: "XL", measurements: { chest: "50\"", length: "27\"" }, condition: "10/10",
+    description: "Vintage 90s Champion Duke Blue Devils NCAA pullover shooting windbreaker in royal blue. Features stitched tackle twill arched \"DUKE\" chest lettering, striped rib-knit V-neck collar & cuffs, embroidered Blue Devil mascot sleeve patch, embroidered Champion back logo, side pockets, and adjustable waist cinch toggle. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-018", name: "Vintage Champion Hooded Track Jacket — Navy, White & Red", price: "₹1,299",
+    images: [
+      "images/zf018-1.jpg",
+      "images/zf018-2.jpg",
+      "images/zf018-3.jpg",
+      "images/zf018-4.jpg",
+      "images/zf018-5.jpg",
+      "images/zf018-6.jpg"
+    ],
+    size: "M", measurements: { chest: "44\"", length: "26\"" }, condition: "10/10",
+    description: "Vintage Champion athletic hooded ripstop track jacket in midnight navy with white side colorblocking and red contrast piping. Features embroidered Champion \"C\" chest emblem, bold vertical Champion script embroidery along the left sleeve, attached drawstring hood, full front zip, and breathable interior mesh lining. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-019", name: "Vintage ASICS Firenze Marathon Track Jacket — Royal Blue, Red & White", price: "₹999",
+    images: [
+      "images/zf019-1.jpg",
+      "images/zf019-2.jpg",
+      "images/zf019-3.jpg",
+      "images/zf019-4.jpg",
+      "images/zf019-5.jpg",
+      "images/zf019-6.jpg",
+      "images/zf019-7.jpg",
+      "images/zf019-8.jpg"
+    ],
+    size: "M", measurements: { chest: "44\"", length: "27\"" }, condition: "8/10",
+    description: "Vintage ASICS Firenze Marathon running track jacket in royal blue with red and white colorblock accents. Features embroidered ASICS chest logo, Firenze Marathon chest & sleeve graphics, silver reflective piping, large ASICS back logo, zippered side pockets, and breathable interior mesh lining. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-020", name: "Vintage New Balance Outdoor Shell Track Jacket — Black & Red", price: "₹1,299",
+    images: [
+      "images/zf020-1.jpg",
+      "images/zf020-2.jpg",
+      "images/zf020-3.jpg",
+      "images/zf020-4.jpg",
+      "images/zf020-5.jpg",
+      "images/zf020-6.jpg",
+      "images/zf020-7.jpg"
+    ],
+    size: "S", measurements: { chest: "42\"", length: "20.5\"" }, condition: "10/10",
+    description: "Vintage New Balance outdoor shell track jacket in black with bold red shoulder/sleeve paneling and white piping accents. Features embroidered New Balance chest logo, fleece-lined red collar, snap-button storm flap closure, velcro cuff adjusters, and breathable interior mesh lining. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-021", name: "Vintage The North Face HyVent 2.5L Hooded Shell Jacket — Magenta", price: "₹1,199",
+    images: [
+      "images/zf021-1.jpg",
+      "images/zf021-2.jpg",
+      "images/zf021-3.jpg",
+      "images/zf021-4.jpg",
+      "images/zf021-5.jpg",
+      "images/zf021-6.jpg",
+      "images/zf021-7.jpg"
+    ],
+    size: "M", measurements: { chest: "44\"", length: "24\"" }, condition: "9/10",
+    description: "Vintage The North Face technical HyVent 2.5L outdoor shell rain jacket in vibrant magenta pink. Features silver embroidered TNF chest and back logos, HyVent 2.5L sleeve branding, underarm pit zip vents, attached cinch hood, mesh stow pocket with branded tab, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-022", name: "Vintage 90s Nike Swoosh Track Jacket — Midnight Navy & White", price: "₹1,299",
+    images: [
+      "images/zf022-1.jpg",
+      "images/zf022-2.jpg",
+      "images/zf022-3.jpg",
+      "images/zf022-4.jpg",
+      "images/zf022-5.jpg",
+      "images/zf022-6.jpg",
+      "images/zf022-7.jpg",
+      "images/zf022-8.jpg"
+    ],
+    size: "XL", measurements: { chest: "52\"", length: "30\"" }, condition: "10/10",
+    description: "Vintage 90s Nike Swoosh athletic track jacket in midnight navy with white and grey stripe sleeve paneling. Features embroidered white Nike Swoosh chest emblem, chunky front zipper with custom rubberized Swoosh pull tab, waffle-knit inner collar lining, zippered hand pockets, and adjustable hem drawcord. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-023", name: "Vintage Champion \"St. Francis Xavier College\" Track Jacket — Navy & Red", price: "₹1,199",
+    images: [
+      "images/zf023-1.jpg",
+      "images/zf023-2.jpg",
+      "images/zf023-3.jpg",
+      "images/zf023-4.jpg",
+      "images/zf023-5.jpg"
+    ],
+    size: "S", measurements: { chest: "40\"", length: "25\"" }, condition: "9/10",
+    description: "Vintage Champion Teamwear collegiate track jacket in midnight navy with scarlet red side and sleeve paneling accented by white piping. Features embroidered St. Francis Xavier College chest crest emblem, bright red stand collar, full front zip, and elasticated cuffs. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-024", name: "Vintage Kappa Technical Track Jacket — Black, Cyan & White", price: "₹999",
+    images: [
+      "images/zf024-1.jpg",
+      "images/zf024-2.jpg",
+      "images/zf024-3.jpg",
+      "images/zf024-4.jpg",
+      "images/zf024-5.jpg",
+      "images/zf024-6.jpg",
+      "images/zf024-7.jpg"
+    ],
+    size: "L", measurements: { chest: "44\"", length: "27.5\"" }, condition: "8/10",
+    description: "Vintage Kappa technical shell track jacket in black with electric cyan accents and white side paneling featuring a halftone polka-dot gradient mesh print. Features embroidered cyan Kappa Omini chest emblem, Aero-Plus technology, branded zipper pull, breathable cyan mesh inner lining, and adjustable bottom hem bungee toggle. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-025", name: "Vintage Kappa \"Moto Corse\" Racing Track Jacket — White, Black & Pink", price: "₹1,299",
+    images: [
+      "images/zf025-1.jpg",
+      "images/zf025-2.jpg",
+      "images/zf025-3.jpg",
+      "images/zf025-4.jpg",
+      "images/zf025-5.jpg"
+    ],
+    size: "XS", measurements: { chest: "37\"", length: "22\"" }, condition: "10/10",
+    description: "Vintage Kappa Moto Corse motorsport track jacket in crisp white with contrast black side/sleeve paneling and vibrant pink racing accents. Features stitched Kappa Moto Corse chest shield badge, embroidered Kappa Omini logo, sleeve number '67' patches, custom metal zipper pull, and black/white striped ribbed collar & hem. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-026", name: "Vintage FILA Colorblock Hooded Anorak Jacket — Soft Pink & Charcoal", price: "₹1,299",
+    images: [
+      "images/zf026-1.jpg",
+      "images/zf026-2.jpg",
+      "images/zf026-3.jpg",
+      "images/zf026-4.jpg",
+      "images/zf026-5.jpg"
+    ],
+    size: "S", measurements: { chest: "43\"", length: "26\"" }, condition: "10/10",
+    description: "Vintage FILA colorblock half-zip hooded anorak jacket in pastel soft pink, white, and charcoal black. Features embroidered FILA logo on centered kangaroo flap pocket, bold screen-printed FILA logo across the back, round custom F-box metal zipper pull, cinch drawstring hood, breathable interior mesh lining, and adjustable bottom hem toggle. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-027", name: "Vintage Adidas Trefoil Asymmetric Colorblock Track Jacket — White, Teal & Magenta", price: "₹1,399",
+    images: [
+      "images/zf027-1.jpg",
+      "images/zf027-2.jpg",
+      "images/zf027-3.jpg",
+      "images/zf027-4.jpg",
+      "images/zf027-5.jpg"
+    ],
+    size: "M", measurements: { chest: "48\"", length: "27.5\"" }, condition: "10/10",
+    description: "Vintage Adidas Trefoil 'Asymm Track Jkt' in crisp white with asymmetric teal green, magenta pink, and black colorblock paneling. Features classic black 3-stripes down sleeves, embroidered black Trefoil chest logo, custom embossed Trefoil zipper pull, cotton-blend interior lining, and adjustable bottom hem drawstring cinch cord. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-028", name: "Vintage Nike Swoosh Minimalist Track Jacket — Midnight Navy", price: "₹1,199",
+    images: [
+      "images/zf028-1.jpg",
+      "images/zf028-2.jpg",
+      "images/zf028-3.jpg",
+      "images/zf028-4.jpg",
+      "images/zf028-5.jpg"
+    ],
+    size: "L", measurements: { chest: "44\"", length: "27.5\"" }, condition: "10/10",
+    description: "Vintage Nike minimalist athletic track jacket in deep midnight navy with a clean white horizontal chest piping stripe. Features embroidered white Nike Swoosh emblem on left chest, silver metallic zipper pull with debossed Swoosh logo, high stand-up collar, breathable mesh interior lining, zippered side pockets, and elasticated hem. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-029", name: "Vintage Nike Court Tennis Track Jacket — Midnight Navy & White", price: "₹1,199",
+    images: [
+      "images/zf029-1.jpg",
+      "images/zf029-2.jpg",
+      "images/zf029-3.jpg",
+      "images/zf029-4.jpg",
+      "images/zf029-5.jpg",
+      "images/zf029-6.jpg"
+    ],
+    size: "XL", measurements: { chest: "46\"", length: "28\"" }, condition: "9/10",
+    description: "Vintage Nike Court performance tennis track jacket in deep midnight navy with a crisp white chest stripe. Features embroidered white Nike Swoosh on left chest, Nike Court tennis tab on lower hem, Nike FIT DRY technology, full front zip, breathable mesh lining, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+
+  { id: "ZF-030", name: "Canvas Chore Jacket — Natural", price: "₹1,699",
+    images: ["https://placehold.co/700x875/ece7dd/141313?text=ZF-030"],
+    size: "L", measurements: { chest: "24\"", length: "26\"" }, condition: "9/10",
+    description: "Undyed natural canvas chore jacket, brass buttons. Authentic Pre-owned Jacket.", status: "sold" }
+];
+
+/* =========================================================================
+   SECTION 4 — SITE RENDERING
+   Nothing below this line normally needs editing.
+========================================================================= */
+
+function escapeHtml(str) {
+  if (str === undefined || str === null) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
+
+const FALLBACK_IMG = "https://placehold.co/700x875/e3ddd0/6b665c?text=Photo+Coming+Soon";
+
+function safeImages(p) {
+  return (Array.isArray(p.images) && p.images.length > 0) ? p.images : [FALLBACK_IMG];
+}
+
+const navEl = document.getElementById("nav");
+const mainEl = document.getElementById("mainContent");
+const modalBackdrop = document.getElementById("modalBackdrop");
+const modalEl = document.getElementById("modal");
+let lastFocused = null;
+
+const TABS = ["AVAILABLE", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
+
+function renderNav(activeTab) {
+  navEl.innerHTML = "";
+  TABS.forEach(tab => {
+    const btn = document.createElement("button");
+    btn.className = "nav-btn" + (tab === activeTab ? " active" : "");
+    btn.textContent = tab;
+    btn.setAttribute("aria-pressed", tab === activeTab ? "true" : "false");
+    btn.onclick = () => renderTab(tab);
+    navEl.appendChild(btn);
+  });
+}
+
+function renderTab(tab) {
+  renderNav(tab);
+  if (tab === "AVAILABLE") renderGrid(PRODUCTS.filter(p => p.status === "available"));
+  else if (tab === "ARCHIVE") renderGrid(PRODUCTS.filter(p => p.status === "sold"));
+  else renderInfo();
+}
+
+function renderGrid(items) {
+  mainEl.innerHTML = `<div class="grid" id="grid"></div>`;
+  const gridEl = document.getElementById("grid");
+
+  if (items.length === 0) {
+    gridEl.innerHTML = `<div class="empty-state">Nothing here right now</div>`;
+    return;
+  }
+
+  items.forEach((p, i) => {
+    const isSold = p.status === "sold";
+    const imgs = safeImages(p);
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "card" + (isSold ? " is-sold" : "");
+    card.style.animationDelay = (i * 0.04) + "s";
+    card.setAttribute("aria-label", `${p.name}, ${p.price}${isSold ? ", sold" : ""}`);
+
+    card.innerHTML = `
+      <div class="card-img-wrap">
+        <img src="${imgs[0]}" alt="${escapeHtml(p.name)}" loading="${i < 4 ? 'eager' : 'lazy'}">
+        <div class="card-id mono">${escapeHtml(p.id)}</div>
+        ${isSold ? '<div class="sold-tag">Sold</div>' : ''}
+      </div>
+      <div class="card-info">
+        <div class="card-name">${escapeHtml(p.name)}</div>
+        <div class="card-meta mono">
+          <span>${escapeHtml(p.price)}</span>
+          <span>${escapeHtml(p.size)}</span>
+        </div>
+      </div>
+    `;
+    card.onclick = () => openModal(p);
+    gridEl.appendChild(card);
+  });
+}
+
+function renderInfo() {
+  const c = CONFIG;
+  const paymentText = c.prepaidAvailable && c.codAvailable ? "PREPAID + COD AVAILABLE"
+    : c.prepaidAvailable ? "PREPAID AVAILABLE"
+    : c.codAvailable ? "COD AVAILABLE"
+    : "CONTACT US FOR PAYMENT OPTIONS";
+
+  mainEl.innerHTML = `
+    <div class="info-panel">
+      <div class="info-block">
+        <div class="info-heading">How to Order</div>
+        <ol class="info-list">
+          ${c.orderInstructions.map(step => `<li>${escapeHtml(step)}</li>`).join("")}
+        </ol>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Payment</div>
+        <div class="info-text mono">${paymentText}</div>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Shipping</div>
+        <ul class="info-bullets">
+          ${c.shippingPoints.map(pt => `<li>${escapeHtml(pt)}</li>`).join("")}
+        </ul>
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Condition Guide</div>
+        ${c.conditionGuide.map(cg => `
+          <div class="condition-row">
+            <span>${escapeHtml(cg.rating)}</span>
+            <span>${escapeHtml(cg.label)}</span>
+          </div>
+        `).join("")}
+      </div>
+      <div class="info-block">
+        <div class="info-heading">Returns</div>
+        <div class="info-text">${escapeHtml(c.returnPolicy)}</div>
+      </div>
+    </div>
+  `;
+}
+
+/* =========================================================================
+   SECTION 6 — PURCHASE LINKS
+========================================================================= */
+function waLink(p) {
+  const msg = `Hello, I am interested in buying this product.\n\nProduct ID: ${p.id}\nProduct Name: ${p.name}\n\nPlease share the details.`;
+  return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
+}
+function igLink() {
+  return `https://www.instagram.com/${CONFIG.instagramUsername}/`;
+}
+function igMessage(p) {
+  return `Hello, I am interested in buying this product.\n\nProduct ID: ${p.id}\nProduct Name: ${p.name}\n\nPlease share the details.`;
+}
+
+/* =========================================================================
+   SECTION 5 — PRODUCT MODAL
+========================================================================= */
+function openModal(p) {
+  lastFocused = document.activeElement;
+  const isSold = p.status === "sold";
+  const imgs = safeImages(p);
+  const m = p.measurements || {};
+
+  const thumbs = imgs.length > 1
+    ? `<div class="modal-thumbs">${imgs.map((img, i) =>
+        `<button type="button" data-idx="${i}" aria-label="View photo ${i + 1}">
+           <img src="${img}" class="${i === 0 ? 'active' : ''}" alt="${escapeHtml(p.name)} photo ${i + 1}">
+         </button>`
+      ).join("")}</div>`
+    : "";
+
+  const specs = [];
+  if (m.chest) specs.push(`<div><div class="spec-label">Chest</div><div class="spec-value">${escapeHtml(m.chest)}</div></div>`);
+  if (m.length) specs.push(`<div><div class="spec-label">Length</div><div class="spec-value">${escapeHtml(m.length)}</div></div>`);
+  specs.push(`<div><div class="spec-label">Size</div><div class="spec-value">${escapeHtml(p.size)}</div></div>`);
+  specs.push(`<div><div class="spec-label">Condition</div><div class="spec-value">${escapeHtml(p.condition)}</div></div>`);
+
+  modalEl.innerHTML = `
+    <div class="modal-close"><button id="closeBtn" aria-label="Close product details">Close ✕</button></div>
+    <img class="modal-img" id="modalMainImg" src="${imgs[0]}" alt="${escapeHtml(p.name)}">
+    ${thumbs}
+    <div class="modal-body">
+      <div class="modal-id mono">${escapeHtml(p.id)}</div>
+      <h2 class="modal-name" id="modalNameHeading">${escapeHtml(p.name)}</h2>
+      <div class="modal-price mono">${escapeHtml(p.price)}</div>
+      <div class="modal-specs">${specs.join("")}</div>
+      <div class="modal-desc">${escapeHtml(p.description)}</div>
+      ${isSold
+        ? `<div class="modal-sold-note">This piece has been claimed</div>`
+        : `<div class="scarcity-note">One piece only · First confirmed order gets it</div>
+           <div class="buy-row">
+              <a class="buy-btn wa" href="${waLink(p)}" target="_blank" rel="noopener noreferrer">Buy on WhatsApp</a>
+              <button type="button" class="buy-btn ig" data-product-id="${escapeHtml(p.id)}" data-product-name="${escapeHtml(p.name)}" onclick="handleIgBuy(this)">Buy on Instagram</button>
+           </div>`
+      }
+    </div>
+  `;
+
+  document.getElementById("closeBtn").onclick = closeModal;
+
+  if (imgs.length > 1) {
+    modalEl.querySelectorAll(".modal-thumbs button").forEach(btn => {
+      btn.onclick = () => {
+        const idx = btn.dataset.idx;
+        document.getElementById("modalMainImg").src = imgs[idx];
+        modalEl.querySelectorAll(".modal-thumbs img").forEach(t => t.classList.remove("active"));
+        btn.querySelector("img").classList.add("active");
+      };
+    });
+  }
+
+  modalBackdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("closeBtn").focus();
+}
+
+function closeModal() {
+  modalBackdrop.classList.remove("open");
+  document.body.style.overflow = "";
+  if (lastFocused) lastFocused.focus();
+}
+
+/* =========================================================================
+   SECTION 6b — INSTAGRAM BUY HANDLER
+   Copies the product message to clipboard, then opens Instagram profile.
+   Instagram does not support pre-filled DMs via web URLs.
+   The user can paste the copied message directly into the DM.
+========================================================================= */
+function handleIgBuy(btn) {
+  const productId   = btn.getAttribute("data-product-id");
+  const productName = btn.getAttribute("data-product-name");
+  const msg = `Hello, I am interested in buying this product.\n\nProduct ID: ${productId}\nProduct Name: ${productName}\n\nPlease share the details.`;
+
+  // Copy message to clipboard then open Instagram
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).then(() => {
+      showToast("Message copied! Paste it in the Instagram DM 👉");
+    }).catch(() => {
+      showToast("Opening Instagram — copy the message manually.");
+    });
+  } else {
+    // Fallback for older browsers / insecure contexts
+    try {
+      const ta = document.createElement("textarea");
+      ta.value = msg;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast("Message copied! Paste it in the Instagram DM 👉");
+    } catch (e) {
+      showToast("Opening Instagram — copy the Product ID manually.");
+    }
+  }
+
+  // Open Instagram profile after a short delay so the toast is visible
+  setTimeout(() => {
+    window.open(igLink(), "_blank", "noopener,noreferrer");
+  }, 600);
+}
+
+function showToast(message) {
+  let toast = document.getElementById("zf-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "zf-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    toast.style.cssText = `
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(12px);
+      background: #141313;
+      color: #fdfcfa;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      letter-spacing: 0.03em;
+      padding: 12px 20px;
+      border-radius: 6px;
+      z-index: 99999;
+      opacity: 0;
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      max-width: 320px;
+      text-align: center;
+      pointer-events: none;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    `;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.style.opacity = "1";
+  toast.style.transform = "translateX(-50%) translateY(0)";
+  clearTimeout(toast._hideTimer);
+  toast._hideTimer = setTimeout(() => {
+    toast.style.opacity = "0";
+    toast.style.transform = "translateX(-50%) translateY(12px)";
+  }, 3500);
+}
+
+/* =========================================================================
+   SECTION 7 — EVENT HANDLERS
+========================================================================= */
+modalBackdrop.addEventListener("click", (e) => {
+  if (e.target === modalBackdrop) closeModal();
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && modalBackdrop.classList.contains("open")) closeModal();
+});
+
+renderTab("AVAILABLE");
+
+</script>
+
+</body>
+</html>
