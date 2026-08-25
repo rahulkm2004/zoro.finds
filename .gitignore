@@ -1,4 +1,4 @@
-# ─── Environment & Secrets ───────────────────────────────────────────────────
+﻿# ─── Environment & Secrets ───────────────────────────────────────────────────
 .env
 .env.local
 .env.*.local
@@ -22,7 +22,7 @@ yarn-error.log*
 .pnp.js
 
 # ─── Build outputs ────────────────────────────────────────────────────────────
-dist/
+# dist/ is intentionally NOT ignored because Cloudflare deploys from ./dist
 build/
 .next/
 out/
