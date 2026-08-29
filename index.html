@@ -112,7 +112,8 @@ nav {
 @media (max-width: 620px) {
   header { padding: 18px 16px 10px; }
   .brand { font-size: 1.7rem; }
-  .tagline, .subline { display: none; }
+  .tagline { font-size: 0.58rem; letter-spacing: 0.16em; margin-top: 6px; }
+  .subline  { font-size: 0.56rem; letter-spacing: 0.13em; margin-top: 4px; }
   nav { padding: 8px 12px 4px; gap: 4px; }
   .nav-btn { padding: 5px 12px; font-size: 0.6rem; }
   .grid { grid-template-columns: repeat(2, 1fr); padding: 10px 8px 60px; gap: 1px; }
@@ -174,7 +175,7 @@ nav {
   padding: 4px 8px;
 }
 
-.card.is-sold .card-img-wrap img { filter: grayscale(1) opacity(0.55); }
+
 
 .card-info { padding: 12px 4px 30px; }
 
@@ -188,6 +189,13 @@ nav {
   margin-top: 6px; display: flex; justify-content: space-between;
   font-size: 0.72rem; color: var(--stone-dark);
 }
+
+.card-price-group { display: flex; align-items: baseline; gap: 6px; }
+.price-orig {
+  font-size: 0.65rem; color: var(--stone);
+  text-decoration: line-through; letter-spacing: 0;
+}
+.price-sale { font-size: 0.72rem; color: var(--black); }
 
 /* ---------- INFO PANEL ---------- */
 .info-panel {
@@ -278,7 +286,16 @@ nav {
   font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
   font-size: 1.7rem; text-transform: uppercase; line-height: 1; margin-bottom: 8px;
 }
-.modal-price { font-family: 'IBM Plex Mono', monospace; font-size: 1.1rem; margin-bottom: 18px; }
+.modal-price {
+  font-family: 'IBM Plex Mono', monospace;
+  display: flex; align-items: baseline; gap: 10px;
+  margin-bottom: 18px;
+}
+.modal-price .price-orig {
+  font-size: 0.8rem; color: var(--stone);
+  text-decoration: line-through;
+}
+.modal-price .price-sale { font-size: 1.1rem; color: var(--black); }
 
 .modal-specs {
   display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;
@@ -329,7 +346,7 @@ footer {
 <header>
   <div class="brand">ZORO FINDS</div>
   <div class="tagline">One-of-One Vintage Pieces</div>
-  <div class="subline">Shipping Across India</div>
+  <div class="subline">Shipping Across India · COD Available</div>
 </header>
 
 <nav id="nav" aria-label="Catalog sections"></nav>
@@ -460,7 +477,7 @@ const PRODUCTS = [
       "images/zf006-7.jpg"
     ],
     size: "L", measurements: { chest: "48\"", length: "30\"" }, condition: "9/10",
-    description: "Rare vintage 90s Adidas track jacket in deep navy with dynamic curved silver-grey chest and sleeve paneling. Features embroidered classic Adidas logo on the chest, custom rubberized pocket zipper pulls, full zip front, and vintage country flags collar tag. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Rare vintage 90s Adidas track jacket in deep navy with dynamic curved silver-grey chest and sleeve paneling. Features embroidered classic Adidas logo on the chest, custom rubberized pocket zipper pulls, full zip front, and vintage country flags collar tag. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-007", name: "Vintage Adidas \"Pleasant Valley Vikings\" Track Jacket — Navy", price: "₹1,299",
     images: [
@@ -666,7 +683,7 @@ const PRODUCTS = [
       "images/zf021-7.jpg"
     ],
     size: "M", measurements: { chest: "44\"", length: "24\"" }, condition: "9/10",
-    description: "Vintage The North Face technical HyVent 2.5L outdoor shell rain jacket in vibrant magenta pink. Features silver embroidered TNF chest and back logos, HyVent 2.5L sleeve branding, underarm pit zip vents, attached cinch hood, mesh stow pocket with branded tab, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Vintage The North Face technical HyVent 2.5L outdoor shell rain jacket in vibrant magenta pink. Features silver embroidered TNF chest and back logos, HyVent 2.5L sleeve branding, underarm pit zip vents, attached cinch hood, mesh stow pocket with branded tab, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-022", name: "Vintage 90s Nike Swoosh Track Jacket — Midnight Navy & White", price: "₹1,299",
     images: [
@@ -843,7 +860,7 @@ function renderGrid(items) {
       <div class="card-info">
         <div class="card-name">${escapeHtml(p.name)}</div>
         <div class="card-meta mono">
-          <span>${escapeHtml(p.price)}</span>
+          <div class="card-price-group">${priceHTML(p.price, 'price-sale', 'price-orig')}</div>
           <span>${escapeHtml(p.size)}</span>
         </div>
       </div>
@@ -898,6 +915,21 @@ function renderInfo() {
 /* =========================================================================
    SECTION 6 — PURCHASE LINKS
 ========================================================================= */
+const ORIG_PRICE_MAP = {
+  "\u20b9999":   "\u20b91,500",
+  "\u20b91,199": "\u20b91,799",
+  "\u20b91,299": "\u20b91,999",
+  "\u20b91,399": "\u20b92,200",
+  "\u20b91,499": "\u20b92,300"
+};
+function origPrice(price) {
+  return ORIG_PRICE_MAP[price] || null;
+}
+function priceHTML(price, saleClass, origClass) {
+  const orig = origPrice(price);
+  if (!orig) return `<span class="${saleClass}">${escapeHtml(price)}</span>`;
+  return `<span class="${origClass}">${orig}</span><span class="${saleClass}">${escapeHtml(price)}</span>`;
+}
 function waLink(p) {
   const msg = `Hello, I am interested in buying this product.\n\nProduct ID: ${p.id}\nProduct Name: ${p.name}\n\nPlease share the details.`;
   return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
@@ -939,7 +971,7 @@ function openModal(p) {
     <div class="modal-body">
       <div class="modal-id mono">${escapeHtml(p.id)}</div>
       <h2 class="modal-name" id="modalNameHeading">${escapeHtml(p.name)}</h2>
-      <div class="modal-price mono">${escapeHtml(p.price)}</div>
+      <div class="modal-price mono">${priceHTML(p.price, 'price-sale', 'price-orig')}</div>
       <div class="modal-specs">${specs.join("")}</div>
       <div class="modal-desc">${escapeHtml(p.description)}</div>
       ${isSold
