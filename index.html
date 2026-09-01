@@ -86,6 +86,74 @@ nav {
 .nav-btn.active { background: var(--black); border-color: var(--black); color: var(--white); }
 .nav-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
 
+/* ---------- CATALOGUE TOOLBAR ---------- */
+.catalogue-toolbar {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 14px 20px 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.toolbar-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.toolbar-label {
+  font-size: 0.64rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  white-space: nowrap;
+}
+
+.toolbar-pills {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.toolbar-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  background: none;
+  border: 1px solid var(--line);
+  padding: 6px 12px;
+  cursor: pointer;
+  color: var(--stone-dark);
+  transition: all 0.15s ease;
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.toolbar-btn:hover {
+  color: var(--black);
+  border-color: var(--stone);
+}
+
+.toolbar-btn.active {
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
+}
+
+.toolbar-btn:focus-visible {
+  outline: 2px solid var(--black);
+  outline-offset: 2px;
+}
+
+.sort-prefix {
+  display: inline;
+}
+
 /* ---------- GRID ---------- */
 .grid {
   max-width: 1240px;
@@ -116,6 +184,58 @@ nav {
   .subline  { font-size: 0.56rem; letter-spacing: 0.13em; margin-top: 4px; }
   nav { padding: 8px 12px 4px; gap: 4px; }
   .nav-btn { padding: 5px 12px; font-size: 0.6rem; }
+  .catalogue-toolbar {
+    padding: 10px 8px 6px;
+    gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .toolbar-section.size-section {
+    overflow: hidden;
+  }
+  .toolbar-section.size-section .toolbar-pills {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 2px;
+    gap: 4px;
+  }
+  .toolbar-section.size-section .toolbar-pills::-webkit-scrollbar {
+    display: none;
+  }
+  .toolbar-section.sort-section .toolbar-pills {
+    display: flex;
+    flex: 1;
+    gap: 4px;
+  }
+  .toolbar-section.sort-section .toolbar-btn {
+    flex: 1;
+    text-align: center;
+  }
+  .toolbar-btn {
+    padding: 5px 8px;
+    font-size: 0.58rem;
+    min-height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .toolbar-label {
+    font-size: 0.56rem;
+    min-width: 34px;
+  }
+  .sort-prefix {
+    display: none;
+  }
   .grid { grid-template-columns: repeat(2, 1fr); padding: 10px 8px 60px; gap: 1px; }
   .card-img-wrap { aspect-ratio: 1 / 1; }
   .card-info { padding: 6px 3px 14px; }
@@ -1045,6 +1165,48 @@ let lastFocused = null;
 
 const TABS = ["JACKETS", "HOODIES", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
 
+let currentTab = "JACKETS";
+let currentSort = "high-low";
+let currentSize = "ALL";
+
+const SIZE_ORDER = ["XS", "S", "S/M", "M", "M/L", "L", "XL", "XXL"];
+
+function parsePrice(priceStr) {
+  return parseInt(String(priceStr).replace(/[^0-9]/g, ""), 10) || 0;
+}
+
+function getTabBaseItems(tab) {
+  if (tab === "JACKETS") return PRODUCTS.filter(p => p.status === "available");
+  if (tab === "HOODIES") return HOODIES.filter(p => p.status === "available");
+  if (tab === "ARCHIVE") return PRODUCTS.filter(p => p.status === "sold" && p.id !== "ZF-030");
+  return [];
+}
+
+function getAvailableSizes(items) {
+  const sizes = Array.from(new Set(items.map(p => p.size).filter(Boolean)));
+  sizes.sort((a, b) => {
+    const ia = SIZE_ORDER.indexOf(a);
+    const ib = SIZE_ORDER.indexOf(b);
+    if (ia !== -1 && ib !== -1) return ia - ib;
+    if (ia !== -1) return -1;
+    if (ib !== -1) return 1;
+    return a.localeCompare(b);
+  });
+  return sizes;
+}
+
+function setSortOrder(order) {
+  if (currentSort === order) return;
+  currentSort = order;
+  renderActiveCollection();
+}
+
+function setSizeFilter(size) {
+  if (currentSize === size) return;
+  currentSize = size;
+  renderActiveCollection();
+}
+
 function renderNav(activeTab) {
   navEl.innerHTML = "";
   TABS.forEach(tab => {
@@ -1052,32 +1214,87 @@ function renderNav(activeTab) {
     btn.className = "nav-btn" + (tab === activeTab ? " active" : "");
     btn.textContent = tab;
     btn.setAttribute("aria-pressed", tab === activeTab ? "true" : "false");
-    btn.onclick = () => renderTab(tab);
+    btn.onclick = () => {
+      currentTab = tab;
+      currentSize = "ALL";
+      renderTab(tab);
+    };
     navEl.appendChild(btn);
   });
 }
 
 function renderTab(tab) {
+  currentTab = tab;
   renderNav(tab);
-  if (tab === "JACKETS") renderGrid(PRODUCTS.filter(p => p.status === "available"), "JACKETS");
-  else if (tab === "HOODIES") renderGrid(HOODIES.filter(p => p.status === "available"), "HOODIES");
-  else if (tab === "ARCHIVE") renderGrid(PRODUCTS.filter(p => p.status === "sold"), "ARCHIVE");
-  else renderInfo();
+  if (tab === "INFO") {
+    renderInfo();
+  } else {
+    renderActiveCollection();
+  }
 }
 
-function renderGrid(items, activeTab) {
-  const hoodiesBanner = (activeTab === "JACKETS") ? `
+function renderActiveCollection() {
+  const baseItems = getTabBaseItems(currentTab);
+  const availableSizes = getAvailableSizes(baseItems);
+
+  if (currentSize !== "ALL" && !availableSizes.includes(currentSize)) {
+    currentSize = "ALL";
+  }
+
+  let displayItems = baseItems;
+  if (currentSize !== "ALL") {
+    displayItems = displayItems.filter(p => p.size === currentSize);
+  }
+
+  displayItems = [...displayItems].sort((a, b) => {
+    const pa = parsePrice(a.price);
+    const pb = parsePrice(b.price);
+    if (currentSort === "low-high") {
+      if (pa !== pb) return pa - pb;
+    } else {
+      // default: high-to-low
+      if (pa !== pb) return pb - pa;
+    }
+    return a.id.localeCompare(b.id);
+  });
+
+  renderCatalogueView(displayItems, availableSizes);
+}
+
+function renderCatalogueView(items, availableSizes) {
+  const hoodiesBanner = (currentTab === "JACKETS") ? `
     <div class="hoodies-banner" id="hoodiesBanner">
       <span class="hoodies-banner-label mono">Also new ↗</span>
       <span class="hoodies-banner-text">We now carry <strong>Hoodies</strong> — vintage pullover &amp; zip-up sweatshirts.</span>
       <button type="button" class="hoodies-banner-btn mono" onclick="renderTab('HOODIES')">Shop Hoodies</button>
     </div>` : "";
 
-  mainEl.innerHTML = hoodiesBanner + `<div class="grid" id="grid"></div>`;
+  const toolbar = `
+    <div class="catalogue-toolbar" id="catalogueToolbar" aria-label="Catalogue filters and sorting">
+      <div class="toolbar-section size-section">
+        <span class="toolbar-label mono">Size</span>
+        <div class="toolbar-pills" role="radiogroup" aria-label="Filter by size">
+          <button type="button" class="toolbar-btn mono ${currentSize === 'ALL' ? 'active' : ''}" onclick="setSizeFilter('ALL')" aria-pressed="${currentSize === 'ALL'}">ALL</button>
+          ${availableSizes.map(sz => `
+            <button type="button" class="toolbar-btn mono ${currentSize === sz ? 'active' : ''}" onclick="setSizeFilter('${escapeHtml(sz)}')" aria-pressed="${currentSize === sz}">${escapeHtml(sz)}</button>
+          `).join("")}
+        </div>
+      </div>
+      <div class="toolbar-section sort-section">
+        <span class="toolbar-label mono">Sort</span>
+        <div class="toolbar-pills" role="radiogroup" aria-label="Sort by price">
+          <button type="button" class="toolbar-btn mono ${currentSort === 'high-low' ? 'active' : ''}" onclick="setSortOrder('high-low')" aria-pressed="${currentSort === 'high-low'}"><span class="sort-prefix">Price: </span>High to Low</button>
+          <button type="button" class="toolbar-btn mono ${currentSort === 'low-high' ? 'active' : ''}" onclick="setSortOrder('low-high')" aria-pressed="${currentSort === 'low-high'}"><span class="sort-prefix">Price: </span>Low to High</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  mainEl.innerHTML = hoodiesBanner + toolbar + `<div class="grid" id="grid"></div>`;
   const gridEl = document.getElementById("grid");
 
   if (items.length === 0) {
-    gridEl.innerHTML = `<div class="empty-state">Nothing here right now</div>`;
+    gridEl.innerHTML = `<div class="empty-state">No pieces found for size ${escapeHtml(currentSize)}</div>`;
     return;
   }
 
