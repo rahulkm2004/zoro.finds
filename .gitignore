@@ -1,4 +1,4 @@
-﻿# ─── Environment & Secrets ───────────────────────────────────────────────────
+# ─── Environment & Secrets ───────────────────────────────────────────────────
 .env
 .env.local
 .env.*.local
@@ -69,3 +69,7 @@ desktop.ini
 
 # ─── Local duplicate HTML (the renamed copy is index.html) ────────────────────
 zoro-finds-archive*.html
+
+# ─── Cloudflare Wrangler ───────────────────────────────────────────────────────
+.wrangler/
+
