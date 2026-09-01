@@ -339,6 +339,51 @@ footer {
   text-align: center; padding: 28px 16px 50px;
   font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone);
 }
+
+/* ---------- HOODIES PROMO BANNER ---------- */
+.hoodies-banner {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 13px 24px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-bottom: 1px solid var(--line);
+  background: var(--offwhite);
+  flex-wrap: wrap;
+}
+.hoodies-banner-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  white-space: nowrap;
+}
+.hoodies-banner-text {
+  font-size: 0.78rem;
+  color: var(--black);
+  flex: 1;
+  line-height: 1.4;
+}
+.hoodies-banner-text strong { font-weight: 600; }
+.hoodies-banner-btn {
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  padding: 7px 16px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: opacity 0.15s ease;
+}
+.hoodies-banner-btn:hover { opacity: 0.8; }
+.hoodies-banner-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+@media (max-width: 620px) {
+  .hoodies-banner { padding: 10px 14px; gap: 8px; }
+  .hoodies-banner-text { font-size: 0.72rem; }
+}
 </style>
 </head>
 <body>
@@ -440,7 +485,7 @@ const PRODUCTS = [
       "images/zf003-5.jpg"
     ],
     size: "L", measurements: { chest: "50\"", length: "27.5\"" }, condition: "9/10",
-    description: "Iconic vintage Adidas Trefoil track jacket in timeless black with contrast white three-stripe trim along the sleeves. Features embroidered white Trefoil logo on the chest, branded Adidas zipper hardware, zippered hand pockets, and elasticated hem. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Iconic vintage Adidas Trefoil track jacket in timeless black with contrast white three-stripe trim along the sleeves. Features embroidered white Trefoil logo on the chest, branded Adidas zipper hardware, zippered hand pockets, and elasticated hem. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-004", name: "Vintage Fila Biella Italia Track Jacket — Midnight Navy", price: "₹1,299",
     images: [
@@ -488,7 +533,7 @@ const PRODUCTS = [
       "images/zf007-1.jpg"
     ],
     size: "M", measurements: { chest: "44\"", length: "27\"" }, condition: "10/10",
-    description: "Vintage Adidas collegiate track jacket in midnight navy with bold white three-stripe sleeve panels. Features custom turquoise \"Pleasant Valley Vikings Basketball\" embroidery, embroidered Adidas chest logo, full front zip, breathable white mesh lining, and side pockets. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Vintage Adidas collegiate track jacket in midnight navy with bold white three-stripe sleeve panels. Features custom turquoise \"Pleasant Valley Vikings Basketball\" embroidery, embroidered Adidas chest logo, full front zip, breathable white mesh lining, and side pockets. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-008", name: "Vintage 80s/90s Adidas Trefoil Colorblock Track Jacket — Magenta & Teal", price: "₹1,299",
     images: [
@@ -670,7 +715,7 @@ const PRODUCTS = [
       "images/zf020-7.jpg"
     ],
     size: "S", measurements: { chest: "42\"", length: "20.5\"" }, condition: "10/10",
-    description: "Vintage New Balance outdoor shell track jacket in black with bold red shoulder/sleeve paneling and white piping accents. Features embroidered New Balance chest logo, fleece-lined red collar, snap-button storm flap closure, velcro cuff adjusters, and breathable interior mesh lining. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Vintage New Balance outdoor shell track jacket in black with bold red shoulder/sleeve paneling and white piping accents. Features embroidered New Balance chest logo, fleece-lined red collar, snap-button storm flap closure, velcro cuff adjusters, and breathable interior mesh lining. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-021", name: "Vintage The North Face HyVent 2.5L Hooded Shell Jacket — Magenta", price: "₹1,199",
     images: [
@@ -786,6 +831,192 @@ const PRODUCTS = [
 ];
 
 /* =========================================================================
+   HOODIES — Separate product array for the Hoodies collection.
+   Same format as PRODUCTS above.
+========================================================================= */
+const HOODIES = [
+  { id: "ZH-001", name: "Vintage GAP Arch Logo Pullover Hoodie — Midnight Navy", price: "₹999",
+    images: [
+      "images/h1-1.jpg",
+      "images/h1-2.jpg",
+      "images/h1-3.jpg",
+      "images/h1-4.jpg",
+      "images/h1-5.jpg",
+      "images/h1-6.jpg"
+    ],
+    size: "M/L", measurements: { chest: "44\"", length: "27\"" }, condition: "9/10",
+    description: "Classic vintage GAP pullover hoodie in deep midnight navy. Features the iconic felted GAP arch logo appliqué across the chest, kangaroo front pocket, drawstring hood, and ribbed cuffs & hem. A timeless American staple in excellent vintage condition. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-002", name: "Vintage Dickies Colorblock Pullover Hoodie — Red & Heather Grey", price: "₹1,299",
+    images: [
+      "images/h2-1.jpg",
+      "images/h2-2.jpg",
+      "images/h2-3.jpg",
+      "images/h2-4.jpg",
+      "images/h2-5.jpg",
+      "images/h2-6.jpg"
+    ],
+    size: "M/L", measurements: { chest: "42\"", length: "25\"" }, condition: "10/10",
+    description: "Vintage Dickies workwear pullover hoodie in bold red with contrast heather grey hood. Features embroidered Dickies script logo on the chest, woven Dickies label at the hem, kangaroo front pocket, and ribbed cuffs & hem. Solid vintage character. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-003", name: "Vintage Nike Script Pullover Hoodie — Deep Plum", price: "₹999",
+    images: [
+      "images/h3-1.jpg",
+      "images/h3-2.jpg",
+      "images/h3-3.jpg",
+      "images/h3-4.jpg",
+      "images/h3-5.jpg",
+      "images/h3-6.jpg"
+    ],
+    size: "M/L", measurements: { chest: "42\"", length: "26.5\"" }, condition: "9/10",
+    description: "Vintage Nike pullover hoodie in rich deep plum purple. Features tonal embroidered Nike script logo on the chest, drawstring hood, kangaroo front pocket, and ribbed cuffs & hem. A rare colourway with a moody, premium aesthetic. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-004", name: "Vintage Superdry Tokyo Track & Field Raglan Hoodie — Grey & Navy", price: "₹1,199",
+    images: [
+      "images/h4-1.jpg",
+      "images/h4-2.jpg",
+      "images/h4-3.jpg",
+      "images/h4-4.jpg",
+      "images/h4-5.jpg",
+      "images/h4-6.jpg",
+      "images/h4-7.jpg",
+      "images/h4-8.jpg"
+    ],
+    size: "M/L", measurements: { chest: "42\"", length: "27.5\"" }, condition: "9/10",
+    description: "Vintage Superdry Tokyo raglan pullover hoodie in charcoal grey body with contrast midnight navy sleeves. Features bold stitched \"Tokyo Superdry Dept 72 Track & Field\" chest appliqué, embroidered number 2 on the left sleeve, custom Superdry drawstring tags, kangaroo pocket, and ribbed cuffs & hem. Excellent vintage condition. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-005", name: "Vintage NBA Store 'Fifth Ave' Washed Zip-Up Hoodie — Washed Grey", price: "₹1,299",
+    images: [
+      "images/h5-1.jpg",
+      "images/h5-2.jpg",
+      "images/h5-3.jpg",
+      "images/h5-4.jpg",
+      "images/h5-5.jpg",
+      "images/h5-6.jpg"
+    ],
+    size: "L", measurements: { chest: "46\"", length: "26\"" }, condition: "10/10",
+    description: "Vintage NBA Store Fifth Avenue New York zip-up hoodie in acid-washed slate grey. Features screen-printed NBA Store 'Fifth Ave, New York' gothic lettering with NBA logo on the chest, full front zip, drawstring hood, kangaroo patch pockets, and ribbed cuffs & hem. Heavy character from genuine wear. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-006", name: "Vintage Superdry Tokyo Script Pullover Hoodie — Faded Navy", price: "₹1,299",
+    images: [
+      "images/h6-1.jpg",
+      "images/h6-2.jpg",
+      "images/h6-3.jpg",
+      "images/h6-4.jpg",
+      "images/h6-5.jpg",
+      "images/h6-6.jpg",
+      "images/h6-7.jpg",
+      "images/h6-8.jpg"
+    ],
+    size: "L", measurements: { chest: "46\"", length: "28\"" }, condition: "9/10",
+    description: "Vintage Superdry Tokyo pullover hoodie in faded navy blue. Features large embroidered red & white Tokyo SuperDry script logo with Japanese kanji detail on the chest, branded woven Superdry drawstring tips, kangaroo front pocket, ribbed cuffs & hem, and a red Superdry tab on the left cuff. Excellent vintage condition. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-007", name: "Official MLB Majestic LA Dodgers Cooperstown Collection Hoodie — Royal Blue", price: "₹1,299",
+    images: [
+      "images/h7-1.jpg",
+      "images/h7-2.jpg",
+      "images/h7-3.jpg",
+      "images/h7-4.jpg",
+      "images/h7-5.jpg",
+      "images/h7-6.jpg"
+    ],
+    size: "L", measurements: { chest: "45\"", length: "28\"" }, condition: "9/10",
+    description: "Official MLB Majestic LA Dodgers Cooperstown Collection pullover hoodie in vibrant electric royal blue. Features bold embroidered 'Dodgers Baseball Club' chest graphic with Majestic and MLB logo patches, embroidered LA logo on the hood, ribbed cuffs & hem, and kangaroo front pocket. A statement vintage sports hoodie. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-008", name: "Vintage Dickies 1922 Pullover Hoodie — Sage Green", price: "₹1,199",
+    images: [
+      "images/h8-1.jpg",
+      "images/h8-2.jpg",
+      "images/h8-3.jpg",
+      "images/h8-4.jpg",
+      "images/h8-5.jpg",
+      "images/h8-6.jpg",
+      "images/h8-7.jpg",
+      "images/h8-8.jpg"
+    ],
+    size: "M/L", measurements: { chest: "42\"", length: "25\"" }, condition: "10/10",
+    description: "Vintage Dickies 1922 pullover hoodie in washed sage green. Features embroidered 'Dickies 1922' chest logo in tonal white, contrast white flatlock stitching throughout, branded Dickies drawstring tips, woven Dickies patch at the hem, kangaroo front pocket, and ribbed cuffs & hem. 100% cotton. Flawless 10/10 condition. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-009", name: "Vintage GAP Arch Logo Zip-Up Hoodie — Heather Grey", price: "₹1,299",
+    images: [
+      "images/h9-1.jpg",
+      "images/h9-2.jpg",
+      "images/h9-3.jpg",
+      "images/h9-4.jpg",
+      "images/h9-5.jpg"
+    ],
+    size: "M/L", measurements: { chest: "42\"", length: "25\"" }, condition: "10/10",
+    description: "Vintage GAP full zip-up hoodie in washed heather grey. Features the iconic felted GAP arch logo appliqué across the chest in navy, full front YKK metal zipper, drawstring hood, kangaroo hand pockets, and ribbed cuffs & hem. Classic American staple with authentic vintage wear. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-010", name: "Vintage GAP Arch Logo Zip-Up Hoodie — Royal Blue & Gold", price: "₹1,299",
+    images: [
+      "images/h10-1.jpg",
+      "images/h10-2.jpg",
+      "images/h10-3.jpg",
+      "images/h10-4.jpg",
+      "images/h10-5.jpg"
+    ],
+    size: "XL", measurements: { chest: "54\"", length: "29\"" }, condition: "9/10",
+    description: "Vintage GAP full zip-up hoodie in vibrant royal blue. Features the bold felted GAP arch logo appliqué across the chest in gold and white, full front zipper, drawstring hood, kangaroo hand pockets, and ribbed cuffs & hem. A rare and eye-catching colourway in excellent vintage condition. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-011", name: "Vintage Nautica Arch Logo Quarter-Zip Sweatshirt — Black", price: "₹1,299",
+    images: [
+      "images/h11-1.jpg",
+      "images/h11-2.jpg",
+      "images/h11-3.jpg",
+      "images/h11-4.jpg",
+      "images/h11-5.jpg",
+      "images/h11-6.jpg",
+      "images/h11-7.jpg"
+    ],
+    size: "M/L", measurements: { chest: "44\"", length: "26.5\"" }, condition: "10/10",
+    description: "Vintage Nautica quarter-zip pullover sweatshirt in deep black. Features large embroidered navy and white arched 'NAUTICA' collegiate logo across the chest, high ribbed stand collar with quarter-zip closure, woven Nautica hem tag, and ribbed cuffs & hem. Bold preppy aesthetic with a premium nautical feel. Authentic Pre-owned Sweatshirt.", status: "available" },
+
+  { id: "ZH-012", name: "Vintage Champion Script Pullover Hoodie — Heather Grey", price: "₹1,299",
+    images: [
+      "images/h12-1.jpg",
+      "images/h12-2.jpg",
+      "images/h12-3.jpg",
+      "images/h12-4.jpg",
+      "images/h12-5.jpg",
+      "images/h12-6.jpg"
+    ],
+    size: "L", measurements: { chest: "46\"", length: "25.5\"" }, condition: "10/10",
+    description: "Vintage Champion Reverse Weave-era pullover hoodie in classic heather grey. Features bold embroidered navy and red Champion script logo across the chest, embroidered Champion 'C' logo on the left cuff, woven 'Authentic American Athletic Apparel — Rochester, USA' label at the hem, kangaroo front pocket, and ribbed cuffs & hem. A true vintage Champion grail. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-013", name: "Y2K Graphic Zip-Up Hoodie — 'Devil Script' Black", price: "₹1,199",
+    images: [
+      "images/h13-1.jpg",
+      "images/h13-2.jpg",
+      "images/h13-3.jpg",
+      "images/h13-4.jpg"
+    ],
+    size: "L", measurements: { chest: "46\"", length: "26\"" }, condition: "9/10",
+    description: "Y2K-era full zip-up hoodie in jet black. Features a bold puff-print gothic bubble letter graphic with devil horns, pink star accents, and a devil tail motif across the chest — a statement streetwear piece straight from the early 2000s. Full front zipper, drawstring hood, kangaroo pockets, and ribbed cuffs & hem. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-014", name: "Disney Stella Lou Bunny Ear Pullover Hoodie — Baby Pink", price: "₹1,199",
+    images: [
+      "images/h14-1.jpg",
+      "images/h14-2.jpg",
+      "images/h14-3.jpg",
+      "images/h14-4.jpg"
+    ],
+    size: "L", measurements: { chest: "45\"", length: "26.5\"" }, condition: "9/10",
+    description: "Official Disney Stella Lou character pullover hoodie in soft baby pink. Features 3D bunny ear detail on the hood with mint green inner lining, embroidered Stella Lou character graphic on the left chest with cursive 'StellaLou' script, branded drawstring tips, kangaroo front pocket, and ribbed cuffs & hem. A rare and adorable collector's piece. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-015", name: "Barbapapa Cartoon Graphic Pullover Hoodie — Cream White", price: "₹999",
+    images: [
+      "images/h15-2.jpg",
+      "images/h15-1.jpg",
+      "images/h15-3.jpg",
+      "images/h15-4.jpg",
+      "images/h15-5.jpg"
+    ],
+    size: "M/L", measurements: { chest: "44\"", length: "25.5\"" }, condition: "10/10",
+    description: "Vintage Barbapapa cartoon pullover hoodie in off-white cream. Features a charming printed graphic of the Barbapapa family in a pink bathtub on the left chest, white drawstring hood, kangaroo front pocket, and ribbed cuffs & hem. A fun, nostalgic collector's piece for fans of classic European animation. Authentic Pre-owned Hoodie.", status: "available" }
+];
+
+/* =========================================================================
    SECTION 4 — SITE RENDERING
    Nothing below this line normally needs editing.
 ========================================================================= */
@@ -812,7 +1043,7 @@ const modalBackdrop = document.getElementById("modalBackdrop");
 const modalEl = document.getElementById("modal");
 let lastFocused = null;
 
-const TABS = ["AVAILABLE", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
+const TABS = ["JACKETS", "HOODIES", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
 
 function renderNav(activeTab) {
   navEl.innerHTML = "";
@@ -828,13 +1059,21 @@ function renderNav(activeTab) {
 
 function renderTab(tab) {
   renderNav(tab);
-  if (tab === "AVAILABLE") renderGrid(PRODUCTS.filter(p => p.status === "available"));
-  else if (tab === "ARCHIVE") renderGrid(PRODUCTS.filter(p => p.status === "sold"));
+  if (tab === "JACKETS") renderGrid(PRODUCTS.filter(p => p.status === "available"), "JACKETS");
+  else if (tab === "HOODIES") renderGrid(HOODIES.filter(p => p.status === "available"), "HOODIES");
+  else if (tab === "ARCHIVE") renderGrid(PRODUCTS.filter(p => p.status === "sold"), "ARCHIVE");
   else renderInfo();
 }
 
-function renderGrid(items) {
-  mainEl.innerHTML = `<div class="grid" id="grid"></div>`;
+function renderGrid(items, activeTab) {
+  const hoodiesBanner = (activeTab === "JACKETS") ? `
+    <div class="hoodies-banner" id="hoodiesBanner">
+      <span class="hoodies-banner-label mono">Also new ↗</span>
+      <span class="hoodies-banner-text">We now carry <strong>Hoodies</strong> — vintage pullover &amp; zip-up sweatshirts.</span>
+      <button type="button" class="hoodies-banner-btn mono" onclick="renderTab('HOODIES')">Shop Hoodies</button>
+    </div>` : "";
+
+  mainEl.innerHTML = hoodiesBanner + `<div class="grid" id="grid"></div>`;
   const gridEl = document.getElementById("grid");
 
   if (items.length === 0) {
@@ -979,7 +1218,6 @@ function openModal(p) {
         : `<div class="scarcity-note">One piece only · First confirmed order gets it</div>
            <div class="buy-row">
               <a class="buy-btn wa" href="${waLink(p)}" target="_blank" rel="noopener noreferrer">Buy on WhatsApp</a>
-              <button type="button" class="buy-btn ig" data-product-id="${escapeHtml(p.id)}" data-product-name="${escapeHtml(p.name)}" onclick="handleIgBuy(this)">Buy on Instagram</button>
            </div>`
       }
     </div>
@@ -1100,7 +1338,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && modalBackdrop.classList.contains("open")) closeModal();
 });
 
-renderTab("AVAILABLE");
+renderTab("JACKETS");
 
 </script>
 
