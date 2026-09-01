@@ -459,51 +459,6 @@ footer {
   text-align: center; padding: 28px 16px 50px;
   font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone);
 }
-
-/* ---------- HOODIES PROMO BANNER ---------- */
-.hoodies-banner {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 13px 24px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  border-bottom: 1px solid var(--line);
-  background: var(--offwhite);
-  flex-wrap: wrap;
-}
-.hoodies-banner-label {
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--stone-dark);
-  white-space: nowrap;
-}
-.hoodies-banner-text {
-  font-size: 0.78rem;
-  color: var(--black);
-  flex: 1;
-  line-height: 1.4;
-}
-.hoodies-banner-text strong { font-weight: 600; }
-.hoodies-banner-btn {
-  font-size: 0.65rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  background: var(--black);
-  color: var(--white);
-  border: none;
-  padding: 7px 16px;
-  cursor: pointer;
-  white-space: nowrap;
-  transition: opacity 0.15s ease;
-}
-.hoodies-banner-btn:hover { opacity: 0.8; }
-.hoodies-banner-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
-@media (max-width: 620px) {
-  .hoodies-banner { padding: 10px 14px; gap: 8px; }
-  .hoodies-banner-text { font-size: 0.72rem; }
-}
 </style>
 </head>
 <body>
@@ -1165,7 +1120,7 @@ let lastFocused = null;
 
 const TABS = ["JACKETS", "HOODIES", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
 
-let currentTab = "JACKETS";
+let currentTab = "HOODIES";
 let currentSort = "high-low";
 let currentSize = "ALL";
 
@@ -1248,13 +1203,6 @@ function renderActiveCollection() {
 }
 
 function renderCatalogueView(items) {
-  const hoodiesBanner = (currentTab === "JACKETS") ? `
-    <div class="hoodies-banner" id="hoodiesBanner">
-      <span class="hoodies-banner-label mono">Also new ↗</span>
-      <span class="hoodies-banner-text">We now carry <strong>Hoodies</strong> — vintage pullover &amp; zip-up sweatshirts.</span>
-      <button type="button" class="hoodies-banner-btn mono" onclick="renderTab('HOODIES')">Shop Hoodies</button>
-    </div>` : "";
-
   const toolbar = `
     <div class="catalogue-toolbar" id="catalogueToolbar" aria-label="Catalogue filters and sorting">
       <div class="toolbar-section size-section">
@@ -1276,7 +1224,7 @@ function renderCatalogueView(items) {
     </div>
   `;
 
-  mainEl.innerHTML = hoodiesBanner + toolbar + `<div class="grid" id="grid"></div>`;
+  mainEl.innerHTML = toolbar + `<div class="grid" id="grid"></div>`;
   const gridEl = document.getElementById("grid");
 
   if (items.length === 0) {
@@ -1541,7 +1489,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && modalBackdrop.classList.contains("open")) closeModal();
 });
 
-renderTab("JACKETS");
+renderTab("HOODIES");
 
 </script>
 
