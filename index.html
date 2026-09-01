@@ -459,6 +459,109 @@ footer {
   text-align: center; padding: 28px 16px 50px;
   font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone);
 }
+
+/* ---------- NEW HOODIES TOAST NOTIFICATION ---------- */
+.hoodies-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--black);
+  color: var(--white);
+  padding: 16px 18px;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(253, 252, 250, 0.12);
+  z-index: 45;
+  max-width: 320px;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hoodies-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hoodies-toast-content {
+  flex: 1;
+}
+
+.hoodies-toast-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.hoodies-toast-msg {
+  font-size: 0.82rem;
+  color: var(--white);
+  line-height: 1.35;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.hoodies-toast-btn {
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.hoodies-toast-btn:hover {
+  opacity: 0.85;
+}
+
+.hoodies-toast-btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.hoodies-toast-close {
+  background: none;
+  border: none;
+  color: var(--stone);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color 0.15s ease;
+}
+
+.hoodies-toast-close:hover {
+  color: var(--white);
+}
+
+.hoodies-toast-close:focus-visible {
+  outline: 2px solid var(--white);
+}
+
+@media (max-width: 620px) {
+  .hoodies-toast {
+    left: 14px;
+    right: 14px;
+    bottom: 18px;
+    max-width: calc(100% - 28px);
+    padding: 14px 16px;
+  }
+}
 </style>
 </head>
 <body>
@@ -477,6 +580,15 @@ footer {
 </div>
 
 <footer>@zoro.finds · Curated, never repeated.</footer>
+
+<div class="hoodies-toast" id="hoodiesToast" role="region" aria-label="New Hoodies Announcement">
+  <div class="hoodies-toast-content">
+    <span class="hoodies-toast-tag mono">NEW DROP</span>
+    <div class="hoodies-toast-msg">New hoodies are here.</div>
+    <button type="button" class="hoodies-toast-btn mono" id="exploreHoodiesBtn">Explore Hoodies →</button>
+  </div>
+  <button type="button" class="hoodies-toast-close" id="closeHoodiesToast" aria-label="Close notification">✕</button>
+</div>
 
 <script>
 /* =========================================================================
@@ -1489,7 +1601,56 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape" && modalBackdrop.classList.contains("open")) closeModal();
 });
 
+/* =========================================================================
+   SECTION 8 — NEW HOODIES TOAST (ONE-TIME)
+========================================================================= */
+const TOAST_STORAGE_KEY = "zoroFindsHoodiesNoticeSeen";
+
+function initHoodiesToast() {
+  let seen = false;
+  try {
+    seen = localStorage.getItem(TOAST_STORAGE_KEY) === "true";
+  } catch (e) {
+    seen = false;
+  }
+
+  if (seen) return;
+
+  const toast = document.getElementById("hoodiesToast");
+  if (!toast) return;
+
+  const markSeen = () => {
+    try {
+      localStorage.setItem(TOAST_STORAGE_KEY, "true");
+    } catch (e) {}
+    toast.classList.remove("visible");
+  };
+
+  const closeBtn = document.getElementById("closeHoodiesToast");
+  if (closeBtn) {
+    closeBtn.onclick = markSeen;
+  }
+
+  const exploreBtn = document.getElementById("exploreHoodiesBtn");
+  if (exploreBtn) {
+    exploreBtn.onclick = () => {
+      markSeen();
+      renderTab("HOODIES");
+      const grid = document.getElementById("grid");
+      if (grid) {
+        grid.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+  }
+
+  // Subtle entrance shortly after page loads (1000ms)
+  setTimeout(() => {
+    toast.classList.add("visible");
+  }, 1000);
+}
+
 renderTab("HOODIES");
+initHoodiesToast();
 
 </script>
 
