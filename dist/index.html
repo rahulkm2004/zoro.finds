@@ -562,6 +562,206 @@ footer {
     padding: 14px 16px;
   }
 }
+
+/* ---------- CUSTOMER REVIEWS SECTION ---------- */
+.reviews-section {
+  border-top: 1px solid var(--line);
+  background: var(--offwhite);
+  padding: 56px 24px 44px;
+}
+.reviews-inner {
+  max-width: 1240px;
+  margin: 0 auto;
+}
+.reviews-header {
+  text-align: center;
+  max-width: 600px;
+  margin: 0 auto 36px;
+}
+.reviews-eyebrow {
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  display: block;
+  margin-bottom: 8px;
+}
+.reviews-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  color: var(--black);
+  margin-bottom: 8px;
+}
+.reviews-sub {
+  font-size: 0.85rem;
+  color: var(--stone-dark);
+  line-height: 1.4;
+}
+.reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+.review-card {
+  background: #000;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.review-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+.review-img-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+.review-img-wrap img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+.reviews-footer {
+  text-align: center;
+  margin-top: 36px;
+}
+.reviews-back-btn {
+  background: none;
+  border: 1px solid var(--line);
+  padding: 8px 18px;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: var(--stone-dark);
+  transition: all 0.15s ease;
+}
+.reviews-back-btn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* ---------- CUSTOMER REVIEWS FLOATING TOAST ---------- */
+.reviews-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  background: var(--black);
+  color: var(--white);
+  padding: 16px 18px;
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(253, 252, 250, 0.14);
+  z-index: 46;
+  max-width: 320px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  opacity: 0;
+  transform: translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reviews-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.reviews-toast-content {
+  flex: 1;
+}
+
+.reviews-toast-tag {
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.reviews-toast-msg {
+  font-size: 0.82rem;
+  color: var(--white);
+  line-height: 1.35;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+.reviews-toast-btn {
+  background: var(--white);
+  color: var(--black);
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.reviews-toast-btn:hover {
+  opacity: 0.85;
+}
+
+.reviews-toast-btn:focus-visible {
+  outline: 2px solid var(--white);
+  outline-offset: 2px;
+}
+
+.reviews-toast-close {
+  background: none;
+  border: none;
+  color: var(--stone);
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+  transition: color 0.15s ease;
+}
+
+.reviews-toast-close:hover {
+  color: var(--white);
+}
+
+.reviews-toast-close:focus-visible {
+  outline: 2px solid var(--white);
+}
+
+@media (max-width: 620px) {
+  .reviews-section {
+    padding: 36px 14px 28px;
+  }
+  .reviews-title {
+    font-size: 1.15rem;
+  }
+  .reviews-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+  .reviews-toast {
+    left: 14px;
+    right: 14px;
+    bottom: 18px;
+    max-width: calc(100% - 28px);
+    padding: 14px 16px;
+  }
+}
 </style>
 </head>
 <body>
@@ -579,7 +779,56 @@ footer {
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalNameHeading"></div>
 </div>
 
+<section class="reviews-section" id="reviewsSection" aria-label="Customer Reviews and Photos">
+  <div class="reviews-inner">
+    <div class="reviews-header">
+      <span class="reviews-eyebrow mono">CUSTOMER FINDS</span>
+      <h2 class="reviews-title">YOU FOUND IT. THEY WORE IT.</h2>
+      <p class="reviews-sub">Real pieces, real people. Straight from our DMs.</p>
+    </div>
+    <div class="reviews-grid">
+      <div class="review-card">
+        <div class="review-img-wrap">
+          <img src="images/review-1.jpg" alt="Customer review message" loading="lazy">
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-img-wrap">
+          <img src="images/review-2.jpg" alt="Customer review message" loading="lazy">
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-img-wrap">
+          <img src="images/review-3.jpg" alt="Customer review message" loading="lazy">
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-img-wrap">
+          <img src="images/review-4.jpg" alt="Customer review and on-body photo" loading="lazy">
+        </div>
+      </div>
+      <div class="review-card">
+        <div class="review-img-wrap">
+          <img src="images/review-5.jpg" alt="Customer review and unboxing photo" loading="lazy">
+        </div>
+      </div>
+    </div>
+    <div class="reviews-footer">
+      <button type="button" class="reviews-back-btn mono" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Back to Top ↑</button>
+    </div>
+  </div>
+</section>
+
 <footer>@zoro.finds · Curated, never repeated.</footer>
+
+<div class="reviews-toast" id="reviewsToast" role="region" aria-label="Customer Reviews Announcement">
+  <div class="reviews-toast-content">
+    <div class="reviews-toast-tag mono">YOU FOUND IT. THEY WORE IT.</div>
+    <div class="reviews-toast-msg">See the finds IRL.</div>
+    <button type="button" class="reviews-toast-btn mono" id="viewReviewsBtn">VIEW REVIEWS →</button>
+  </div>
+  <button type="button" class="reviews-toast-close" id="closeReviewsToast" aria-label="Close notification">✕</button>
+</div>
 
 <div class="hoodies-toast" id="hoodiesToast" role="region" aria-label="New Hoodies Announcement">
   <div class="hoodies-toast-content">
@@ -1649,8 +1898,61 @@ function initHoodiesToast() {
   }, 1000);
 }
 
+/* =========================================================================
+   SECTION 9 — CUSTOMER REVIEWS TOAST (ONE-TIME)
+========================================================================= */
+const REVIEWS_TOAST_STORAGE_KEY = "zoroFindsReviewsNoticeSeen";
+
+function initReviewsToast() {
+  let seen = false;
+  try {
+    seen = localStorage.getItem(REVIEWS_TOAST_STORAGE_KEY) === "true";
+  } catch (e) {
+    seen = false;
+  }
+
+  if (seen) return;
+
+  const toast = document.getElementById("reviewsToast");
+  if (!toast) return;
+
+  const markSeen = () => {
+    try {
+      localStorage.setItem(REVIEWS_TOAST_STORAGE_KEY, "true");
+    } catch (e) {}
+    toast.classList.remove("visible");
+  };
+
+  const closeBtn = document.getElementById("closeReviewsToast");
+  if (closeBtn) {
+    closeBtn.onclick = markSeen;
+  }
+
+  const viewBtn = document.getElementById("viewReviewsBtn");
+  if (viewBtn) {
+    viewBtn.onclick = () => {
+      markSeen();
+      const reviewsSection = document.getElementById("reviewsSection");
+      if (reviewsSection) {
+        reviewsSection.scrollIntoView({ behavior: "smooth" });
+      }
+    };
+  }
+
+  // Show after approximately 5–7 seconds (6000ms)
+  setTimeout(() => {
+    // If hoodies toast is still visible, dismiss it cleanly so they do not overlap
+    const hoodiesToast = document.getElementById("hoodiesToast");
+    if (hoodiesToast && hoodiesToast.classList.contains("visible")) {
+      hoodiesToast.classList.remove("visible");
+    }
+    toast.classList.add("visible");
+  }, 6000);
+}
+
 renderTab("HOODIES");
 initHoodiesToast();
+initReviewsToast();
 
 </script>
 
