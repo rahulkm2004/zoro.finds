@@ -68,6 +68,7 @@ nav {
   justify-content: center;
   gap: 6px;
   padding: 20px 16px 8px;
+  flex-wrap: wrap;
 }
 
 .nav-btn {
@@ -650,97 +651,61 @@ footer {
   color: var(--black);
 }
 
-/* ---------- CUSTOMER REVIEWS FLOATING TOAST ---------- */
-.reviews-toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
-  background: var(--black);
-  color: var(--white);
-  padding: 16px 18px;
-  border-radius: 2px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(253, 252, 250, 0.14);
-  z-index: 46;
-  max-width: 320px;
-  display: flex;
-  align-items: flex-start;
-  gap: 12px;
-  opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.reviews-toast.visible {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-.reviews-toast-content {
-  flex: 1;
-}
-
-.reviews-toast-tag {
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--stone);
-  margin-bottom: 4px;
-  display: block;
-}
-
-.reviews-toast-msg {
-  font-size: 0.82rem;
-  color: var(--white);
-  line-height: 1.35;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-.reviews-toast-btn {
-  background: var(--white);
+/* ---------- HIGHLIGHTED REVIEWS NAVIGATION BUTTON ---------- */
+.nav-btn.nav-btn-reviews {
+  position: relative;
+  border-color: var(--black);
   color: var(--black);
-  border: none;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
+  background: var(--offwhite);
+  font-weight: 600;
   display: inline-flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
+  letter-spacing: 0.12em;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.reviews-toast-btn:hover {
-  opacity: 0.85;
+.nav-btn.nav-btn-reviews .reviews-pulse-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--black);
+  display: inline-block;
+  animation: reviewsPulse 2.4s infinite ease-in-out;
 }
 
-.reviews-toast-btn:focus-visible {
-  outline: 2px solid var(--white);
-  outline-offset: 2px;
+@keyframes reviewsPulse {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(0.85);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
 }
 
-.reviews-toast-close {
-  background: none;
-  border: none;
-  color: var(--stone);
-  font-size: 1rem;
-  line-height: 1;
-  cursor: pointer;
-  padding: 2px 4px;
-  transition: color 0.15s ease;
+.nav-btn.nav-btn-reviews .reviews-arrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  transition: transform 0.2s ease;
 }
 
-.reviews-toast-close:hover {
+.nav-btn.nav-btn-reviews:hover {
+  background: var(--black);
   color: var(--white);
+  border-color: var(--black);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
 }
 
-.reviews-toast-close:focus-visible {
-  outline: 2px solid var(--white);
+.nav-btn.nav-btn-reviews:hover .reviews-pulse-dot {
+  background: var(--white);
+}
+
+.nav-btn.nav-btn-reviews:hover .reviews-arrow {
+  transform: translate(2px, -2px);
 }
 
 @media (max-width: 620px) {
@@ -754,12 +719,8 @@ footer {
     grid-template-columns: 1fr;
     gap: 14px;
   }
-  .reviews-toast {
-    left: 14px;
-    right: 14px;
-    bottom: 18px;
-    max-width: calc(100% - 28px);
-    padding: 14px 16px;
+  .nav-btn.nav-btn-reviews {
+    gap: 4px;
   }
 }
 </style>
@@ -820,15 +781,6 @@ footer {
 </section>
 
 <footer>@zoro.finds · Curated, never repeated.</footer>
-
-<div class="reviews-toast" id="reviewsToast" role="region" aria-label="Customer Reviews Announcement">
-  <div class="reviews-toast-content">
-    <div class="reviews-toast-tag mono">YOU FOUND IT. THEY WORE IT.</div>
-    <div class="reviews-toast-msg">See the finds IRL.</div>
-    <button type="button" class="reviews-toast-btn mono" id="viewReviewsBtn">VIEW REVIEWS →</button>
-  </div>
-  <button type="button" class="reviews-toast-close" id="closeReviewsToast" aria-label="Close notification">✕</button>
-</div>
 
 <div class="hoodies-toast" id="hoodiesToast" role="region" aria-label="New Hoodies Announcement">
   <div class="hoodies-toast-content">
@@ -1524,6 +1476,19 @@ function renderNav(activeTab) {
     };
     navEl.appendChild(btn);
   });
+
+  const reviewsBtn = document.createElement("button");
+  reviewsBtn.type = "button";
+  reviewsBtn.className = "nav-btn nav-btn-reviews";
+  reviewsBtn.setAttribute("aria-label", "Customer Reviews and Real Finds");
+  reviewsBtn.innerHTML = `<span class="reviews-pulse-dot" aria-hidden="true"></span>REVIEWS <span class="reviews-arrow" aria-hidden="true">↗</span>`;
+  reviewsBtn.onclick = () => {
+    const section = document.getElementById("reviewsSection");
+    if (section) {
+      section.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+  navEl.appendChild(reviewsBtn);
 }
 
 function renderTab(tab) {
@@ -1898,61 +1863,8 @@ function initHoodiesToast() {
   }, 1000);
 }
 
-/* =========================================================================
-   SECTION 9 — CUSTOMER REVIEWS TOAST (ONE-TIME)
-========================================================================= */
-const REVIEWS_TOAST_STORAGE_KEY = "zoroFindsReviewsNoticeSeen";
-
-function initReviewsToast() {
-  let seen = false;
-  try {
-    seen = localStorage.getItem(REVIEWS_TOAST_STORAGE_KEY) === "true";
-  } catch (e) {
-    seen = false;
-  }
-
-  if (seen) return;
-
-  const toast = document.getElementById("reviewsToast");
-  if (!toast) return;
-
-  const markSeen = () => {
-    try {
-      localStorage.setItem(REVIEWS_TOAST_STORAGE_KEY, "true");
-    } catch (e) {}
-    toast.classList.remove("visible");
-  };
-
-  const closeBtn = document.getElementById("closeReviewsToast");
-  if (closeBtn) {
-    closeBtn.onclick = markSeen;
-  }
-
-  const viewBtn = document.getElementById("viewReviewsBtn");
-  if (viewBtn) {
-    viewBtn.onclick = () => {
-      markSeen();
-      const reviewsSection = document.getElementById("reviewsSection");
-      if (reviewsSection) {
-        reviewsSection.scrollIntoView({ behavior: "smooth" });
-      }
-    };
-  }
-
-  // Show after approximately 5–7 seconds (6000ms)
-  setTimeout(() => {
-    // If hoodies toast is still visible, dismiss it cleanly so they do not overlap
-    const hoodiesToast = document.getElementById("hoodiesToast");
-    if (hoodiesToast && hoodiesToast.classList.contains("visible")) {
-      hoodiesToast.classList.remove("visible");
-    }
-    toast.classList.add("visible");
-  }, 6000);
-}
-
 renderTab("HOODIES");
 initHoodiesToast();
-initReviewsToast();
 
 </script>
 
