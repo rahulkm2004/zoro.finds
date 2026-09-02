@@ -1245,7 +1245,7 @@ const HOODIES = [
       "images/h2-6.jpg"
     ],
     sizes: ["M", "L"], displaySize: "M/L", size: "M/L", measurements: { chest: "42\"", length: "25\"" }, condition: "10/10",
-    description: "Vintage Dickies workwear pullover hoodie in bold red with contrast heather grey hood. Features embroidered Dickies script logo on the chest, woven Dickies label at the hem, kangaroo front pocket, and ribbed cuffs & hem. Solid vintage character. Authentic Pre-owned Hoodie.", status: "available" },
+    description: "Vintage Dickies workwear pullover hoodie in bold red with contrast heather grey hood. Features embroidered Dickies script logo on the chest, woven Dickies label at the hem, kangaroo front pocket, and ribbed cuffs & hem. Solid vintage character. Authentic Pre-owned Hoodie.", status: "sold" },
 
   { id: "ZH-003", name: "Vintage Nike Script Pullover Hoodie — Deep Plum", price: "₹999",
     images: [
@@ -1334,7 +1334,7 @@ const HOODIES = [
       "images/h9-5.jpg"
     ],
     sizes: ["M", "L"], displaySize: "M/L", size: "M/L", measurements: { chest: "42\"", length: "25\"" }, condition: "10/10",
-    description: "Vintage GAP full zip-up hoodie in washed heather grey. Features the iconic felted GAP arch logo appliqué across the chest in navy, full front YKK metal zipper, drawstring hood, kangaroo hand pockets, and ribbed cuffs & hem. Classic American staple with authentic vintage wear. Authentic Pre-owned Hoodie.", status: "available" },
+    description: "Vintage GAP full zip-up hoodie in washed heather grey. Features the iconic felted GAP arch logo appliqué across the chest in navy, full front YKK metal zipper, drawstring hood, kangaroo hand pockets, and ribbed cuffs & hem. Classic American staple with authentic vintage wear. Authentic Pre-owned Hoodie.", status: "sold" },
 
   { id: "ZH-010", name: "Vintage GAP Arch Logo Zip-Up Hoodie — Royal Blue & Gold", price: "₹1,299",
     images: [
@@ -1358,7 +1358,7 @@ const HOODIES = [
       "images/h11-7.jpg"
     ],
     sizes: ["M", "L"], displaySize: "M/L", size: "M/L", measurements: { chest: "44\"", length: "26.5\"" }, condition: "10/10",
-    description: "Vintage Nautica quarter-zip pullover sweatshirt in deep black. Features large embroidered navy and white arched 'NAUTICA' collegiate logo across the chest, high ribbed stand collar with quarter-zip closure, woven Nautica hem tag, and ribbed cuffs & hem. Bold preppy aesthetic with a premium nautical feel. Authentic Pre-owned Sweatshirt.", status: "available" },
+    description: "Vintage Nautica quarter-zip pullover sweatshirt in deep black. Features large embroidered navy and white arched 'NAUTICA' collegiate logo across the chest, high ribbed stand collar with quarter-zip closure, woven Nautica hem tag, and ribbed cuffs & hem. Bold preppy aesthetic with a premium nautical feel. Authentic Pre-owned Sweatshirt.", status: "sold" },
 
   { id: "ZH-012", name: "Vintage Champion Script Pullover Hoodie — Heather Grey", price: "₹1,299",
     images: [
@@ -1446,7 +1446,7 @@ function parsePrice(priceStr) {
 function getTabBaseItems(tab) {
   if (tab === "JACKETS") return PRODUCTS.filter(p => p.status === "available");
   if (tab === "HOODIES") return HOODIES.filter(p => p.status === "available");
-  if (tab === "ARCHIVE") return PRODUCTS.filter(p => p.status === "sold" && p.id !== "ZF-030");
+  if (tab === "ARCHIVE") return [...PRODUCTS, ...HOODIES].filter(p => p.status === "sold" && p.id !== "ZF-030");
   return [];
 }
 
@@ -1571,7 +1571,7 @@ function renderCatalogueView(items) {
       <div class="card-img-wrap">
         <img src="${imgs[0]}" alt="${escapeHtml(p.name)}" loading="${i < 4 ? 'eager' : 'lazy'}">
         <div class="card-id mono">${escapeHtml(p.id)}</div>
-        ${isSold ? '<div class="sold-tag">Sold</div>' : ''}
+        ${isSold ? '<div class="sold-tag">Sold Out</div>' : ''}
       </div>
       <div class="card-info">
         <div class="card-name">${escapeHtml(p.name)}</div>
@@ -1691,7 +1691,7 @@ function openModal(p) {
       <div class="modal-specs">${specs.join("")}</div>
       <div class="modal-desc">${escapeHtml(p.description)}</div>
       ${isSold
-        ? `<div class="modal-sold-note">This piece has been claimed</div>`
+        ? `<div class="modal-sold-note">Sold Out · This piece has been claimed</div>`
         : `<div class="scarcity-note">One piece only · First confirmed order gets it</div>
            <div class="buy-row">
               <a class="buy-btn wa" href="${waLink(p)}" target="_blank" rel="noopener noreferrer">Buy on WhatsApp</a>
