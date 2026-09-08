@@ -177,12 +177,12 @@ function confirmOrderAndMarkSoldOut(orderData) {
     const insertOrderStmt = db.prepare(`
       INSERT INTO orders (
         id, order_number, customer_name, customer_phone, customer_email,
-        shipping_address, city, state, pincode, products, total_amount,
+        shipping_address, city, state, pincode, products, shipping_charge, total_amount,
         payment_method, payment_status, order_status, razorpay_order_id,
         razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
       ) VALUES (
         ?, ?, ?, ?, ?,
-        ?, ?, ?, ?, ?, ?,
+        ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?,
         ?, ?, ?, ?, ?
       )
@@ -199,6 +199,7 @@ function confirmOrderAndMarkSoldOut(orderData) {
       orderData.state || orderData.customer?.state || '',
       orderData.pincode || orderData.customer?.pincode || '',
       typeof orderData.products === 'string' ? orderData.products : JSON.stringify(orderData.products || []),
+      typeof orderData.shipping_charge === 'number' ? orderData.shipping_charge : (orderData.payment_method === 'COD' ? 100 : 0),
       orderData.total_amount || 0,
       orderData.payment_method || 'ONLINE',
       orderData.payment_status || 'PAID',

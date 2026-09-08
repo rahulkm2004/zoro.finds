@@ -148,8 +148,8 @@ export default {
           }
         }
 
-        // Calculate total amount securely
-        let calculatedTotalRupees = 0;
+        // Calculate subtotal amount securely
+        let calculatedSubtotalRupees = 0;
         for (const item of items) {
           let price = 0;
           if (env.DB) {
@@ -171,17 +171,20 @@ export default {
             return jsonResponse({ error: 'Invalid price for item: ' + (item.id || 'Unknown') }, 400);
           }
 
-          calculatedTotalRupees += price;
+          calculatedSubtotalRupees += price;
         }
 
         const paymentMethod = data.payment_method === 'cod' ? 'cod' : 'online';
+        const shippingChargeRupees = (paymentMethod === 'cod') ? 100 : 0;
+        const calculatedTotalRupees = calculatedSubtotalRupees + shippingChargeRupees;
+
         let chargeRupees = calculatedTotalRupees;
         let advanceAmountRupees = calculatedTotalRupees;
         let remainingAmountRupees = 0;
 
         if (paymentMethod === 'cod') {
-          if (calculatedTotalRupees < 200) {
-            return jsonResponse({ error: 'Minimum order total for Cash on Delivery is ₹200' }, 400);
+          if (calculatedSubtotalRupees < 200) {
+            return jsonResponse({ error: 'Minimum order subtotal for Cash on Delivery is ₹200' }, 400);
           }
           chargeRupees = 200; // ₹200 mandatory advance
           advanceAmountRupees = 200;
@@ -211,6 +214,8 @@ export default {
             receipt: receiptId,
             notes: {
               payment_method: paymentMethod,
+              product_subtotal: '₹' + calculatedSubtotalRupees,
+              shipping_charge: '₹' + shippingChargeRupees + (paymentMethod === 'cod' ? ' (COD Fee)' : ' (FREE)'),
               total_order_amount: '₹' + calculatedTotalRupees,
               advance_paid_amount: '₹' + advanceAmountRupees,
               remaining_cod_amount: '₹' + remainingAmountRupees,
@@ -234,6 +239,8 @@ export default {
           key_id: key_id,
           receipt: rzpOrder.receipt,
           payment_method: paymentMethod,
+          subtotal_amount: calculatedSubtotalRupees,
+          shipping_charge: shippingChargeRupees,
           total_amount: calculatedTotalRupees,
           advance_amount: advanceAmountRupees,
           remaining_amount: remainingAmountRupees
@@ -276,7 +283,30 @@ export default {
         const customer = data.customer || {};
         const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
         const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
-        const totalAmount = typeof data.total_amount === 'number' ? data.total_amount : 0;
+
+        // Calculate subtotal & shipping securely on backend
+        let subtotalAmount = 0;
+        for (const item of items) {
+          let price = 0;
+          if (env.DB) {
+            const product = await env.DB.prepare('SELECT numeric_price FROM products WHERE id = ?')
+              .bind(item.id)
+              .first();
+            if (product && typeof product.numeric_price === 'number') {
+              price = product.numeric_price;
+            }
+          }
+          if (!price && typeof item.price === 'number' && item.price > 0) {
+            price = item.price;
+          } else if (!price && typeof item.price === 'string') {
+            const parsed = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+            if (!isNaN(parsed) && parsed > 0) price = parsed;
+          }
+          subtotalAmount += price;
+        }
+
+        const shippingCharge = paymentMethod === 'COD' ? 100 : 0;
+        const totalAmount = subtotalAmount + shippingCharge;
         const advanceAmount = paymentMethod === 'COD' ? 200 : totalAmount;
         const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 200) : 0;
         const now = new Date().toISOString();
@@ -313,10 +343,10 @@ export default {
             env.DB.prepare(`
               INSERT INTO orders (
                 id, order_number, customer_name, customer_phone, customer_email,
-                shipping_address, city, state, pincode, products, total_amount,
+                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
                 payment_method, payment_status, order_status, razorpay_order_id,
                 razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `).bind(
               orderId,
               orderNumber,
@@ -328,6 +358,7 @@ export default {
               customer.state || '',
               customer.pincode || '',
               JSON.stringify(items),
+              shippingCharge,
               totalAmount,
               paymentMethod,
               paymentStatus,
@@ -353,6 +384,8 @@ export default {
           payment_id: razorpay_payment_id,
           payment_method: paymentMethod,
           payment_status: paymentStatus,
+          subtotal_amount: subtotalAmount,
+          shipping_charge: shippingCharge,
           total_amount: totalAmount,
           advance_amount: advanceAmount,
           remaining_amount: remainingAmount

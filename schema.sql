@@ -37,6 +37,7 @@ CREATE TABLE IF NOT EXISTS orders (
   state TEXT NOT NULL,
   pincode TEXT NOT NULL,
   products TEXT NOT NULL,      -- JSON Array of purchased product line items
+  shipping_charge REAL DEFAULT 0,
   total_amount REAL NOT NULL,
   payment_method TEXT NOT NULL CHECK(payment_method IN ('ONLINE', 'COD')),
   payment_status TEXT NOT NULL CHECK(payment_status IN ('PENDING', 'PAID', 'ADVANCE_PAID', 'FAILED')),

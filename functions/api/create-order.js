@@ -67,17 +67,20 @@ export async function onRequestPost(context) {
         });
       }
 
-      calculatedTotalRupees += price;
+      calculatedSubtotalRupees += price;
     }
 
     const paymentMethod = data.payment_method === 'cod' ? 'cod' : 'online';
+    const shippingChargeRupees = (paymentMethod === 'cod') ? 100 : 0;
+    const calculatedTotalRupees = calculatedSubtotalRupees + shippingChargeRupees;
+
     let chargeRupees = calculatedTotalRupees;
     let advanceAmountRupees = calculatedTotalRupees;
     let remainingAmountRupees = 0;
 
     if (paymentMethod === 'cod') {
-      if (calculatedTotalRupees < 200) {
-        return new Response(JSON.stringify({ error: 'Minimum order total for Cash on Delivery is ₹200' }), {
+      if (calculatedSubtotalRupees < 200) {
+        return new Response(JSON.stringify({ error: 'Minimum order subtotal for Cash on Delivery is ₹200' }), {
           status: 400,
           headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
         });
@@ -113,6 +116,8 @@ export async function onRequestPost(context) {
         receipt: receiptId,
         notes: {
           payment_method: paymentMethod,
+          product_subtotal: '₹' + calculatedSubtotalRupees,
+          shipping_charge: '₹' + shippingChargeRupees + (paymentMethod === 'cod' ? ' (COD Fee)' : ' (FREE)'),
           total_order_amount: '₹' + calculatedTotalRupees,
           advance_paid_amount: '₹' + advanceAmountRupees,
           remaining_cod_amount: '₹' + remainingAmountRupees,
@@ -139,6 +144,8 @@ export async function onRequestPost(context) {
       key_id: key_id,
       receipt: rzpOrder.receipt,
       payment_method: paymentMethod,
+      subtotal_amount: calculatedSubtotalRupees,
+      shipping_charge: shippingChargeRupees,
       total_amount: calculatedTotalRupees,
       advance_amount: advanceAmountRupees,
       remaining_amount: remainingAmountRupees

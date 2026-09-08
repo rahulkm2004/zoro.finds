@@ -56,7 +56,30 @@ export async function onRequestPost(context) {
     const customer = data.customer || {};
     const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
     const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
-    const totalAmount = typeof data.total_amount === 'number' ? data.total_amount : 0;
+
+    // Calculate subtotal & shipping securely on backend
+    let subtotalAmount = 0;
+    for (const item of items) {
+      let price = 0;
+      if (env.DB) {
+        const product = await env.DB.prepare('SELECT numeric_price FROM products WHERE id = ?')
+          .bind(item.id)
+          .first();
+        if (product && typeof product.numeric_price === 'number') {
+          price = product.numeric_price;
+        }
+      }
+      if (!price && typeof item.price === 'number' && item.price > 0) {
+        price = item.price;
+      } else if (!price && typeof item.price === 'string') {
+        const parsed = parseFloat(item.price.replace(/[^0-9.]/g, ''));
+        if (!isNaN(parsed) && parsed > 0) price = parsed;
+      }
+      subtotalAmount += price;
+    }
+
+    const shippingCharge = paymentMethod === 'COD' ? 100 : 0;
+    const totalAmount = subtotalAmount + shippingCharge;
     const advanceAmount = paymentMethod === 'COD' ? 200 : totalAmount;
     const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 200) : 0;
     const now = new Date().toISOString();
@@ -96,10 +119,10 @@ export async function onRequestPost(context) {
         env.DB.prepare(`
           INSERT INTO orders (
             id, order_number, customer_name, customer_phone, customer_email,
-            shipping_address, city, state, pincode, products, total_amount,
+            shipping_address, city, state, pincode, products, shipping_charge, total_amount,
             payment_method, payment_status, order_status, razorpay_order_id,
             razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `).bind(
           orderId,
           orderNumber,
@@ -111,6 +134,7 @@ export async function onRequestPost(context) {
           customer.state || '',
           customer.pincode || '',
           JSON.stringify(items),
+          shippingCharge,
           totalAmount,
           paymentMethod,
           paymentStatus,
@@ -136,6 +160,8 @@ export async function onRequestPost(context) {
       payment_id: razorpay_payment_id,
       payment_method: paymentMethod,
       payment_status: paymentStatus,
+      subtotal_amount: subtotalAmount,
+      shipping_charge: shippingCharge,
       total_amount: totalAmount,
       advance_amount: advanceAmount,
       remaining_amount: remainingAmount
