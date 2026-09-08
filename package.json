@@ -4,8 +4,9 @@
   "description": "A curated vintage jacket catalogue built as a single-page static website. Browse one-of-one vintage pieces, view detailed slides, measurements, and condition notes, and purchase directly via WhatsApp or Instagram.",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('dist')) fs.mkdirSync('dist'); fs.copyFileSync('index.html', 'dist/index.html'); if(fs.existsSync('CNAME')) fs.copyFileSync('CNAME', 'dist/CNAME'); if(fs.existsSync('_worker.js')) fs.copyFileSync('_worker.js', 'dist/_worker.js'); console.log('✓ Build complete');\"",
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
