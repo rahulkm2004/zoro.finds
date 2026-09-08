@@ -18,6 +18,6 @@
     }
   ],
   "vars": {
-    "RAZORPAY_KEY_ID": "rzp_test_TZbI6Firui4Ixz"
+    "RAZORPAY_KEY_ID": "rzp_live_TZeomLzCKdjOSc"
   }
 }
