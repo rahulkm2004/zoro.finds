@@ -3,621 +3,2042 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZORO FINDS — One-of-One Vintage</title>
+<title>ZORO.FINDS — Curated Vintage & 1-of-1 Thrift Archive</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700&family=Inter:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
 /* =========================================================================
-   SECTION 3 — GLOBAL STYLES
+   DESIGN SYSTEM & CSS TOKENS (INSPIRED BY THRFT / HIGH-END FASHION ARCHIVE)
 ========================================================================= */
 :root {
-  --black: #141313;
-  --white: #fdfcfa;
-  --offwhite: #f1efea;
-  --stone: #b9b3a8;
-  --stone-dark: #6b665c;
-  --line: #dad5cb;
+  --black: #080808;
+  --dark-surface: #121212;
+  --dark-card: #181818;
+  --white: #ffffff;
+  --offwhite: #f7f6f2;
+  --bone: #ece8e1;
+  --stone-light: #dcd7ce;
+  --stone: #a9a296;
+  --stone-dark: #5c574e;
+  --line: #e2ddd3;
+  --line-dark: #262626;
+  --accent-gold: #c89d55;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background: var(--white);
   color: var(--black);
-  font-family: 'Inter', sans-serif;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
-.mono { font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.04em; }
+.mono {
+  font-family: 'IBM Plex Mono', monospace;
+  letter-spacing: 0.04em;
+}
 
-/* ---------- HEADER ---------- */
-header {
-  padding: 48px 24px 28px;
-  text-align: center;
+/* ---------- MARQUEE ANNOUNCEMENT BAR ---------- */
+.announcement-bar {
+  background: var(--black);
+  color: var(--white);
+  padding: 8px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.marquee-track {
+  display: inline-flex;
+  animation: marqueeScroll 28s linear infinite;
+  gap: 36px;
+}
+
+.marquee-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 16px;
+  flex-shrink: 0;
+}
+
+.marquee-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  background: var(--accent-gold);
+  border-radius: 50%;
+}
+
+@keyframes marqueeScroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+/* ---------- SITE HEADER (CLEAN & EDITORIAL) ---------- */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 90;
+  background: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
+  transition: all 0.25s ease;
 }
 
-.brand {
+.header-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 1;
+}
+
+.sidebar-toggle-btn {
+  background: none;
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.sidebar-toggle-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.hamburger-lines {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 14px;
+}
+
+.hamburger-lines span {
+  display: block;
+  height: 1.5px;
+  background: currentColor;
+  border-radius: 1px;
+}
+
+.header-center {
+  flex-shrink: 0;
+  text-align: center;
+}
+
+.brand-link {
+  text-decoration: none;
+  color: var(--black);
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+}
+
+.brand-logo-text {
   font-family: 'Big Shoulders Display', sans-serif;
-  font-weight: 700;
-  font-size: clamp(2.6rem, 10vw, 4.4rem);
-  letter-spacing: 0.03em;
+  font-size: 2.1rem;
+  font-weight: 900;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
   line-height: 0.95;
 }
 
-.tagline {
-  margin-top: 12px;
-  font-size: 0.72rem;
+.brand-sub-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.58rem;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--stone-dark);
+  margin-top: 2px;
 }
 
-.subline {
-  margin-top: 6px;
-  font-size: 0.7rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--stone);
-}
-
-/* ---------- NAV ---------- */
-nav {
+.header-right {
   display: flex;
-  justify-content: center;
-  gap: 6px;
-  padding: 20px 16px 8px;
-  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
-.nav-btn {
+.nav-quick-btn {
+  background: none;
+  border: none;
   font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
+  color: var(--stone-dark);
+  cursor: pointer;
+  padding: 6px 10px;
+  transition: color 0.15s ease;
+}
+
+.nav-quick-btn:hover, .nav-quick-btn.active {
+  color: var(--black);
+}
+
+.nav-reviews-btn {
   background: none;
   border: 1px solid var(--line);
-  padding: 8px 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  color: var(--black);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 2px;
+  transition: all 0.2s ease;
+}
+
+.nav-reviews-btn:hover {
+  background: var(--offwhite);
+  border-color: var(--black);
+}
+
+.pulse-dot {
+  width: 6px;
+  height: 6px;
+  background: #25D366;
+  border-radius: 50%;
+  animation: pulseAnimation 2s infinite;
+}
+
+@keyframes pulseAnimation {
+  0% { transform: scale(0.95); opacity: 0.8; }
+  50% { transform: scale(1.3); opacity: 1; }
+  100% { transform: scale(0.95); opacity: 0.8; }
+}
+
+.nav-cart-btn {
+  background: var(--black);
+  color: var(--white);
+  border: 1px solid var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.nav-cart-btn:hover {
+  background: #2b2b2b;
+}
+
+.cart-counter-pill {
+  background: var(--white);
+  color: var(--black);
+  font-size: 0.65rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+/* ---------- SIDEBAR NAVIGATION (DRAWER) ---------- */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.65);
+  backdrop-filter: blur(6px);
+  z-index: 150;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.sidebar-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.site-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 380px;
+  background: var(--white);
+  z-index: 151;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(-100%);
+  transition: transform 0.38s var(--ease-out);
+  box-shadow: 12px 0 40px rgba(0, 0, 0, 0.15);
+  border-right: 1px solid var(--line);
+}
+
+.sidebar-backdrop.open .site-sidebar {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  padding: 24px 28px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sidebar-brand-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.sidebar-close-btn {
+  background: none;
+  border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
   cursor: pointer;
   color: var(--stone-dark);
+  padding: 6px 12px;
+  border-radius: 2px;
   transition: all 0.15s ease;
 }
 
-.nav-btn.active { background: var(--black); border-color: var(--black); color: var(--white); }
-.nav-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
+.sidebar-close-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
 
-/* ---------- CATALOGUE TOOLBAR ---------- */
-.catalogue-toolbar {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 14px 20px 8px;
+.sidebar-body {
+  padding: 28px;
+  flex: 1;
+  overflow-y: auto;
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
+}
+
+.sidebar-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-nav-btn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid var(--line);
+  padding: 14px 18px;
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--black);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 2px;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.sidebar-nav-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+  transform: translateX(4px);
+}
+
+.sidebar-nav-btn.featured {
+  background: var(--offwhite);
+  border-color: var(--stone);
+}
+
+.sidebar-nav-btn.featured:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.sidebar-nav-badge {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  padding: 4px 8px;
+  border: 1px solid currentColor;
+  border-radius: 2px;
+  font-weight: 500;
+}
+
+.sidebar-footer {
+  border-top: 1px solid var(--line);
+  padding-top: 24px;
+  margin-top: 24px;
+  font-size: 0.72rem;
+  color: var(--stone-dark);
+  line-height: 1.6;
+}
+
+.sidebar-social-links {
+  display: flex;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.sidebar-social-link {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--black);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* =========================================================================
+   HERO VIDEO & BRAND MONOLITH SECTION
+========================================================================= */
+.editorial-hero-wrapper {
+  position: relative;
+  width: 100%;
+  background: var(--black);
+  color: var(--white);
+  overflow: hidden;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.hero-video-container {
+  position: relative;
+  width: 100%;
+  height: clamp(480px, 75vh, 760px);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.hero-video-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 30%;
+  opacity: 0.85;
+  filter: contrast(1.06) brightness(0.92);
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(8,8,8,0.2) 0%, rgba(8,8,8,0.45) 50%, rgba(8,8,8,0.88) 100%);
+  pointer-events: none;
+}
+
+.hero-content-box {
+  position: relative;
+  z-index: 10;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 40px 32px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.hero-tag-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(12px);
+  padding: 6px 14px;
+  border-radius: 2px;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  width: fit-content;
+}
+
+.hero-main-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: clamp(3.2rem, 8.5vw, 6.8rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.92;
+  margin-bottom: 16px;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+.hero-subtitle {
+  font-size: clamp(0.85rem, 1.4vw, 1.05rem);
+  color: var(--bone);
+  max-width: 620px;
+  line-height: 1.5;
+  margin-bottom: 28px;
+}
+
+.hero-actions-row {
+  display: flex;
   align-items: center;
   gap: 16px;
   flex-wrap: wrap;
 }
 
+.hero-cta-btn {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--white);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 26px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: all 0.25s var(--ease-smooth);
+}
+
+.hero-cta-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--white);
+  transform: translateY(-2px);
+}
+
+.hero-cta-btn.secondary {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.hero-cta-btn.secondary:hover {
+  background: var(--white);
+  color: var(--black);
+  border-color: var(--white);
+}
+
+/* =========================================================================
+   LARGE EDITORIAL CATEGORY SHOWCASES (HOODIES & JACKETS)
+========================================================================= */
+.landing-category-showcases {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 64px 28px 48px;
+}
+
+.section-editorial-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 16px;
+  margin-bottom: 36px;
+}
+
+.section-editorial-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  font-weight: 900;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  line-height: 1;
+}
+
+.section-editorial-sub {
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--stone-dark);
+  text-transform: uppercase;
+}
+
+.category-duo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 64px;
+}
+
+.category-large-card {
+  position: relative;
+  background: var(--offwhite);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: all 0.4s var(--ease-out);
+}
+
+.category-large-card:hover {
+  border-color: var(--black);
+  transform: translateY(-6px);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.08);
+}
+
+.category-card-media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16/12;
+  overflow: hidden;
+  background: #000;
+}
+
+.category-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.8s var(--ease-out), filter 0.5s ease;
+  filter: contrast(1.04) brightness(0.98);
+}
+
+.category-large-card:hover .category-card-img {
+  transform: scale(1.05);
+  filter: contrast(1.08) brightness(1.02);
+}
+
+.category-card-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.05) 0%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+}
+
+.category-card-tag {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  background: rgba(8, 8, 8, 0.9);
+  backdrop-filter: blur(8px);
+  color: var(--white);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.category-card-count {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  color: var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.category-card-body {
+  padding: 28px 26px 24px;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+}
+
+.category-num-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.16em;
+  color: var(--stone);
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.category-name-heading {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: clamp(2.4rem, 4.5vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  line-height: 0.95;
+  margin-bottom: 12px;
+  color: var(--black);
+}
+
+.category-desc-text {
+  font-size: 0.88rem;
+  color: var(--stone-dark);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.category-footer-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+  padding-top: 18px;
+  margin-top: auto;
+}
+
+.category-starting-price {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--stone-dark);
+}
+
+.category-action-button {
+  background: var(--black);
+  color: var(--white);
+  border: 1px solid var(--black);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 12px 22px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
+  transition: all 0.2s ease;
+}
+
+.category-large-card:hover .category-action-button {
+  background: #282828;
+}
+
+.category-action-button .btn-arrow {
+  transition: transform 0.25s var(--ease-out);
+}
+
+.category-large-card:hover .category-action-button .btn-arrow {
+  transform: translateX(5px);
+}
+
+/* ---------- BRAND PILLARS / MANIFESTO ---------- */
+.brand-pillars-bar {
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  padding: 44px 0;
+  margin-bottom: 64px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.pillar-item {
+  padding: 0 16px;
+}
+
+.pillar-index {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.18em;
+  color: var(--stone);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.pillar-heading {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.pillar-text {
+  font-size: 0.82rem;
+  color: var(--stone-dark);
+  line-height: 1.55;
+}
+
+/* ---------- CATALOGUE VIEW & FILTER TOOLBAR ---------- */
+.catalogue-breadcrumb-bar {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 28px 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px;
+}
+
+.back-to-home-btn {
+  background: none;
+  border: 1px solid var(--line);
+  padding: 8px 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border-radius: 2px;
+}
+
+.back-to-home-btn:hover {
+  border-color: var(--black);
+  color: var(--black);
+  background: var(--offwhite);
+}
+
+.catalogue-active-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 2.2rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.catalogue-toolbar {
+  max-width: 1440px;
+  margin: 0 auto 32px;
+  padding: 14px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  background: var(--offwhite);
+}
+
 .toolbar-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .toolbar-label {
-  font-size: 0.64rem;
-  letter-spacing: 0.14em;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--stone-dark);
-  white-space: nowrap;
 }
 
 .toolbar-pills {
   display: flex;
-  align-items: center;
-  gap: 4px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .toolbar-btn {
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  background: none;
+  background: var(--white);
   border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   padding: 6px 12px;
   cursor: pointer;
-  color: var(--stone-dark);
+  color: var(--black);
   transition: all 0.15s ease;
-  line-height: 1.2;
-  white-space: nowrap;
+  border-radius: 2px;
 }
 
 .toolbar-btn:hover {
-  color: var(--black);
-  border-color: var(--stone);
+  border-color: var(--black);
 }
 
 .toolbar-btn.active {
   background: var(--black);
-  border-color: var(--black);
   color: var(--white);
+  border-color: var(--black);
 }
 
-.toolbar-btn:focus-visible {
-  outline: 2px solid var(--black);
-  outline-offset: 2px;
-}
-
-.sort-prefix {
-  display: inline;
-}
-
-/* ---------- GRID ---------- */
+/* ---------- PRODUCT GRID & CARDS ---------- */
 .grid {
-  max-width: 1240px;
-  margin: 0 auto;
-  padding: 24px 20px 100px;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 2px;
-  background: var(--line);
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 28px;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 28px 80px;
+}
+
+.card {
+  position: relative;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s var(--ease-out), box-shadow 0.25s ease, border-color 0.2s ease;
+  text-align: left;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  border-color: var(--black);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.08);
+}
+
+.card.is-sold {
+  opacity: 0.72;
+}
+
+.card-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  background: var(--offwhite);
+  overflow: hidden;
+}
+
+.card-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s var(--ease-out);
+}
+
+.card:hover .card-img-wrap img {
+  transform: scale(1.05);
+}
+
+.card-id {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background: rgba(8, 8, 8, 0.88);
+  backdrop-filter: blur(6px);
+  color: var(--white);
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  padding: 4px 8px;
+  border-radius: 2px;
+}
+
+.sold-tag {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: var(--black);
+  color: var(--white);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  border-radius: 2px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.card-info {
+  padding: 18px 16px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  justify-content: space-between;
+  border-top: 1px solid var(--line);
+}
+
+.card-name {
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.35;
+  margin-bottom: 12px;
+  color: var(--black);
+}
+
+.card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: var(--stone-dark);
+  border-top: 1px dashed var(--line);
+  padding-top: 10px;
+}
+
+.card-price-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.price-orig {
+  text-decoration: line-through;
+  color: var(--stone);
+  font-size: 0.7rem;
+}
+
+.price-sale {
+  color: var(--black);
+  font-weight: 700;
 }
 
 .empty-state {
   grid-column: 1 / -1;
-  background: var(--white);
   text-align: center;
-  padding: 60px 20px;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.8rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  padding: 80px 20px;
   color: var(--stone-dark);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
 }
 
-@media (max-width: 620px) {
-  header { padding: 18px 16px 10px; }
-  .brand { font-size: 1.7rem; }
-  .tagline { font-size: 0.58rem; letter-spacing: 0.16em; margin-top: 6px; }
-  .subline  { font-size: 0.56rem; letter-spacing: 0.13em; margin-top: 4px; }
-  nav { padding: 8px 12px 4px; gap: 4px; }
-  .nav-btn { padding: 5px 12px; font-size: 0.6rem; }
-  .catalogue-toolbar {
-    padding: 10px 8px 6px;
-    gap: 8px;
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .toolbar-section {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    width: 100%;
-  }
-  .toolbar-section.size-section {
-    overflow: hidden;
-  }
-  .toolbar-section.size-section .toolbar-pills {
-    display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    padding-bottom: 2px;
-    gap: 4px;
-  }
-  .toolbar-section.size-section .toolbar-pills::-webkit-scrollbar {
-    display: none;
-  }
-  .toolbar-section.sort-section .toolbar-pills {
-    display: flex;
-    flex: 1;
-    gap: 4px;
-  }
-  .toolbar-section.sort-section .toolbar-btn {
-    flex: 1;
-    text-align: center;
-  }
-  .toolbar-btn {
-    padding: 5px 8px;
-    font-size: 0.58rem;
-    min-height: 30px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .toolbar-label {
-    font-size: 0.56rem;
-    min-width: 34px;
-  }
-  .sort-prefix {
-    display: none;
-  }
-  .grid { grid-template-columns: repeat(2, 1fr); padding: 10px 8px 60px; gap: 1px; }
-  .card-img-wrap { aspect-ratio: 1 / 1; }
-  .card-info { padding: 6px 3px 14px; }
-  .card-name { font-size: 0.7rem; }
-  .card-meta { font-size: 0.58rem; margin-top: 3px; }
-  .card-id { font-size: 0.5rem; padding: 2px 5px; }
-  .sold-tag { font-size: 0.48rem; padding: 3px 6px; }
-}
-
-/* ---------- CARD ---------- */
-.card {
-  background: var(--white);
-  cursor: pointer;
-  position: relative;
+/* ---------- PRODUCT MODAL / QUICK VIEW ---------- */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.75);
+  backdrop-filter: blur(8px);
+  z-index: 120;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
   opacity: 0;
-  animation: fadeIn 0.5s ease forwards;
-  border: none;
-  text-align: left;
-  width: 100%;
-  padding: 0;
-  font: inherit;
-  color: inherit;
+  visibility: hidden;
+  transition: opacity 0.25s ease, visibility 0.25s ease;
 }
 
-.card:focus-visible { outline: 2px solid var(--black); outline-offset: -2px; }
+.modal-backdrop.open {
+  opacity: 1;
+  visibility: visible;
+}
 
-@keyframes fadeIn { to { opacity: 1; } }
-
-.card-img-wrap {
+.modal {
+  background: var(--white);
+  max-width: 580px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
   position: relative;
-  aspect-ratio: 4 / 5;
-  overflow: hidden;
+  border-radius: 2px;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+  transform: translateY(20px);
+  transition: transform 0.3s var(--ease-out);
+}
+
+.modal-backdrop.open .modal {
+  transform: translateY(0);
+}
+
+.modal-close {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: var(--white);
+  padding: 12px 18px;
+  display: flex;
+  justify-content: flex-end;
+  border-bottom: 1px solid var(--line);
+}
+
+.modal-close button {
+  background: none;
+  border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.modal-close button:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.modal-img {
+  width: 100%;
+  max-height: 480px;
+  object-fit: contain;
+  background: #000;
+  display: block;
+}
+
+.modal-thumbs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 20px;
+  overflow-x: auto;
+  border-bottom: 1px solid var(--line);
   background: var(--offwhite);
 }
 
-.card-img-wrap img {
-  width: 100%; height: 100%;
+.modal-thumbs button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.modal-thumbs img {
+  width: 54px;
+  height: 68px;
   object-fit: cover;
-  display: block;
-  transition: transform 0.4s ease;
+  border: 1px solid var(--line);
+  opacity: 0.6;
+  transition: opacity 0.15s ease, border-color 0.15s ease;
 }
 
-.card:hover .card-img-wrap img { transform: scale(1.03); }
-
-.card-id {
-  position: absolute; top: 10px; left: 10px;
-  font-size: 0.62rem; letter-spacing: 0.1em;
-  background: var(--white); color: var(--black);
-  padding: 3px 7px;
+.modal-thumbs img.active, .modal-thumbs img:hover {
+  opacity: 1;
+  border-color: var(--black);
 }
 
-.sold-tag {
-  position: absolute; top: 10px; right: 10px;
-  font-size: 0.6rem; letter-spacing: 0.14em;
-  text-transform: uppercase;
-  background: var(--black); color: var(--white);
-  padding: 4px 8px;
+.modal-body {
+  padding: 24px 22px;
 }
 
-
-
-.card-info { padding: 12px 4px 30px; }
-
-.card-name {
-  font-family: 'Big Shoulders Display', sans-serif;
-  font-weight: 600; font-size: 1rem;
-  text-transform: uppercase; letter-spacing: 0.01em; line-height: 1.15;
+.modal-id {
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  color: var(--stone-dark);
+  margin-bottom: 4px;
 }
 
-.card-meta {
-  margin-top: 6px; display: flex; justify-content: space-between;
-  font-size: 0.72rem; color: var(--stone-dark);
-}
-
-.card-price-group { display: flex; align-items: baseline; gap: 6px; }
-.price-orig {
-  font-size: 0.65rem; color: var(--stone);
-  text-decoration: line-through; letter-spacing: 0;
-}
-.price-sale { font-size: 0.72rem; color: var(--black); }
-
-/* ---------- INFO PANEL ---------- */
-.info-panel {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 12px 24px 100px;
-}
-
-.info-block { padding: 22px 0; border-bottom: 1px solid var(--line); }
-.info-block:last-child { border-bottom: none; }
-
-.info-heading {
-  font-family: 'Big Shoulders Display', sans-serif;
-  font-weight: 600; font-size: 1rem;
-  text-transform: uppercase; letter-spacing: 0.05em;
-  margin-bottom: 10px;
-}
-
-.info-text { font-size: 0.85rem; line-height: 1.7; color: #3a3733; }
-.info-list { list-style: none; counter-reset: step; }
-.info-list li {
-  font-size: 0.85rem; line-height: 1.8; color: #3a3733;
-  padding-left: 20px; position: relative;
-}
-.info-list li::before {
-  content: counter(step); counter-increment: step;
-  position: absolute; left: 0;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem; color: var(--stone-dark);
-}
-.info-bullets { list-style: none; padding: 0; margin: 0; }
-.info-bullets li {
-  font-size: 0.85rem; line-height: 1.8; color: #3a3733;
-  padding-left: 18px; position: relative;
-}
-.info-bullets li::before {
-  content: "•"; position: absolute; left: 2px;
-  color: var(--stone-dark); font-size: 0.9rem; line-height: 1.7;
-}
-
-.condition-row {
-  display: flex; justify-content: space-between;
-  font-size: 0.82rem; padding: 5px 0;
-}
-.condition-row span:first-child { font-family: 'IBM Plex Mono', monospace; }
-.condition-row span:last-child { color: var(--stone-dark); }
-
-/* ---------- MODAL ---------- */
-.modal-backdrop {
-  display: none; position: fixed; inset: 0;
-  background: rgba(20, 19, 19, 0.6); z-index: 50; padding: 0;
-}
-.modal-backdrop.open { display: flex; align-items: flex-end; justify-content: center; }
-
-.modal {
-  background: var(--white); width: 100%; max-width: 640px;
-  max-height: 92vh; overflow-y: auto; animation: slideUp 0.25s ease;
-}
-
-@media (min-width: 640px) {
-  .modal-backdrop.open { align-items: center; }
-  .modal { max-height: 88vh; }
-}
-
-@keyframes slideUp { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-
-.modal-close {
-  position: sticky; top: 0; display: flex; justify-content: flex-end;
-  padding: 14px 16px 0; background: var(--white); z-index: 2;
-}
-.modal-close button {
-  background: none; border: none;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-  letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
-  color: var(--stone-dark); padding: 6px;
-}
-.modal-close button:focus-visible { outline: 2px solid var(--black); }
-
-.modal-img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; background: var(--offwhite); }
-
-.modal-thumbs { display: flex; gap: 6px; padding: 8px 24px 0; }
-.modal-thumbs button { border: none; background: none; padding: 0; cursor: pointer; }
-.modal-thumbs img { width: 52px; height: 65px; object-fit: cover; opacity: 0.55; display: block; }
-.modal-thumbs img.active { opacity: 1; outline: 1px solid var(--black); }
-
-.modal-body { padding: 22px 24px 32px; }
-.modal-id { font-size: 0.68rem; color: var(--stone-dark); margin-bottom: 8px; }
 .modal-name {
-  font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
-  font-size: 1.7rem; text-transform: uppercase; line-height: 1; margin-bottom: 8px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 8px;
 }
+
 .modal-price {
-  font-family: 'IBM Plex Mono', monospace;
-  display: flex; align-items: baseline; gap: 10px;
+  font-size: 1.15rem;
+  font-weight: 700;
   margin-bottom: 18px;
 }
-.modal-price .price-orig {
-  font-size: 0.8rem; color: var(--stone);
-  text-decoration: line-through;
-}
-.modal-price .price-sale { font-size: 1.1rem; color: var(--black); }
 
 .modal-specs {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 10px 20px;
-  padding: 16px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
-  margin-bottom: 14px;
-}
-.spec-label { font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone); margin-bottom: 3px; }
-.spec-value { font-size: 0.85rem; }
-
-.sizing-note { font-size: 0.7rem; color: var(--stone-dark); line-height: 1.5; margin-bottom: 18px; font-style: italic; }
-
-.modal-desc { font-size: 0.88rem; line-height: 1.65; color: #3a3733; margin-bottom: 16px; }
-
-.scarcity-note {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem;
-  letter-spacing: 0.1em; text-transform: uppercase; color: var(--stone-dark);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  padding: 14px 0;
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
   margin-bottom: 18px;
 }
 
-.buy-row { display: flex; gap: 10px; }
-.buy-btn {
-  flex: 1; text-align: center; padding: 14px 8px;
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem;
-  letter-spacing: 0.08em; text-transform: uppercase; text-decoration: none;
-  border: 1px solid var(--black); cursor: pointer;
-  display: inline-block; box-sizing: border-box;
-  -webkit-appearance: none; appearance: none;
-}
-.buy-btn:focus-visible { outline: 2px solid var(--black); outline-offset: 2px; }
-.buy-btn.wa { background: var(--black); color: var(--white); }
-.buy-btn.ig { background: var(--white); color: var(--black); }
-
-
-.modal-sold-note {
-  font-family: 'IBM Plex Mono', monospace; font-size: 0.75rem;
-  letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone-dark);
-  padding: 14px 0; text-align: center; border: 1px dashed var(--line);
+.spec-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  margin-bottom: 3px;
 }
 
-footer {
-  text-align: center; padding: 28px 16px 50px;
-  font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--stone);
+.spec-value {
+  font-weight: 600;
+  font-size: 0.8rem;
 }
 
-/* ---------- NEW HOODIES TOAST NOTIFICATION ---------- */
-.hoodies-toast {
-  position: fixed;
-  bottom: 24px;
-  right: 24px;
+.modal-size-select-wrap {
+  margin: 16px 0 20px;
+}
+
+.modal-size-label {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  margin-bottom: 8px;
+  display: block;
+}
+
+.modal-size-options {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.modal-size-btn {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  padding: 6px 14px;
+  border: 1px solid var(--line);
+  background: var(--white);
+  cursor: pointer;
+  color: var(--black);
+  transition: all 0.15s ease;
+  border-radius: 2px;
+}
+
+.modal-size-btn:hover {
+  border-color: var(--black);
+}
+
+.modal-size-btn.active {
   background: var(--black);
   color: var(--white);
-  padding: 16px 18px;
-  border-radius: 2px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(253, 252, 250, 0.12);
-  z-index: 45;
-  max-width: 320px;
+  border-color: var(--black);
+}
+
+.modal-desc {
+  font-size: 0.85rem;
+  color: var(--stone-dark);
+  line-height: 1.5;
+  margin-bottom: 24px;
+}
+
+.scarcity-note {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #c67d0a;
+  margin-bottom: 12px;
+}
+
+.buy-row {
   display: flex;
-  align-items: flex-start;
-  gap: 14px;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.buy-btn {
+  flex: 1;
+  padding: 14px 18px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 2px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s var(--ease-smooth);
+}
+
+.buy-btn.add-to-cart-btn {
+  background: var(--white);
+  color: var(--black);
+  border: 1.5px solid var(--black);
+}
+
+.buy-btn.add-to-cart-btn:hover {
+  background: var(--offwhite);
+  border-color: var(--black);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.buy-btn.buy-now-btn {
+  background: var(--black);
+  color: var(--white);
+  border: 1.5px solid var(--black);
+}
+
+.buy-btn.buy-now-btn:hover {
+  background: #252525;
+  border-color: #252525;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+}
+
+.modal-sold-note {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  padding: 14px 0;
+  text-align: center;
+  border: 1px dashed var(--line);
+}
+
+/* ---------- CART DRAWER STYLES ---------- */
+.cart-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 8, 8, 0.65);
+  backdrop-filter: blur(8px);
+  z-index: 140;
   opacity: 0;
-  transform: translateY(20px);
-  pointer-events: none;
-  transition: opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  visibility: hidden;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
-.hoodies-toast.visible {
+.cart-backdrop.open {
   opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
+  visibility: visible;
 }
 
-.hoodies-toast-content {
+.cart-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  max-width: 440px;
+  background: var(--white);
+  z-index: 141;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.38s var(--ease-out);
+  box-shadow: -12px 0 40px rgba(0, 0, 0, 0.18);
+  border-left: 1px solid var(--line);
+}
+
+.cart-backdrop.open .cart-drawer {
+  transform: translateX(0);
+}
+
+.cart-header {
+  padding: 22px 26px;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cart-header-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.cart-close-btn {
+  background: none;
+  border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  cursor: pointer;
+  color: var(--stone-dark);
+  padding: 6px 12px;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.cart-close-btn:hover {
+  background: var(--black);
+  color: var(--white);
+  border-color: var(--black);
+}
+
+.cart-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 26px;
+}
+
+.cart-empty-message {
+  text-align: center;
+  padding: 60px 0;
+  color: var(--stone-dark);
+  font-size: 0.85rem;
+}
+
+.cart-item-card {
+  display: flex;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--line);
+  align-items: center;
+}
+
+.cart-item-img {
+  width: 64px;
+  height: 80px;
+  object-fit: cover;
+  background: var(--offwhite);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.cart-item-info {
   flex: 1;
 }
 
-.hoodies-toast-tag {
-  font-size: 0.62rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--stone);
-  margin-bottom: 4px;
-  display: block;
-}
-
-.hoodies-toast-msg {
+.cart-item-title {
   font-size: 0.82rem;
-  color: var(--white);
+  font-weight: 600;
   line-height: 1.35;
-  font-weight: 500;
-  margin-bottom: 10px;
+  margin-bottom: 4px;
 }
 
-.hoodies-toast-btn {
-  background: var(--white);
-  color: var(--black);
-  border: none;
-  font-family: 'IBM Plex Mono', monospace;
-  font-size: 0.65rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 6px 12px;
-  cursor: pointer;
-  transition: opacity 0.15s ease;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
+.cart-item-meta {
+  font-size: 0.7rem;
+  color: var(--stone-dark);
+  margin-bottom: 6px;
 }
 
-.hoodies-toast-btn:hover {
-  opacity: 0.85;
+.cart-item-price {
+  font-weight: 700;
+  font-size: 0.85rem;
 }
 
-.hoodies-toast-btn:focus-visible {
-  outline: 2px solid var(--white);
-  outline-offset: 2px;
-}
-
-.hoodies-toast-close {
+.cart-item-remove {
   background: none;
   border: none;
-  color: var(--stone);
-  font-size: 1rem;
-  line-height: 1;
+  font-size: 0.65rem;
+  color: var(--stone-dark);
   cursor: pointer;
+  text-decoration: underline;
   padding: 2px 4px;
-  transition: color 0.15s ease;
 }
 
-.hoodies-toast-close:hover {
+.cart-item-remove:hover {
+  color: #c00;
+}
+
+.cart-footer {
+  padding: 20px 26px;
+  border-top: 1px solid var(--line);
+  background: var(--offwhite);
+}
+
+.cart-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  margin-bottom: 8px;
+  color: var(--stone-dark);
+}
+
+.cart-row.total {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--black);
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.cart-checkout-btn {
+  width: 100%;
+  background: var(--black);
   color: var(--white);
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.15s ease;
+  display: block;
+  text-align: center;
+  border-radius: 2px;
 }
 
-.hoodies-toast-close:focus-visible {
-  outline: 2px solid var(--white);
+.cart-checkout-btn:hover {
+  opacity: 0.88;
 }
 
-@media (max-width: 620px) {
-  .hoodies-toast {
-    left: 14px;
-    right: 14px;
-    bottom: 18px;
-    max-width: calc(100% - 28px);
-    padding: 14px 16px;
-  }
+/* ---------- CHECKOUT VIEW STYLES ---------- */
+.checkout-view {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+
+.checkout-header {
+  margin-bottom: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.checkout-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.checkout-back-btn {
+  background: none;
+  border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 16px;
+  cursor: pointer;
+  color: var(--stone-dark);
+  transition: all 0.15s ease;
+  border-radius: 2px;
+}
+
+.checkout-back-btn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+.checkout-grid {
+  display: grid;
+  grid-template-columns: 1.35fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.checkout-form-card, .checkout-summary-card {
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 28px;
+  border-radius: 2px;
+}
+
+.checkout-section-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 10px;
+  margin-bottom: 18px;
+}
+
+.form-row {
+  margin-bottom: 16px;
+}
+
+.form-row.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-label {
+  display: block;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  margin-bottom: 6px;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: var(--offwhite);
+  transition: border-color 0.15s ease;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--black);
+  background: var(--white);
+}
+
+/* Payment Method Selection Styles */
+.payment-methods-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.payment-method-card {
+  border: 1.5px solid var(--line);
+  background: var(--offwhite);
+  padding: 16px 18px;
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  transition: all 0.2s var(--ease-smooth);
+  user-select: none;
+}
+
+.payment-method-card:hover {
+  border-color: #999;
+  background: #fdfdfd;
+}
+
+.payment-method-card.active {
+  border-color: var(--black);
+  background: var(--white);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+.payment-method-radio-wrap {
+  display: flex;
+  align-items: center;
+  margin-top: 3px;
+}
+
+.payment-method-radio-wrap input[type="radio"] {
+  accent-color: var(--black);
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.payment-method-content {
+  flex: 1;
+}
+
+.payment-method-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.payment-method-name {
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.payment-method-tag {
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 2px;
+  background: #eefbf2;
+  color: #15803d;
+  border: 1px solid rgba(21, 128, 61, 0.2);
+}
+
+.payment-method-tag.cod {
+  background: #fff8e6;
+  color: #b45309;
+  border: 1px solid rgba(180, 83, 9, 0.2);
+}
+
+.payment-method-desc {
+  font-size: 0.76rem;
+  color: var(--stone-dark);
+  line-height: 1.4;
+}
+
+/* COD Dynamic Breakdown Box in Order Summary */
+.cod-breakdown-card {
+  background: #fffbf0;
+  border: 1.5px solid #f59e0b;
+  padding: 16px;
+  border-radius: 2px;
+  margin-top: 16px;
+  margin-bottom: 16px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.cod-breakdown-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #92400e;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.cod-breakdown-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.78rem;
+  padding: 6px 0;
+  border-bottom: 1px dashed rgba(245, 158, 11, 0.3);
+  color: #78350f;
+}
+
+.cod-breakdown-row:last-of-type {
+  border-bottom: none;
+}
+
+.cod-breakdown-row.highlight {
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: #92400e;
+}
+
+.cod-breakdown-notice {
+  font-size: 0.72rem;
+  line-height: 1.45;
+  color: #78350f;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.payment-badge-box {
+  background: var(--offwhite);
+  border: 1px dashed var(--stone);
+  padding: 14px;
+  border-radius: 2px;
+  margin-top: 14px;
+}
+
+.payment-badge-title {
+  font-weight: 600;
+  font-size: 0.8rem;
+  margin-bottom: 4px;
+}
+
+.payment-badge-desc {
+  font-size: 0.72rem;
+  color: var(--stone-dark);
+  line-height: 1.4;
+}
+
+.checkout-items-list {
+  max-height: 280px;
+  overflow-y: auto;
+  border-bottom: 1px solid var(--line);
+  margin-bottom: 16px;
+}
+
+.checkout-mini-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px dashed var(--line);
+}
+
+.checkout-mini-item:last-child {
+  border-bottom: none;
+}
+
+.checkout-mini-img {
+  width: 48px;
+  height: 60px;
+  object-fit: cover;
+  background: var(--offwhite);
+  border: 1px solid var(--line);
+  flex-shrink: 0;
+}
+
+.checkout-mini-details {
+  flex: 1;
+}
+
+.checkout-mini-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.checkout-mini-meta {
+  font-size: 0.65rem;
+  color: var(--stone-dark);
+}
+
+.checkout-mini-price {
+  font-weight: 700;
+  font-size: 0.8rem;
+}
+
+.place-order-btn {
+  width: 100%;
+  background: var(--black);
+  color: var(--white);
+  border: none;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 16px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: opacity 0.15s ease;
+  margin-top: 20px;
+  border-radius: 2px;
+}
+
+.place-order-btn:hover {
+  opacity: 0.88;
+}
+
+/* Order Success Screen */
+.order-success-card {
+  max-width: 680px;
+  margin: 40px auto 80px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  padding: 44px 32px;
+  text-align: center;
+  border-radius: 2px;
+}
+
+.order-success-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #141313;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+}
+
+.order-success-title {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-bottom: 8px;
+}
+
+.order-success-num {
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  margin-bottom: 24px;
+}
+
+.order-success-box {
+  background: var(--offwhite);
+  border: 1px solid var(--line);
+  padding: 20px;
+  text-align: left;
+  border-radius: 2px;
+  margin: 20px 0 28px;
+}
+
+.order-success-wa-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: #25D366;
+  color: #fff;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 2px;
+  margin-bottom: 12px;
+  width: 100%;
+  max-width: 380px;
+}
+
+.order-success-wa-btn:hover {
+  background: #20BA5A;
+}
+
+.order-success-home-btn {
+  background: none;
+  border: 1px solid var(--line);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 10px 20px;
+  cursor: pointer;
+  color: var(--stone-dark);
+  transition: all 0.15s ease;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.order-success-home-btn:hover {
+  border-color: var(--black);
+  color: var(--black);
+}
+
+/* ---------- INFO PANEL STYLES ---------- */
+.info-panel {
+  max-width: 840px;
+  margin: 40px auto 100px;
+  padding: 0 28px;
+}
+
+.info-block {
+  border-bottom: 1px solid var(--line);
+  padding: 28px 0;
+}
+
+.info-block:first-child {
+  padding-top: 0;
+}
+
+.info-heading {
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin-bottom: 14px;
+}
+
+.info-list, .info-bullets {
+  padding-left: 20px;
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: var(--stone-dark);
+}
+
+.condition-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--line);
+  font-size: 0.82rem;
 }
 
 /* ---------- CUSTOMER REVIEWS SECTION ---------- */
 .reviews-section {
   border-top: 1px solid var(--line);
   background: var(--offwhite);
-  padding: 56px 24px 44px;
+  padding: 68px 28px 56px;
+  margin-top: 40px;
 }
+
 .reviews-inner {
-  max-width: 1240px;
+  max-width: 1440px;
   margin: 0 auto;
 }
+
 .reviews-header {
   text-align: center;
-  max-width: 600px;
-  margin: 0 auto 36px;
+  max-width: 620px;
+  margin: 0 auto 44px;
 }
+
 .reviews-eyebrow {
   font-size: 0.65rem;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--stone-dark);
   display: block;
   margin-bottom: 8px;
 }
+
 .reviews-title {
-  font-size: 1.45rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-family: 'Big Shoulders Display', sans-serif;
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
   color: var(--black);
   margin-bottom: 8px;
 }
+
 .reviews-sub {
-  font-size: 0.85rem;
+  font-size: 0.86rem;
   color: var(--stone-dark);
-  line-height: 1.4;
+  line-height: 1.45;
 }
+
 .reviews-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 20px;
   align-items: start;
 }
+
 .review-card {
   background: #000;
   border: 1px solid var(--line);
-  border-radius: 4px;
+  border-radius: 2px;
   overflow: hidden;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
+
 .review-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
 }
+
 .review-img-wrap {
   width: 100%;
   display: flex;
@@ -625,178 +2046,230 @@ footer {
   justify-content: center;
   background: #000;
 }
+
 .review-img-wrap img {
   width: 100%;
   height: auto;
   display: block;
   object-fit: contain;
 }
-.reviews-footer {
+
+/* ---------- SITE FOOTER ---------- */
+footer {
   text-align: center;
-  margin-top: 36px;
-}
-.reviews-back-btn {
-  background: none;
-  border: 1px solid var(--line);
-  padding: 8px 18px;
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
+  padding: 36px 20px 64px;
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
-  cursor: pointer;
-  color: var(--stone-dark);
-  transition: all 0.15s ease;
-}
-.reviews-back-btn:hover {
-  border-color: var(--black);
-  color: var(--black);
-}
-
-/* ---------- HIGHLIGHTED REVIEWS NAVIGATION BUTTON ---------- */
-.nav-btn.nav-btn-reviews {
-  position: relative;
-  border-color: var(--black);
-  color: var(--black);
-  background: var(--offwhite);
-  font-weight: 600;
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  letter-spacing: 0.12em;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.nav-btn.nav-btn-reviews .reviews-pulse-dot {
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  background: var(--black);
-  display: inline-block;
-  animation: reviewsPulse 2.4s infinite ease-in-out;
-}
-
-@keyframes reviewsPulse {
-  0%, 100% {
-    opacity: 0.35;
-    transform: scale(0.85);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-}
-
-.nav-btn.nav-btn-reviews .reviews-arrow {
-  display: inline-block;
-  font-size: 0.72rem;
-  transition: transform 0.2s ease;
-}
-
-.nav-btn.nav-btn-reviews:hover {
-  background: var(--black);
-  color: var(--white);
-  border-color: var(--black);
-  transform: translateY(-1px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
-}
-
-.nav-btn.nav-btn-reviews:hover .reviews-pulse-dot {
+  color: var(--stone);
+  border-top: 1px solid var(--line);
   background: var(--white);
 }
 
-.nav-btn.nav-btn-reviews:hover .reviews-arrow {
-  transform: translate(2px, -2px);
+/* ---------- RESPONSIVE STYLES ---------- */
+@media (max-width: 960px) {
+  .category-duo-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .brand-pillars-bar {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .checkout-grid {
+    grid-template-columns: 1fr;
+  }
+  .header-inner {
+    padding: 12px 18px;
+  }
+  .nav-quick-btn {
+    display: none;
+  }
 }
 
-@media (max-width: 620px) {
-  .reviews-section {
-    padding: 36px 14px 28px;
+@media (max-width: 600px) {
+  .hero-video-container {
+    height: 520px;
   }
-  .reviews-title {
-    font-size: 1.15rem;
+  .hero-content-box {
+    padding: 24px 18px;
   }
-  .reviews-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .hero-main-title {
+    font-size: 3.2rem;
   }
-  .nav-btn.nav-btn-reviews {
-    gap: 4px;
+  .hero-actions-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .hero-cta-btn {
+    justify-content: center;
+  }
+  .landing-category-showcases {
+    padding: 40px 16px 32px;
+  }
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    padding: 0 16px 60px;
+  }
+  .card-info {
+    padding: 12px 10px;
+  }
+  .card-name {
+    font-size: 0.78rem;
+  }
+  .modal-specs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .buy-row {
+    flex-direction: column;
+  }
+  .catalogue-toolbar {
+    padding: 12px 16px;
   }
 }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="brand">ZORO FINDS</div>
-  <div class="tagline">One-of-One Vintage Pieces</div>
-  <div class="subline">Shipping Across India · COD Available</div>
+<!-- TOP ANNOUNCEMENT MARQUEE (INSPIRED BY THRFT) -->
+<div class="announcement-bar" role="region" aria-label="Announcement">
+  <div class="marquee-track">
+    <span class="marquee-item"><span>✦ 100% AUTHENTIC 1-OF-1 THRIFT & VINTAGE</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ PAN-INDIA EXPRESS DISPATCH WITHIN 24 HOURS</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ DROP 02 HOODIES & JACKETS NOW LIVE</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ EXACT GARMENT MEASUREMENTS PROVIDED</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ 100% AUTHENTIC 1-OF-1 THRIFT & VINTAGE</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ PAN-INDIA EXPRESS DISPATCH WITHIN 24 HOURS</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ DROP 02 HOODIES & JACKETS NOW LIVE</span> <span class="marquee-dot"></span></span>
+    <span class="marquee-item"><span>✦ EXACT GARMENT MEASUREMENTS PROVIDED</span> <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- MINIMAL TOP HEADER (NO REPEATED CATEGORY TABS) -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <button type="button" class="sidebar-toggle-btn" onclick="openSidebar()" aria-label="Open Navigation Directory">
+        <span class="hamburger-lines" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+        <span>MENU</span>
+      </button>
+    </div>
+
+    <div class="header-center">
+      <a href="javascript:void(0)" onclick="goToHome()" class="brand-link" aria-label="ZORO.FINDS Home">
+        <div class="brand-logo-text">ZORO.FINDS</div>
+        <span class="brand-sub-badge">VINTAGE ARCHIVE</span>
+      </a>
+    </div>
+
+    <div class="header-right">
+      <button type="button" class="nav-quick-btn nav-link-archive" onclick="renderTab('ARCHIVE')">ARCHIVE</button>
+      <button type="button" class="nav-quick-btn nav-link-info" onclick="renderTab('INFO')">GUIDE</button>
+      <button type="button" class="nav-reviews-btn" onclick="goToReviews()" aria-label="Customer Reviews">
+        <span class="pulse-dot" aria-hidden="true"></span> REVIEWS ↗
+      </button>
+      <button type="button" class="nav-cart-btn" onclick="openCartDrawer()" aria-label="Open Shopping Bag">
+        BAG <span class="cart-counter-pill mono" id="topCartCount">0</span>
+      </button>
+    </div>
+  </div>
 </header>
 
-<nav id="nav" aria-label="Catalog sections"></nav>
+<!-- SIDEBAR NAVIGATION DRAWER -->
+<div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true">
+  <aside class="site-sidebar" id="siteSidebar" role="navigation" aria-label="Main Navigation">
+    <div class="sidebar-header">
+      <div class="sidebar-brand-title">ZORO.FINDS</div>
+      <button type="button" class="sidebar-close-btn" onclick="closeSidebar()" aria-label="Close navigation">CLOSE ✕</button>
+    </div>
+    <div class="sidebar-body">
+      <ul class="sidebar-nav-list">
+        <li>
+          <button type="button" class="sidebar-nav-btn" onclick="closeSidebar(); goToHome()">
+            <span>00 HOME</span>
+            <span class="sidebar-nav-badge">INDEX</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn featured" id="sidebarHoodiesBtn" onclick="closeSidebar(); goToCollection('HOODIES')">
+            <span>01 HOODIES</span>
+            <span class="sidebar-nav-badge" id="sidebarHoodiesBadge">20 PIECES</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn featured" onclick="closeSidebar(); goToCollection('JACKETS')">
+            <span>02 JACKETS</span>
+            <span class="sidebar-nav-badge" id="sidebarJacketsBadge">24 PIECES</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn" onclick="closeSidebar(); renderTab('ARCHIVE')">
+            <span>03 ARCHIVE</span>
+            <span class="sidebar-nav-badge">15 SOLD</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn" onclick="closeSidebar(); goToReviews()">
+            <span>04 REVIEWS & IRL</span>
+            <span class="sidebar-nav-badge">COMMUNITY</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn" onclick="closeSidebar(); renderTab('INFO')">
+            <span>05 SIZING & INFO</span>
+            <span class="sidebar-nav-badge">GUIDE</span>
+          </button>
+        </li>
+        <li>
+          <button type="button" class="sidebar-nav-btn" onclick="closeSidebar(); openCartDrawer()">
+            <span>06 SHOPPING BAG</span>
+            <span class="sidebar-nav-badge" id="sidebarCartBadge">0 ITEMS</span>
+          </button>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer mono">
+        <div><strong>100% AUTHENTIC 1-OF-1 VINTAGE</strong></div>
+        <div>Pan-India Insured Express Delivery · Exact Garment Measurements</div>
+        <div class="sidebar-social-links">
+          <a class="sidebar-social-link" href="https://wa.me/919361730070" target="_blank" rel="noopener">WhatsApp</a>
+          <a class="sidebar-social-link" href="https://www.instagram.com/zoro.finds/" target="_blank" rel="noopener">Instagram</a>
+        </div>
+      </div>
+    </div>
+  </aside>
+</div>
+
+<!-- MAIN PAGE CONTAINER (CLEAN SINGLE VIEW) -->
 <main id="mainContent"></main>
 
+<!-- PRODUCT DETAILS MODAL -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalNameHeading"></div>
 </div>
 
-<section class="reviews-section" id="reviewsSection" aria-label="Customer Reviews and Photos">
-  <div class="reviews-inner">
-    <div class="reviews-header">
-      <span class="reviews-eyebrow mono">CUSTOMER FINDS</span>
-      <h2 class="reviews-title">YOU FOUND IT. THEY WORE IT.</h2>
-      <p class="reviews-sub">Real pieces, real people. Straight from our DMs.</p>
+<!-- SLIDE-OUT CART DRAWER -->
+<div class="cart-backdrop" id="cartBackdrop" aria-hidden="true">
+  <div class="cart-drawer" id="cartDrawer" role="dialog" aria-modal="true" aria-labelledby="cartDrawerHeading">
+    <div class="cart-header">
+      <div class="cart-header-title" id="cartDrawerHeading">SHOPPING BAG (<span id="cartDrawerCount">0</span>)</div>
+      <button type="button" class="cart-close-btn" onclick="closeCartDrawer()" aria-label="Close cart">CLOSE ✕</button>
     </div>
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-img-wrap">
-          <img src="images/review-1.jpg" alt="Customer review message" loading="lazy">
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-img-wrap">
-          <img src="images/review-2.jpg" alt="Customer review message" loading="lazy">
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-img-wrap">
-          <img src="images/review-3.jpg" alt="Customer review message" loading="lazy">
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-img-wrap">
-          <img src="images/review-4.jpg" alt="Customer review and on-body photo" loading="lazy">
-        </div>
-      </div>
-      <div class="review-card">
-        <div class="review-img-wrap">
-          <img src="images/review-5.jpg" alt="Customer review and unboxing photo" loading="lazy">
-        </div>
-      </div>
-    </div>
-    <div class="reviews-footer">
-      <button type="button" class="reviews-back-btn mono" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">Back to Top ↑</button>
-    </div>
+    <div class="cart-body" id="cartBody"></div>
+    <div class="cart-footer" id="cartFooter"></div>
   </div>
-</section>
-
-<footer>@zoro.finds · Curated, never repeated.</footer>
-
-<div class="hoodies-toast" id="hoodiesToast" role="region" aria-label="New Hoodies Announcement">
-  <div class="hoodies-toast-content">
-    <span class="hoodies-toast-tag mono">NEW DROP</span>
-    <div class="hoodies-toast-msg">New hoodies are here.</div>
-    <button type="button" class="hoodies-toast-btn mono" id="exploreHoodiesBtn">Explore Hoodies →</button>
-  </div>
-  <button type="button" class="hoodies-toast-close" id="closeHoodiesToast" aria-label="Close notification">✕</button>
 </div>
 
+<footer>
+  <div class="mono">© 2026 ZORO.FINDS — ALL RIGHTS RESERVED · CURATED ONE-OF-ONE THRIFT & VINTAGE ARCHIVE</div>
+</footer>
+
 <script>
-/* =========================================================================
-   SECTION 1 — CONFIG
-   Edit these once. Every part of the site (payment info, shipping text,
-   buy buttons, archive visibility) updates automatically from here.
-========================================================================= */
 const CONFIG = {
   instagramUsername: "zoro.finds",
   whatsappNumber: "916362911551",
@@ -815,10 +2288,10 @@ const CONFIG = {
   ],
 
   orderInstructions: [
-    "Select your piece",
-    "Tap Buy on WhatsApp or Buy on Instagram",
-    "Send us the Product ID",
-    "We confirm availability and payment details"
+    "Select your 1-of-1 curated piece",
+    "Choose your preferred size (exact measurements provided on product page)",
+    "Click ADD TO CART to keep browsing or BUY NOW for instant checkout",
+    "Enter your shipping address and complete your order with Prepaid (UPI/QR) or COD"
   ],
 
   returnPolicy: "No returns or exchanges. All pieces are one-of-one vintage. Please check all slides and measurements carefully before placing your order.",
@@ -831,13 +2304,7 @@ const CONFIG = {
   ]
 };
 
-/* =========================================================================
-   SECTION 2 — PRODUCTS
-   Copy a block, change the values, paste it into the array.
-   Never delete a sold item — change its status to "sold" instead.
-   Measurements only support chest and length.
-========================================================================= */
-const PRODUCTS = [
+let PRODUCTS = [
   { id: "ZF-001", name: "Vintage 90s Adidas Track Jacket — Navy & Grey", price: "₹1,399",
     images: [
       "images/zf001-1.jpg",
@@ -1210,19 +2677,13 @@ const PRODUCTS = [
       "images/zf029-6.jpg"
     ],
     sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "46\"", length: "28\"" }, condition: "9/10",
-    description: "Vintage Nike Court performance tennis track jacket in deep midnight navy with a crisp white chest stripe. Features embroidered white Nike Swoosh on left chest, Nike Court tennis tab on lower hem, Nike FIT DRY technology, full front zip, breathable mesh lining, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-030", name: "Canvas Chore Jacket — Natural", price: "₹1,699",
-    images: ["https://placehold.co/700x875/ece7dd/141313?text=ZF-030"],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "24\"", length: "26\"" }, condition: "9/10",
-    description: "Undyed natural canvas chore jacket, brass buttons. Authentic Pre-owned Jacket.", status: "sold" }
+    description: "Vintage Nike Court performance tennis track jacket in deep midnight navy with a crisp white chest stripe. Features embroidered white Nike Swoosh on left chest, Nike Court tennis tab on lower hem, Nike FIT DRY technology, full front zip, breathable mesh lining, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" }
 ];
 
 /* =========================================================================
-   HOODIES — Separate product array for the Hoodies collection.
-   Same format as PRODUCTS above.
+   HOODIES (1-OF-1 CURATED COLLECTION)
 ========================================================================= */
-const HOODIES = [
+let HOODIES = [
   { id: "ZH-001", name: "Vintage GAP Arch Logo Pullover Hoodie — Midnight Navy", price: "₹999",
     images: [
       "images/h1-1.jpg",
@@ -1583,102 +3044,432 @@ const HOODIES = [
 ];
 
 /* =========================================================================
-   SECTION 4 — SITE RENDERING
-   Nothing below this line normally needs editing.
+   APPLICATION STATE & CORE HELPERS
 ========================================================================= */
+const FILTER_SIZES = ["S", "M", "L", "XL", "XXL"];
+let currentTab = "HOME";
+let currentSize = "ALL";
+let currentSort = "high-low";
+let lastFocused = null;
+
+const mainEl = document.getElementById("mainContent");
+const modalBackdrop = document.getElementById("modalBackdrop");
+const modalEl = document.getElementById("modal");
+const sidebarBackdrop = document.getElementById("sidebarBackdrop");
+const cartBackdrop = document.getElementById("cartBackdrop");
+
+function parsePrice(priceStr) {
+  if (!priceStr) return 0;
+  return parseInt(priceStr.replace(/[^0-9]/g, ""), 10) || 0;
+}
 
 function escapeHtml(str) {
-  if (str === undefined || str === null) return "";
+  if (!str) return "";
   return String(str)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
+    .replace(/'/g, "&#039;");
 }
-
-const FALLBACK_IMG = "https://placehold.co/700x875/e3ddd0/6b665c?text=Photo+Coming+Soon";
 
 function safeImages(p) {
-  return (Array.isArray(p.images) && p.images.length > 0) ? p.images : [FALLBACK_IMG];
+  if (Array.isArray(p.images) && p.images.length > 0) return p.images;
+  if (p.image) return [p.image];
+  return ["images/placeholder.jpg"];
 }
 
-const navEl = document.getElementById("nav");
-const mainEl = document.getElementById("mainContent");
-const modalBackdrop = document.getElementById("modalBackdrop");
-const modalEl = document.getElementById("modal");
-let lastFocused = null;
-
-const TABS = ["JACKETS", "HOODIES", ...(CONFIG.showArchive && CONFIG.showSoldProducts ? ["ARCHIVE"] : []), "INFO"];
-
-let currentTab = "HOODIES";
-let currentSort = "high-low";
-let currentSize = "ALL";
-
-const FILTER_SIZES = ["XS", "S", "M", "L", "XL"];
-
-function parsePrice(priceStr) {
-  return parseInt(String(priceStr).replace(/[^0-9]/g, ""), 10) || 0;
+function findProductById(id) {
+  return HOODIES.find(p => p.id === id) || PRODUCTS.find(p => p.id === id) || null;
 }
 
 function getTabBaseItems(tab) {
-  if (tab === "JACKETS") return PRODUCTS.filter(p => p.status === "available");
-  if (tab === "HOODIES") return HOODIES.filter(p => p.status === "available");
-  if (tab === "ARCHIVE") return [...PRODUCTS, ...HOODIES].filter(p => p.status === "sold" && p.id !== "ZF-030");
+  if (tab === "HOODIES") return HOODIES.filter(p => p.status !== "sold");
+  if (tab === "JACKETS") return PRODUCTS.filter(p => p.status !== "sold");
+  if (tab === "ARCHIVE") {
+    const soldH = HOODIES.filter(p => p.status === "sold");
+    const soldJ = PRODUCTS.filter(p => p.status === "sold");
+    return [...soldH, ...soldJ];
+  }
   return [];
 }
 
-function setSortOrder(order) {
-  if (currentSort === order) return;
-  currentSort = order;
-  renderActiveCollection();
+/* =========================================================================
+   SIDEBAR & DRAWER CONTROLS
+========================================================================= */
+function openSidebar() {
+  sidebarBackdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeSidebar() {
+  sidebarBackdrop.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function goToReviews() {
+  currentTab = "REVIEWS";
+  renderTab("REVIEWS");
+  try {
+    if (window.location.hash !== "#reviews") {
+      history.pushState(null, null, "#reviews");
+    }
+  } catch (e) {}
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+/* =========================================================================
+   SHOPPING CART & LOCAL STORAGE MANAGEMENT
+========================================================================= */
+const CART_STORAGE_KEY = "zoroFindsCartItems";
+
+function getCart() {
+  try {
+    const raw = localStorage.getItem(CART_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveCart(cart) {
+  try {
+    localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(cart));
+  } catch (e) {}
+  updateCartBadges();
+  renderCartDrawer();
+}
+
+function addToCart(productId, sizeChoice, openDrawer = false) {
+  const p = findProductById(productId);
+  if (!p) return false;
+  if (p.status === "sold") {
+    showToast("This item has been sold out.");
+    return false;
+  }
+
+  const cart = getCart();
+  const selectedSize = sizeChoice || p.displaySize || p.size || "Free Size";
+  const existingIdx = cart.findIndex(item => item.id === p.id && item.size === selectedSize);
+
+  if (existingIdx > -1) {
+    showToast("Item is already in your shopping bag (" + selectedSize + ")");
+  } else {
+    cart.push({
+      id: p.id,
+      name: p.name,
+      price: p.price,
+      numericPrice: parsePrice(p.price),
+      size: selectedSize,
+      image: safeImages(p)[0],
+      quantity: 1
+    });
+    saveCart(cart);
+    showToast("✓ Added " + p.name + " (" + selectedSize + ") to Bag");
+  }
+
+  if (openDrawer) {
+    openCartDrawer();
+  }
+  return true;
+}
+
+function removeFromCart(index) {
+  const cart = getCart();
+  if (index >= 0 && index < cart.length) {
+    const removed = cart.splice(index, 1);
+    saveCart(cart);
+    if (removed[0]) {
+      showToast("Removed from Bag");
+    }
+  }
+}
+
+function updateCartBadges() {
+  const cart = getCart();
+  const totalCount = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
+
+  const topCartCount = document.getElementById("topCartCount");
+  if (topCartCount) topCartCount.textContent = totalCount;
+
+  const sidebarCartBadge = document.getElementById("sidebarCartBadge");
+  if (sidebarCartBadge) sidebarCartBadge.textContent = totalCount + (totalCount === 1 ? " ITEM" : " ITEMS");
+
+  const cartDrawerCount = document.getElementById("cartDrawerCount");
+  if (cartDrawerCount) cartDrawerCount.textContent = totalCount;
+}
+
+function openCartDrawer() {
+  renderCartDrawer();
+  cartBackdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+}
+
+function closeCartDrawer() {
+  cartBackdrop.classList.remove("open");
+  document.body.style.overflow = "";
+}
+
+function renderCartDrawer() {
+  const cart = getCart();
+  const cartBody = document.getElementById("cartBody");
+  const cartFooter = document.getElementById("cartFooter");
+
+  if (!cartBody || !cartFooter) return;
+
+  if (cart.length === 0) {
+    cartBody.innerHTML = `
+      <div class="cart-empty-message">
+        <div style="font-family: 'Big Shoulders Display', sans-serif; font-size: 1.8rem; font-weight: 800; margin-bottom: 8px;">YOUR BAG IS EMPTY</div>
+        <p style="color: var(--stone-dark); margin-bottom: 24px;">Add curated 1-of-1 pieces to your bag.</p>
+        <button type="button" class="category-action-button mono" style="margin: 0 auto;" onclick="closeCartDrawer(); goToCollection('HOODIES')">SHOP HOODIES →</button>
+      </div>
+    `;
+    cartFooter.innerHTML = "";
+    return;
+  }
+
+  let subtotal = 0;
+  cartBody.innerHTML = cart.map((item, idx) => {
+    const itemTotal = item.numericPrice * (item.quantity || 1);
+    subtotal += itemTotal;
+    return `
+      <div class="cart-item-card">
+        <img class="cart-item-img" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+        <div class="cart-item-info">
+          <div class="cart-item-title">${escapeHtml(item.name)}</div>
+          <div class="cart-item-meta mono">ID: ${escapeHtml(item.id)} · Size: ${escapeHtml(item.size)}</div>
+          <div class="cart-item-price mono">₹${itemTotal.toLocaleString('en-IN')}</div>
+        </div>
+        <button type="button" class="cart-item-remove mono" onclick="removeFromCart(${idx})" aria-label="Remove item">REMOVE</button>
+      </div>
+    `;
+  }).join("");
+
+  cartFooter.innerHTML = `
+    <div class="cart-row">
+      <span>Subtotal</span>
+      <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+    </div>
+    <div class="cart-row">
+      <span>Shipping (Pan-India)</span>
+      <span class="mono" style="color: #20BA5A; font-weight: 600;">FREE</span>
+    </div>
+    <div class="cart-row total">
+      <span>Total</span>
+      <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+    </div>
+    <button type="button" class="cart-checkout-btn" onclick="closeCartDrawer(); startCheckout()">PROCEED TO CHECKOUT →</button>
+  `;
+}
+
+/* =========================================================================
+   PAGE ROUTING & TAB NAVIGATION
+========================================================================= */
+function goToHome() {
+  currentTab = "HOME";
+  if (window.location.hash && window.location.hash !== "#home" && window.location.hash !== "#") {
+    try { history.replaceState(null, null, window.location.pathname); } catch (e) { window.location.hash = ""; }
+  }
+  renderTab("HOME");
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function goToCollection(categoryName) {
+  currentTab = categoryName;
+  currentSize = "ALL";
+  currentSort = "high-low";
+  if (categoryName === "HOODIES") {
+    if (window.location.hash !== "#hoodies") {
+      try { history.pushState(null, null, "#hoodies"); } catch (e) { window.location.hash = "hoodies"; }
+    }
+  } else if (categoryName === "JACKETS") {
+    if (window.location.hash !== "#jackets") {
+      try { history.pushState(null, null, "#jackets"); } catch (e) { window.location.hash = "jackets"; }
+    }
+  }
+  renderTab(categoryName);
+  window.scrollTo({ top: 0, behavior: "instant" });
 }
 
 function setSizeFilter(size) {
-  if (currentSize === size) return;
   currentSize = size;
   renderActiveCollection();
 }
 
-function renderNav(activeTab) {
-  navEl.innerHTML = "";
-  TABS.forEach(tab => {
-    const btn = document.createElement("button");
-    btn.className = "nav-btn" + (tab === activeTab ? " active" : "");
-    btn.textContent = tab;
-    btn.setAttribute("aria-pressed", tab === activeTab ? "true" : "false");
-    btn.onclick = () => {
-      currentTab = tab;
-      currentSize = "ALL";
-      renderTab(tab);
-    };
-    navEl.appendChild(btn);
-  });
-
-  const reviewsBtn = document.createElement("button");
-  reviewsBtn.type = "button";
-  reviewsBtn.className = "nav-btn nav-btn-reviews";
-  reviewsBtn.setAttribute("aria-label", "Customer Reviews and Real Finds");
-  reviewsBtn.innerHTML = `<span class="reviews-pulse-dot" aria-hidden="true"></span>REVIEWS <span class="reviews-arrow" aria-hidden="true">↗</span>`;
-  reviewsBtn.onclick = () => {
-    const section = document.getElementById("reviewsSection");
-    if (section) {
-      section.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-  navEl.appendChild(reviewsBtn);
+function setSortOrder(sort) {
+  currentSort = sort;
+  renderActiveCollection();
 }
 
 function renderTab(tab) {
   currentTab = tab;
-  renderNav(tab);
-  if (tab === "INFO") {
+  
+  document.querySelectorAll(".nav-quick-btn").forEach(btn => btn.classList.remove("active"));
+  if (tab === "ARCHIVE") {
+    const b = document.querySelector(".nav-link-archive");
+    if (b) b.classList.add("active");
+  } else if (tab === "INFO") {
+    const b = document.querySelector(".nav-link-info");
+    if (b) b.classList.add("active");
+  }
+
+  if (tab === "HOME") {
+    renderLandingPage();
+  } else if (tab === "REVIEWS") {
+    renderReviews();
+  } else if (tab === "INFO") {
     renderInfo();
+  } else if (tab === "CHECKOUT") {
+    renderCheckout();
   } else {
     renderActiveCollection();
   }
 }
 
+/* =========================================================================
+   EDITORIAL LANDING PAGE RENDERER (THRFT REFERENCE STYLE)
+========================================================================= */
+function renderLandingPage() {
+  const activeHoodies = HOODIES.filter(h => h.status !== "sold").length;
+  const activeJackets = PRODUCTS.filter(j => j.status !== "sold").length;
+
+  mainEl.innerHTML = `
+    <div class="editorial-landing">
+      <!-- HERO VIDEO & EDITORIAL MONOLITH -->
+      <section class="editorial-hero-wrapper" aria-label="Brand Hero Video">
+        <div class="hero-video-container">
+          <video class="hero-video-media" autoplay loop muted playsinline preload="metadata">
+            <source src="images/hero-video.mp4" type="video/mp4">
+          </video>
+          <div class="hero-video-overlay"></div>
+          <div class="hero-content-box">
+            <span class="hero-tag-badge mono">✦ HOODIES DROP LIVE ✦</span>
+            <h1 class="hero-main-title">ZORO.FINDS</h1>
+            <p class="hero-subtitle">Vintage jackets, heavyweight hoodies & rare thrift finds — curated one-of-one pieces.</p>
+            <div class="hero-actions-row">
+              <button type="button" class="hero-cta-btn mono" onclick="goToCollection('HOODIES')">SHOP HOODIES (${activeHoodies}) →</button>
+              <button type="button" class="hero-cta-btn secondary mono" onclick="goToCollection('JACKETS')">SHOP JACKETS (${activeJackets}) →</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- LARGE FASHION CATEGORY DISCOVERY SECTION -->
+      <section class="landing-category-showcases" aria-label="Curated Categories">
+        <div class="section-editorial-header">
+          <h2 class="section-editorial-title">FEATURED CATEGORIES</h2>
+          <span class="section-editorial-sub mono">[ CURATED 1-OF-1 DROPS ]</span>
+        </div>
+
+        <div class="category-duo-grid">
+          <!-- HOODIES CATEGORY -->
+          <article class="category-large-card" onclick="goToCollection('HOODIES')" tabindex="0" role="button" aria-label="Shop Vintage Hoodies Collection">
+            <div class="category-card-media">
+              <img class="category-card-img" src="images/landing-hoodies.jpg" alt="Curated Vintage Hoodies Drop" loading="eager">
+              <div class="category-card-overlay"></div>
+              <div class="category-card-tag mono">COLLECTION / 01</div>
+              <div class="category-card-count mono">${activeHoodies} PIECES ACTIVE</div>
+            </div>
+            <div class="category-card-body">
+              <div>
+                <span class="category-num-label mono">[ DROP 02 / HOODIES ]</span>
+                <h3 class="category-name-heading">HOODIES</h3>
+                <p class="category-desc-text">Heavyweight vintage pullovers, graphic zip-ups, demon horn balaclavas & embroidered heritage pieces from Stüssy, Nike, Oakley, GAP, Jordan, Fila & Harajuku labels.</p>
+              </div>
+              <div class="category-footer-row">
+                <span class="category-starting-price mono">FROM ₹999 · 1-OF-1 VINTAGE</span>
+                <button type="button" class="category-action-button mono" onclick="event.stopPropagation(); goToCollection('HOODIES')">SHOP HOODIES <span class="btn-arrow" aria-hidden="true">→</span></button>
+              </div>
+            </div>
+          </article>
+
+          <!-- JACKETS CATEGORY -->
+          <article class="category-large-card" onclick="goToCollection('JACKETS')" tabindex="0" role="button" aria-label="Shop Vintage Jackets Collection">
+            <div class="category-card-media">
+              <img class="category-card-img" src="images/landing-jackets.jpg" alt="Curated Vintage Jackets Drop" loading="eager">
+              <div class="category-card-overlay"></div>
+              <div class="category-card-tag mono">COLLECTION / 02</div>
+              <div class="category-card-count mono">${activeJackets} PIECES ACTIVE</div>
+            </div>
+            <div class="category-card-body">
+              <div>
+                <span class="category-num-label mono">[ DROP 01 / JACKETS ]</span>
+                <h3 class="category-name-heading">JACKETS</h3>
+                <p class="category-desc-text">Retro 90s nylon windbreakers, varsity collegiate coats, motorsport tracks & colorblock sports zip jackets from Adidas Originals, Lacoste, Duke, Fila & Champion.</p>
+              </div>
+              <div class="category-footer-row">
+                <span class="category-starting-price mono">FROM ₹999 · 1-OF-1 VINTAGE</span>
+                <button type="button" class="category-action-button mono" onclick="event.stopPropagation(); goToCollection('JACKETS')">SHOP JACKETS <span class="btn-arrow" aria-hidden="true">→</span></button>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <!-- BRAND VALUE PILLARS -->
+        <div class="brand-pillars-bar" aria-label="Brand Pillars">
+          <div class="pillar-item">
+            <span class="pillar-index mono">[ 01 ] AUTHENTIC SOURCING</span>
+            <h4 class="pillar-heading">1-OF-1 ARCHIVE</h4>
+            <p class="pillar-text">Every single piece in the archive is hand-selected and unique. Once a piece is ordered, it is claimed permanently.</p>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-index mono">[ 02 ] PRECISION SIZING</span>
+            <h4 class="pillar-heading">GUARANTEED FIT</h4>
+            <p class="pillar-text">Every item includes exact pit-to-pit chest and collar-to-hem length measurements in inches for reliable sizing.</p>
+          </div>
+          <div class="pillar-item">
+            <span class="pillar-index mono">[ 03 ] NATIONWIDE DISPATCH</span>
+            <h4 class="pillar-heading">EXPRESS SHIPPING & COD</h4>
+            <p class="pillar-text">Insured door-to-door delivery across all India PIN codes. Direct assistance available via WhatsApp & Instagram.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- COMMUNITY REVIEWS SECTION (INTEGRATED ON HOMEPAGE) -->
+      <section class="reviews-section" id="reviewsSection" aria-label="Customer Reviews and Community styling">
+        <div class="reviews-inner">
+          <div class="reviews-header">
+            <span class="reviews-eyebrow mono">COMMUNITY ARCHIVE</span>
+            <h2 class="reviews-title">YOU FOUND IT. THEY WORE IT.</h2>
+            <p class="reviews-sub">Real pieces styled by real people. Direct from our community DMs.</p>
+          </div>
+          <div class="reviews-grid">
+            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-1.jpg')">
+              <div class="review-img-wrap">
+                <img src="images/review-1.jpg" alt="Customer review screenshot" loading="lazy">
+              </div>
+            </div>
+            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-2.jpg')">
+              <div class="review-img-wrap">
+                <img src="images/review-2.jpg" alt="Customer review screenshot" loading="lazy">
+              </div>
+            </div>
+            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-3.jpg')">
+              <div class="review-img-wrap">
+                <img src="images/review-3.jpg" alt="Customer review screenshot" loading="lazy">
+              </div>
+            </div>
+            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-4.jpg')">
+              <div class="review-img-wrap">
+                <img src="images/review-4.jpg" alt="Customer review screenshot" loading="lazy">
+              </div>
+            </div>
+            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-5.jpg')">
+              <div class="review-img-wrap">
+                <img src="images/review-5.jpg" alt="Customer review screenshot" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+/* =========================================================================
+   CATALOGUE VIEW RENDERER (HOODIES, JACKETS, ARCHIVE)
+========================================================================= */
 function renderActiveCollection() {
   const baseItems = getTabBaseItems(currentTab);
 
@@ -1697,7 +3488,6 @@ function renderActiveCollection() {
     if (currentSort === "low-high") {
       if (pa !== pb) return pa - pb;
     } else {
-      // default: high-to-low
       if (pa !== pb) return pb - pa;
     }
     return a.id.localeCompare(b.id);
@@ -1707,10 +3497,22 @@ function renderActiveCollection() {
 }
 
 function renderCatalogueView(items) {
+  const collectionTitle = currentTab === "HOODIES" ? "HOODIES ARCHIVE"
+    : currentTab === "JACKETS" ? "JACKETS ARCHIVE"
+    : "PERMANENT ARCHIVE (CLAIMED PIECES)";
+
+  const breadcrumb = `
+    <div class="catalogue-breadcrumb-bar">
+      <button type="button" class="back-to-home-btn mono" onclick="goToHome()">← BACK TO HOME</button>
+      <div class="catalogue-active-title">${collectionTitle}</div>
+      <div class="mono" style="font-size: 0.72rem; color: var(--stone-dark);">${items.length} ${items.length === 1 ? 'PIECE' : 'PIECES'}</div>
+    </div>
+  `;
+
   const toolbar = `
     <div class="catalogue-toolbar" id="catalogueToolbar" aria-label="Catalogue filters and sorting">
       <div class="toolbar-section size-section">
-        <span class="toolbar-label mono">Size</span>
+        <span class="toolbar-label mono">Size:</span>
         <div class="toolbar-pills" role="radiogroup" aria-label="Filter by size">
           <button type="button" class="toolbar-btn mono ${currentSize === 'ALL' ? 'active' : ''}" onclick="setSizeFilter('ALL')" aria-pressed="${currentSize === 'ALL'}">ALL</button>
           ${FILTER_SIZES.map(sz => `
@@ -1719,16 +3521,16 @@ function renderCatalogueView(items) {
         </div>
       </div>
       <div class="toolbar-section sort-section">
-        <span class="toolbar-label mono">Sort</span>
+        <span class="toolbar-label mono">Sort:</span>
         <div class="toolbar-pills" role="radiogroup" aria-label="Sort by price">
-          <button type="button" class="toolbar-btn mono ${currentSort === 'high-low' ? 'active' : ''}" onclick="setSortOrder('high-low')" aria-pressed="${currentSort === 'high-low'}"><span class="sort-prefix">Price: </span>High to Low</button>
-          <button type="button" class="toolbar-btn mono ${currentSort === 'low-high' ? 'active' : ''}" onclick="setSortOrder('low-high')" aria-pressed="${currentSort === 'low-high'}"><span class="sort-prefix">Price: </span>Low to High</button>
+          <button type="button" class="toolbar-btn mono ${currentSort === 'high-low' ? 'active' : ''}" onclick="setSortOrder('high-low')" aria-pressed="${currentSort === 'high-low'}">PRICE: HIGH TO LOW</button>
+          <button type="button" class="toolbar-btn mono ${currentSort === 'low-high' ? 'active' : ''}" onclick="setSortOrder('low-high')" aria-pressed="${currentSort === 'low-high'}">PRICE: LOW TO HIGH</button>
         </div>
       </div>
     </div>
   `;
 
-  mainEl.innerHTML = toolbar + `<div class="grid" id="grid"></div>`;
+  mainEl.innerHTML = breadcrumb + toolbar + `<div class="grid" id="grid"></div>`;
   const gridEl = document.getElementById("grid");
 
   if (items.length === 0) {
@@ -1742,7 +3544,7 @@ function renderCatalogueView(items) {
     const card = document.createElement("button");
     card.type = "button";
     card.className = "card" + (isSold ? " is-sold" : "");
-    card.style.animationDelay = (i * 0.04) + "s";
+    card.style.animationDelay = (i * 0.03) + "s";
     card.setAttribute("aria-label", `${p.name}, ${p.price}${isSold ? ", sold" : ""}`);
 
     card.innerHTML = `
@@ -1773,6 +3575,9 @@ function renderInfo() {
 
   mainEl.innerHTML = `
     <div class="info-panel">
+      <div style="margin-bottom: 24px;">
+        <button type="button" class="back-to-home-btn mono" onclick="goToHome()">← BACK TO HOME</button>
+      </div>
       <div class="info-block">
         <div class="info-heading">How to Order</div>
         <ol class="info-list">
@@ -1800,17 +3605,560 @@ function renderInfo() {
       </div>
       <div class="info-block">
         <div class="info-heading">Returns</div>
-        <div class="info-text">${escapeHtml(c.returnPolicy)}</div>
+        <div class="info-text" style="font-size: 0.85rem; color: var(--stone-dark); line-height: 1.6;">${escapeHtml(c.returnPolicy)}</div>
       </div>
     </div>
   `;
 }
 
 /* =========================================================================
-   SECTION 6 — PURCHASE LINKS
+   COMMUNITY REVIEWS PAGE RENDERER
+========================================================================= */
+function renderReviews() {
+  const reviews = [
+    { img: "images/review-1.jpg", caption: "Vintage Nike Pullover · Styled by Community" },
+    { img: "images/review-2.jpg", caption: "Vintage Adidas Track Jacket · Styled by Community" },
+    { img: "images/review-3.jpg", caption: "Y2K Tribal Balaclava Hoodie · Styled by Community" },
+    { img: "images/review-4.jpg", caption: "Vintage Dickies Workwear Hoodie · Styled by Community" },
+    { img: "images/review-5.jpg", caption: "Vintage GAP Arch Logo Hoodie · Styled by Community" }
+  ];
+
+  mainEl.innerHTML = `
+    <div class="reviews-page-view" style="max-width: 1440px; margin: 0 auto; padding: 24px 28px 80px;">
+      <div class="catalogue-breadcrumb-bar" style="padding: 0 0 24px 0;">
+        <button type="button" class="back-to-home-btn mono" onclick="goToHome()">← BACK TO HOME</button>
+        <div class="catalogue-active-title">COMMUNITY REVIEWS & IRL</div>
+        <div class="mono" style="font-size: 0.72rem; color: var(--stone-dark);">5 COMMUNITY REVIEWS</div>
+      </div>
+
+      <div class="reviews-page-banner" style="background: var(--offwhite); border: 1px solid var(--line); padding: 32px 24px; border-radius: 2px; margin-bottom: 40px; text-align: center;">
+        <span class="mono" style="font-size: 0.68rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--stone-dark); display: block; margin-bottom: 8px;">✦ REAL COMMUNITY FEEDBACK ✦</span>
+        <h1 style="font-family: 'Big Shoulders Display', sans-serif; font-size: clamp(2.2rem, 5vw, 3.5rem); font-weight: 900; letter-spacing: 0.02em; text-transform: uppercase; margin-bottom: 12px;">YOU FOUND IT. THEY WORE IT.</h1>
+        <p style="font-size: 0.92rem; color: var(--stone-dark); max-width: 600px; margin: 0 auto 20px; line-height: 1.5;">Authentic customer DMs, on-body fits, and real reviews from thrift enthusiasts across India.</p>
+        <a href="https://www.instagram.com/zoro.finds/" target="_blank" rel="noopener" class="category-action-button mono" style="display: inline-flex; margin: 0 auto; text-decoration: none;">TAG @ZORO.FINDS ON INSTAGRAM ↗</a>
+      </div>
+
+      <div class="reviews-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px;">
+        ${reviews.map((r, i) => `
+          <div class="review-card" style="background: #000; border: 1px solid var(--line); border-radius: 2px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.06); cursor: pointer;" onclick="openReviewModal('${r.img}')">
+            <div class="review-img-wrap" style="width: 100%; display: flex; align-items: center; justify-content: center; background: #000;">
+              <img src="${r.img}" alt="Customer review screenshot" style="width: 100%; height: auto; display: block;" loading="${i < 3 ? 'eager' : 'lazy'}">
+            </div>
+          </div>
+        `).join("")}
+      </div>
+    </div>
+  `;
+}
+
+/* =========================================================================
+   CHECKOUT PAGE & ORDER PLACEMENT FLOW
+========================================================================= */
+function startCheckout() {
+  const cart = getCart();
+  if (cart.length === 0) {
+    showToast("Your shopping bag is empty");
+    return;
+  }
+  currentTab = "CHECKOUT";
+  renderTab("CHECKOUT");
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+let checkoutPaymentMethod = "online";
+
+function setCheckoutPaymentMethod(method) {
+  checkoutPaymentMethod = method;
+  const cart = getCart();
+  let subtotal = 0;
+  cart.forEach(item => {
+    subtotal += item.numericPrice * (item.quantity || 1);
+  });
+  
+  // Update selection card classes and radio buttons
+  document.querySelectorAll(".payment-method-card").forEach(el => {
+    if (el.dataset.method === method) {
+      el.classList.add("active");
+      const radio = el.querySelector("input[type='radio']");
+      if (radio) radio.checked = true;
+    } else {
+      el.classList.remove("active");
+      const radio = el.querySelector("input[type='radio']");
+      if (radio) radio.checked = false;
+    }
+  });
+
+  // Update dynamic breakdown in Order Summary
+  const breakdownContainer = document.getElementById("checkoutOrderBreakdownWrap");
+  if (breakdownContainer) {
+    if (method === "cod") {
+      const remaining = Math.max(0, subtotal - 200);
+      breakdownContainer.innerHTML = `
+        <div class="cod-breakdown-card">
+          <div class="cod-breakdown-title mono">✦ CASH ON DELIVERY BREAKDOWN</div>
+          <div class="cod-breakdown-row">
+            <span>ORDER TOTAL</span>
+            <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="cod-breakdown-row highlight">
+            <span>PAY NOW (ONLINE ADVANCE)</span>
+            <span class="mono" style="color: #b45309;">₹200</span>
+          </div>
+          <div class="cod-breakdown-row highlight">
+            <span>PAY ON DELIVERY</span>
+            <span class="mono" style="color: #15803d;">₹${remaining.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="cod-breakdown-notice">
+            <strong>₹200 advance payment is required to confirm your Cash on Delivery order.</strong><br>
+            The remaining <strong>₹${remaining.toLocaleString('en-IN')}</strong> must be paid at the time of delivery.
+          </div>
+        </div>
+      `;
+    } else {
+      breakdownContainer.innerHTML = `
+        <div class="cart-row total">
+          <span>Grand Total (Pay Online)</span>
+          <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+        </div>
+      `;
+    }
+  }
+
+  // Update Action Button Text
+  const btn = document.getElementById("placeOrderBtn");
+  const badgeTitle = document.getElementById("paymentBadgeTitle");
+  const badgeDesc = document.getElementById("paymentBadgeDesc");
+
+  if (btn) {
+    if (method === "cod") {
+      btn.innerHTML = `PAY ₹200 ADVANCE (CONFIRM COD) →`;
+    } else {
+      btn.innerHTML = `PROCEED TO PAY (₹${subtotal.toLocaleString('en-IN')}) →`;
+    }
+  }
+
+  if (badgeTitle && badgeDesc) {
+    if (method === "cod") {
+      badgeTitle.textContent = "PAYMENT: ₹200 ADVANCE VIA SECURE RAZORPAY";
+      badgeDesc.textContent = "Pay ₹200 mandatory advance online now to lock your order. Pay the remaining ₹" + Math.max(0, subtotal - 200).toLocaleString('en-IN') + " in cash or UPI upon delivery.";
+    } else {
+      badgeTitle.textContent = "PAYMENT: 100% SECURE RAZORPAY CHECKOUT";
+      badgeDesc.textContent = "UPI (Google Pay, PhonePe, Paytm, BHIM), Debit & Credit Cards, NetBanking, and EMI supported. Instant backend signature verification.";
+    }
+  }
+}
+
+function renderCheckout() {
+  const cart = getCart();
+  if (cart.length === 0) {
+    mainEl.innerHTML = `
+      <div class="checkout-view" style="text-align: center; padding: 80px 20px;">
+        <h2 style="font-family: 'Big Shoulders Display', sans-serif; font-size: 2rem; margin-bottom: 12px;">YOUR SHOPPING BAG IS EMPTY</h2>
+        <p style="color: var(--stone-dark); margin-bottom: 24px;">Add items to your bag before proceeding to checkout.</p>
+        <button type="button" class="category-action-button mono" onclick="goToCollection('HOODIES')">SHOP HOODIES →</button>
+      </div>
+    `;
+    return;
+  }
+
+  let subtotal = 0;
+  const itemsListHTML = cart.map(item => {
+    const itemTotal = item.numericPrice * (item.quantity || 1);
+    subtotal += itemTotal;
+    return `
+      <div class="checkout-mini-item">
+        <img class="checkout-mini-img" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.name)}">
+        <div class="checkout-mini-details">
+          <div class="checkout-mini-name">${escapeHtml(item.name)}</div>
+          <div class="checkout-mini-meta mono">ID: ${escapeHtml(item.id)} · Size: ${escapeHtml(item.size)} · Qty: ${item.quantity || 1}</div>
+        </div>
+        <div class="checkout-mini-price mono">₹${itemTotal.toLocaleString('en-IN')}</div>
+      </div>
+    `;
+  }).join("");
+
+  const codRemaining = Math.max(0, subtotal - 200);
+
+  mainEl.innerHTML = `
+    <div class="checkout-view">
+      <div class="checkout-header">
+        <h1 class="checkout-title">CHECKOUT</h1>
+        <button type="button" class="checkout-back-btn mono" onclick="goToHome()">← CONTINUE SHOPPING</button>
+      </div>
+
+      <div class="checkout-grid">
+        <div class="checkout-form-card">
+          <div class="checkout-section-title mono">1. SHIPPING & CONTACT DETAILS</div>
+          <form id="checkoutForm" onsubmit="handlePlaceOrder(event)">
+            <div class="form-row">
+              <label class="form-label" for="custName">Full Name *</label>
+              <input class="form-input" type="text" id="custName" required placeholder="e.g. Rahul Sharma">
+            </div>
+            <div class="form-row two-col">
+              <div>
+                <label class="form-label" for="custPhone">WhatsApp / Mobile *</label>
+                <input class="form-input" type="tel" id="custPhone" required placeholder="e.g. 9876543210">
+              </div>
+              <div>
+                <label class="form-label" for="custEmail">Email (Optional)</label>
+                <input class="form-input" type="email" id="custEmail" placeholder="name@example.com">
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="custAddress">Shipping Address *</label>
+              <input class="form-input" type="text" id="custAddress" required placeholder="House/Flat, Street, Area">
+            </div>
+            <div class="form-row two-col">
+              <div>
+                <label class="form-label" for="custCity">City *</label>
+                <input class="form-input" type="text" id="custCity" required placeholder="e.g. Bangalore">
+              </div>
+              <div>
+                <label class="form-label" for="custPincode">PIN Code *</label>
+                <input class="form-input" type="text" id="custPincode" required placeholder="e.g. 560001">
+              </div>
+            </div>
+            <div class="form-row">
+              <label class="form-label" for="custState">State *</label>
+              <input class="form-input" type="text" id="custState" required placeholder="e.g. Karnataka">
+            </div>
+
+            <div class="checkout-section-title mono" style="margin-top: 28px;">2. SELECT PAYMENT METHOD</div>
+            
+            <div class="payment-methods-group">
+              <!-- Option 1: Pay Online -->
+              <div class="payment-method-card ${checkoutPaymentMethod === 'online' ? 'active' : ''}" data-method="online" onclick="setCheckoutPaymentMethod('online')">
+                <div class="payment-method-radio-wrap">
+                  <input type="radio" name="checkoutPaymentMethodRadio" value="online" ${checkoutPaymentMethod === 'online' ? 'checked' : ''} onchange="setCheckoutPaymentMethod('online')">
+                </div>
+                <div class="payment-method-content">
+                  <div class="payment-method-header">
+                    <span class="payment-method-name mono">○ Pay Online</span>
+                    <span class="payment-method-tag mono">100% SECURE</span>
+                  </div>
+                  <div class="payment-method-desc">Pay the full amount securely online via UPI, Cards, or NetBanking.</div>
+                </div>
+              </div>
+
+              <!-- Option 2: Cash on Delivery -->
+              <div class="payment-method-card ${checkoutPaymentMethod === 'cod' ? 'active' : ''}" data-method="cod" onclick="setCheckoutPaymentMethod('cod')">
+                <div class="payment-method-radio-wrap">
+                  <input type="radio" name="checkoutPaymentMethodRadio" value="cod" ${checkoutPaymentMethod === 'cod' ? 'checked' : ''} onchange="setCheckoutPaymentMethod('cod')">
+                </div>
+                <div class="payment-method-content">
+                  <div class="payment-method-header">
+                    <span class="payment-method-name mono">○ Cash on Delivery (COD)</span>
+                    <span class="payment-method-tag cod mono">₹200 ADVANCE</span>
+                  </div>
+                  <div class="payment-method-desc">Pay ₹200 now to confirm your order. Pay the remaining balance at the time of delivery.</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="payment-badge-box">
+              <div class="payment-badge-title mono" id="paymentBadgeTitle">${checkoutPaymentMethod === 'cod' ? 'PAYMENT: ₹200 ADVANCE VIA SECURE RAZORPAY' : 'PAYMENT: 100% SECURE RAZORPAY CHECKOUT'}</div>
+              <div class="payment-badge-desc" id="paymentBadgeDesc">${checkoutPaymentMethod === 'cod' ? 'Pay ₹200 mandatory advance online now to lock your order. Pay the remaining ₹' + codRemaining.toLocaleString('en-IN') + ' upon delivery.' : 'UPI (Google Pay, PhonePe, Paytm, BHIM), Debit & Credit Cards, NetBanking, and EMI supported. Instant backend signature verification.'}</div>
+            </div>
+
+            <button type="submit" class="place-order-btn" id="placeOrderBtn">${checkoutPaymentMethod === 'cod' ? 'PAY ₹200 ADVANCE (CONFIRM COD) →' : `PROCEED TO PAY (₹${subtotal.toLocaleString('en-IN')}) →`}</button>
+          </form>
+        </div>
+
+        <div class="checkout-summary-card">
+          <div class="checkout-section-title mono">3. ORDER SUMMARY (${cart.length} ${cart.length === 1 ? 'ITEM' : 'ITEMS'})</div>
+          <div class="checkout-items-list">
+            ${itemsListHTML}
+          </div>
+          <div class="cart-row">
+            <span>Subtotal</span>
+            <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+          </div>
+          <div class="cart-row">
+            <span>Shipping</span>
+            <span class="mono" style="color: #20BA5A; font-weight: 600;">FREE</span>
+          </div>
+          
+          <div id="checkoutOrderBreakdownWrap">
+            ${checkoutPaymentMethod === 'cod' ? `
+              <div class="cod-breakdown-card">
+                <div class="cod-breakdown-title mono">✦ CASH ON DELIVERY BREAKDOWN</div>
+                <div class="cod-breakdown-row">
+                  <span>ORDER TOTAL</span>
+                  <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+                </div>
+                <div class="cod-breakdown-row highlight">
+                  <span>PAY NOW (ONLINE ADVANCE)</span>
+                  <span class="mono" style="color: #b45309;">₹200</span>
+                </div>
+                <div class="cod-breakdown-row highlight">
+                  <span>PAY ON DELIVERY</span>
+                  <span class="mono" style="color: #15803d;">₹${codRemaining.toLocaleString('en-IN')}</span>
+                </div>
+                <div class="cod-breakdown-notice">
+                  <strong>₹200 advance payment is required to confirm your Cash on Delivery order.</strong><br>
+                  The remaining <strong>₹${codRemaining.toLocaleString('en-IN')}</strong> must be paid at the time of delivery.
+                </div>
+              </div>
+            ` : `
+              <div class="cart-row total">
+                <span>Grand Total (Pay Online)</span>
+                <span class="mono">₹${subtotal.toLocaleString('en-IN')}</span>
+              </div>
+            `}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function handlePlaceOrder(e) {
+  e.preventDefault();
+  const name = document.getElementById("custName").value.trim();
+  const phone = document.getElementById("custPhone").value.trim();
+  const email = document.getElementById("custEmail") ? document.getElementById("custEmail").value.trim() : "";
+  const address = document.getElementById("custAddress").value.trim();
+  const city = document.getElementById("custCity").value.trim();
+  const pincode = document.getElementById("custPincode").value.trim();
+  const state = document.getElementById("custState").value.trim();
+
+  const cart = getCart();
+  if (cart.length === 0) {
+    showToast("Shopping bag is empty");
+    return;
+  }
+
+  const btn = document.getElementById("placeOrderBtn");
+  const originalBtnText = btn ? btn.innerHTML : "PROCEED TO PAY";
+  if (btn) {
+    btn.disabled = true;
+    btn.innerHTML = "INITIALIZING SECURE CHECKOUT...";
+    btn.style.opacity = "0.7";
+  }
+
+  function resetBtn() {
+    if (btn) {
+      btn.disabled = false;
+      btn.innerHTML = originalBtnText;
+      btn.style.opacity = "";
+    }
+  }
+
+  const customerData = { name, phone, email, address, city, pincode, state };
+
+  try {
+    showToast("Creating secure order on server...");
+    const orderRes = await fetch("/api/create-order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        items: cart,
+        customer: customerData,
+        payment_method: checkoutPaymentMethod
+      })
+    });
+
+    const orderData = await orderRes.json();
+
+    if (!orderRes.ok || !orderData.order_id) {
+      showToast(orderData.error || "Order Creation Error: Unable to initialize order");
+      if (orderData.error && orderData.error.includes("sold out")) {
+        fetchProductsFromDB();
+      }
+      resetBtn();
+      return;
+    }
+
+    if (typeof Razorpay === "undefined") {
+      showToast("Razorpay SDK not loaded. Please check your internet connection.");
+      resetBtn();
+      return;
+    }
+
+    const isCod = (orderData.payment_method === 'cod');
+    const orderDescription = isCod 
+      ? "ZORO.FINDS ₹200 COD Advance Payment" 
+      : "ZORO.FINDS Curated 1-of-1 Thrift Archive Order";
+
+    const rzpOptions = {
+      key: orderData.key_id,
+      amount: orderData.amount,
+      currency: orderData.currency || "INR",
+      name: "ZORO.FINDS",
+      description: orderDescription,
+      order_id: orderData.order_id,
+      prefill: {
+        name: customerData.name,
+        contact: customerData.phone,
+        email: customerData.email
+      },
+      theme: {
+        color: "#080808"
+      },
+      modal: {
+        ondismiss: function() {
+          showToast("Payment window closed. Click Proceed to Pay whenever you are ready.");
+          resetBtn();
+        }
+      },
+      handler: async function(paymentResponse) {
+        if (btn) {
+          btn.innerHTML = "VERIFYING PAYMENT SECURITY...";
+        }
+        showToast("Verifying payment signature with server...");
+        try {
+          const verifyRes = await fetch("/api/verify-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              razorpay_order_id: paymentResponse.razorpay_order_id,
+              razorpay_payment_id: paymentResponse.razorpay_payment_id,
+              razorpay_signature: paymentResponse.razorpay_signature,
+              customer: customerData,
+              items: cart,
+              payment_method: orderData.payment_method || checkoutPaymentMethod,
+              total_amount: orderData.total_amount,
+              advance_amount: orderData.advance_amount,
+              remaining_amount: orderData.remaining_amount
+            })
+          });
+
+          const verifyData = await verifyRes.json();
+
+          if (verifyRes.ok && verifyData.success) {
+            localStorage.removeItem(CART_STORAGE_KEY);
+            updateCartBadges();
+            await fetchProductsFromDB();
+            renderOrderSuccess({
+              orderId: paymentResponse.razorpay_order_id,
+              paymentId: paymentResponse.razorpay_payment_id,
+              customer: customerData,
+              items: cart,
+              paymentMethod: orderData.payment_method || checkoutPaymentMethod,
+              totalAmount: orderData.total_amount || Math.round(orderData.amount / 100),
+              advancePaid: orderData.advance_amount || (checkoutPaymentMethod === 'cod' ? 200 : orderData.total_amount),
+              remainingAmount: orderData.remaining_amount || 0
+            });
+          } else {
+            showToast("Payment verification failed: " + (verifyData.error || "Signature mismatch"));
+            if (verifyData.error && verifyData.error.includes("sold out")) {
+              await fetchProductsFromDB();
+            }
+            resetBtn();
+          }
+        } catch (verifyErr) {
+          showToast("Network error during payment verification. Please contact support.");
+          resetBtn();
+        }
+      }
+    };
+
+    const rzp = new Razorpay(rzpOptions);
+    rzp.on("payment.failed", function(failResponse) {
+      showToast("Payment Failed: " + (failResponse.error?.description || "Transaction declined"));
+      resetBtn();
+    });
+    rzp.open();
+
+  } catch (err) {
+    showToast("Network error: Unable to connect to server");
+    resetBtn();
+  }
+}
+
+function renderOrderSuccess(orderData) {
+  let itemsSummary = orderData.items.map(item =>
+    `• ${item.id} — ${item.name} (${item.size}) : ₹${item.numericPrice.toLocaleString('en-IN')}`
+  ).join("\n");
+
+  const isCod = (orderData.paymentMethod === 'cod');
+
+  if (isCod) {
+    mainEl.innerHTML = `
+      <div class="checkout-view">
+        <div class="order-success-card">
+          <div class="order-success-icon" style="background: #141313;">✓</div>
+          <h2 class="order-success-title">ORDER CONFIRMED</h2>
+          <div class="order-success-num mono">ORDER ID: ${escapeHtml(orderData.orderId)}</div>
+          
+          <div class="mono" style="font-size: 0.76rem; color: #b45309; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.08em;">
+            ✦ PAYMENT STATUS: ₹200 ADVANCE PAID
+          </div>
+          <div class="mono" style="font-size: 0.72rem; color: #15803d; margin-bottom: 24px; font-weight: 600;">
+            ✦ RAZORPAY PAYMENT ID: ${escapeHtml(orderData.paymentId || "SUCCESS")}
+          </div>
+
+          <div style="background: #fff8e6; border: 1.5px solid #f59e0b; padding: 18px 20px; border-radius: 2px; text-align: left; margin-bottom: 24px;">
+            <div class="mono" style="font-weight: 800; font-size: 0.88rem; color: #92400e; margin-bottom: 6px; letter-spacing: 0.04em;">
+              REMAINING AMOUNT: ₹${orderData.remainingAmount.toLocaleString('en-IN')} TO BE PAID AT DELIVERY
+            </div>
+            <p style="color: #78350f; font-size: 0.78rem; line-height: 1.5; margin: 0;">
+              Your 1-of-1 archive piece has been reserved. Please keep <strong>₹${orderData.remainingAmount.toLocaleString('en-IN')}</strong> ready in cash or UPI when your delivery agent arrives.
+            </p>
+          </div>
+          
+          <div class="order-success-box mono" style="font-size: 0.8rem; line-height: 1.6; text-align: left; background: var(--offwhite); padding: 20px; border: 1px solid var(--line); border-radius: 2px;">
+            <div><strong>Customer:</strong> ${escapeHtml(orderData.customer.name)} (${escapeHtml(orderData.customer.phone)})</div>
+            <div><strong>Delivery Address:</strong> ${escapeHtml(orderData.customer.address)}, ${escapeHtml(orderData.customer.city)} - ${escapeHtml(orderData.customer.pincode)}, ${escapeHtml(orderData.customer.state)}</div>
+            <div style="margin-top: 8px;"><strong>Items Ordered:</strong></div>
+            <div style="color: var(--stone-dark); margin: 4px 0 10px 12px; white-space: pre-line;">${escapeHtml(itemsSummary)}</div>
+            
+            <div style="border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+              <div><strong>Payment Method:</strong> Cash on Delivery (COD)</div>
+              <div><strong>Order Total:</strong> ₹${orderData.totalAmount.toLocaleString('en-IN')} (Free Insured Delivery)</div>
+              <div style="color: #15803d;"><strong>Advance Paid Online:</strong> ₹${orderData.advancePaid.toLocaleString('en-IN')}</div>
+              <div style="color: #b45309; font-weight: 700; font-size: 0.88rem;"><strong>Remaining to Pay on Delivery:</strong> ₹${orderData.remainingAmount.toLocaleString('en-IN')}</div>
+            </div>
+          </div>
+
+          <button type="button" class="order-success-home-btn mono" onclick="goToHome()" style="margin-top: 28px; width: 100%;">RETURN TO HOMEPAGE</button>
+        </div>
+      </div>
+    `;
+  } else {
+    mainEl.innerHTML = `
+      <div class="checkout-view">
+        <div class="order-success-card">
+          <div class="order-success-icon" style="background: #141313;">✓</div>
+          <h2 class="order-success-title">ORDER CONFIRMED</h2>
+          <div class="order-success-num mono">ORDER ID: ${escapeHtml(orderData.orderId)}</div>
+          <div class="mono" style="font-size: 0.76rem; color: #15803d; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.08em;">
+            ✦ PAYMENT STATUS: PAID (FULL)
+          </div>
+          <div class="mono" style="font-size: 0.72rem; color: #15803d; margin-bottom: 24px; font-weight: 600;">
+            ✦ RAZORPAY PAYMENT ID: ${escapeHtml(orderData.paymentId || "SUCCESS")}
+          </div>
+          <p style="color: var(--stone-dark); line-height: 1.5; margin-bottom: 24px;">
+            Your 1-of-1 archive order is locked and 100% confirmed. We are preparing your piece for insured Pan-India express dispatch.
+          </p>
+          
+          <div class="order-success-box mono" style="font-size: 0.8rem; line-height: 1.6; text-align: left; background: var(--offwhite); padding: 20px; border: 1px solid var(--line); border-radius: 2px;">
+            <div><strong>Customer:</strong> ${escapeHtml(orderData.customer.name)} (${escapeHtml(orderData.customer.phone)})</div>
+            <div><strong>Delivery Address:</strong> ${escapeHtml(orderData.customer.address)}, ${escapeHtml(orderData.customer.city)} - ${escapeHtml(orderData.customer.pincode)}, ${escapeHtml(orderData.customer.state)}</div>
+            <div style="margin-top: 8px;"><strong>Items Ordered:</strong></div>
+            <div style="color: var(--stone-dark); margin: 4px 0 10px 12px; white-space: pre-line;">${escapeHtml(itemsSummary)}</div>
+            
+            <div style="border-top: 1px dashed var(--line); padding-top: 10px; margin-top: 10px; display: flex; flex-direction: column; gap: 4px;">
+              <div><strong>Payment Method:</strong> Pay Online (Razorpay)</div>
+              <div><strong>Total Paid:</strong> ₹${orderData.totalAmount.toLocaleString('en-IN')} (Free Insured Delivery)</div>
+            </div>
+          </div>
+
+          <button type="button" class="order-success-home-btn mono" onclick="goToHome()" style="margin-top: 28px; width: 100%;">RETURN TO HOMEPAGE</button>
+        </div>
+      </div>
+    `;
+  }
+
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+/* =========================================================================
+   PURCHASE LINKS & PRODUCT MODAL
 ========================================================================= */
 const ORIG_PRICE_MAP = {
   "\u20b9999":   "\u20b91,500",
+  "\u20b91,099": "\u20b91,699",
   "\u20b91,199": "\u20b91,799",
   "\u20b91,299": "\u20b91,999",
   "\u20b91,399": "\u20b92,200",
@@ -1824,25 +4172,70 @@ function priceHTML(price, saleClass, origClass) {
   if (!orig) return `<span class="${saleClass}">${escapeHtml(price)}</span>`;
   return `<span class="${origClass}">${orig}</span><span class="${saleClass}">${escapeHtml(price)}</span>`;
 }
-function waLink(p) {
-  const msg = `Hello, I am interested in buying this product.\n\nProduct ID: ${p.id}\nProduct Name: ${p.name}\n\nPlease share the details.`;
-  return `https://wa.me/${CONFIG.whatsappNumber}?text=${encodeURIComponent(msg)}`;
-}
-function igLink() {
-  return `https://www.instagram.com/${CONFIG.instagramUsername}/`;
-}
-function igMessage(p) {
-  return `Hello, I am interested in buying this product.\n\nProduct ID: ${p.id}\nProduct Name: ${p.name}\n\nPlease share the details.`;
+let activeModalProduct = null;
+let activeModalSelectedSize = null;
+
+function selectModalSize(size, btn) {
+  activeModalSelectedSize = size;
+  modalEl.querySelectorAll(".modal-size-btn").forEach(b => b.classList.remove("active"));
+  if (btn) btn.classList.add("active");
 }
 
-/* =========================================================================
-   SECTION 5 — PRODUCT MODAL
-========================================================================= */
+function addCurrentProductToCart() {
+  if (!activeModalProduct) return;
+  const p = activeModalProduct;
+  const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
+  
+  addToCart(p.id, size, false);
+  
+  const btn = document.getElementById("modalAddToCartBtn");
+  if (btn) {
+    const originalText = btn.innerHTML;
+    btn.innerHTML = "✓ ADDED TO BAG";
+    btn.style.background = "#eefbf2";
+    btn.style.borderColor = "#20BA5A";
+    btn.style.color = "#15803d";
+    setTimeout(() => {
+      if (btn) {
+        btn.innerHTML = originalText;
+        btn.style.background = "";
+        btn.style.borderColor = "";
+        btn.style.color = "";
+      }
+    }, 1800);
+  }
+}
+
+function buyNowCurrentProduct() {
+  if (!activeModalProduct) return;
+  const p = activeModalProduct;
+  const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
+  
+  addToCart(p.id, size, false);
+  closeModal();
+  startCheckout();
+}
+
 function openModal(p) {
   lastFocused = document.activeElement;
+  activeModalProduct = p;
   const isSold = p.status === "sold";
   const imgs = safeImages(p);
   const m = p.measurements || {};
+
+  const availSizes = (Array.isArray(p.sizes) && p.sizes.length > 0) ? p.sizes : (p.size ? [p.size] : []);
+  activeModalSelectedSize = availSizes[0] || p.displaySize || p.size || "Free Size";
+
+  const sizeSelectorHTML = (!isSold && availSizes.length > 0)
+    ? `<div class="modal-size-select-wrap">
+         <span class="modal-size-label mono">Select Size:</span>
+         <div class="modal-size-options">
+           ${availSizes.map((sz, idx) => `
+             <button type="button" class="modal-size-btn mono ${idx === 0 ? 'active' : ''}" onclick="selectModalSize('${sz}', this)">${sz}</button>
+           `).join("")}
+         </div>
+       </div>`
+    : "";
 
   const thumbs = imgs.length > 1
     ? `<div class="modal-thumbs">${imgs.map((img, i) =>
@@ -1867,12 +4260,14 @@ function openModal(p) {
       <h2 class="modal-name" id="modalNameHeading">${escapeHtml(p.name)}</h2>
       <div class="modal-price mono">${priceHTML(p.price, 'price-sale', 'price-orig')}</div>
       <div class="modal-specs">${specs.join("")}</div>
+      ${sizeSelectorHTML}
       <div class="modal-desc">${escapeHtml(p.description)}</div>
       ${isSold
         ? `<div class="modal-sold-note">Sold Out · This piece has been claimed</div>`
-        : `<div class="scarcity-note">One piece only · First confirmed order gets it</div>
+        : `<div class="scarcity-note">✦ 1-OF-1 CURATED PIECE · CLAIM BEFORE GONE</div>
            <div class="buy-row">
-              <a class="buy-btn wa" href="${waLink(p)}" target="_blank" rel="noopener noreferrer">Buy on WhatsApp</a>
+              <button type="button" class="buy-btn add-to-cart-btn mono" id="modalAddToCartBtn" onclick="addCurrentProductToCart()">ADD TO CART 👜</button>
+              <button type="button" class="buy-btn buy-now-btn mono" id="modalBuyNowBtn" onclick="buyNowCurrentProduct()">BUY NOW →</button>
            </div>`
       }
     </div>
@@ -1899,48 +4294,22 @@ function openModal(p) {
 function closeModal() {
   modalBackdrop.classList.remove("open");
   document.body.style.overflow = "";
+  activeModalProduct = null;
   if (lastFocused) lastFocused.focus();
 }
 
-/* =========================================================================
-   SECTION 6b — INSTAGRAM BUY HANDLER
-   Copies the product message to clipboard, then opens Instagram profile.
-   Instagram does not support pre-filled DMs via web URLs.
-   The user can paste the copied message directly into the DM.
-========================================================================= */
-function handleIgBuy(btn) {
-  const productId   = btn.getAttribute("data-product-id");
-  const productName = btn.getAttribute("data-product-name");
-  const msg = `Hello, I am interested in buying this product.\n\nProduct ID: ${productId}\nProduct Name: ${productName}\n\nPlease share the details.`;
-
-  // Copy message to clipboard then open Instagram
-  if (navigator.clipboard && navigator.clipboard.writeText) {
-    navigator.clipboard.writeText(msg).then(() => {
-      showToast("Message copied! Paste it in the Instagram DM 👉");
-    }).catch(() => {
-      showToast("Opening Instagram — copy the message manually.");
-    });
-  } else {
-    // Fallback for older browsers / insecure contexts
-    try {
-      const ta = document.createElement("textarea");
-      ta.value = msg;
-      ta.style.position = "fixed";
-      ta.style.opacity = "0";
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      showToast("Message copied! Paste it in the Instagram DM 👉");
-    } catch (e) {
-      showToast("Opening Instagram — copy the Product ID manually.");
-    }
-  }
-
-  // Open Instagram profile after a short delay so the toast is visible
-  setTimeout(() => {
-    window.open(igLink(), "_blank", "noopener,noreferrer");
-  }, 600);
+function openReviewModal(imgSrc) {
+  lastFocused = document.activeElement;
+  modalEl.innerHTML = `
+    <div class="modal-close"><button id="closeBtn" aria-label="Close review photo">Close ✕</button></div>
+    <div style="background: #000; padding: 20px; text-align: center;">
+      <img src="${escapeHtml(imgSrc)}" alt="Customer review photo" style="max-width: 100%; max-height: 80vh; object-fit: contain; border-radius: 2px;">
+    </div>
+  `;
+  document.getElementById("closeBtn").onclick = closeModal;
+  modalBackdrop.classList.add("open");
+  document.body.style.overflow = "hidden";
+  document.getElementById("closeBtn").focus();
 }
 
 function showToast(message) {
@@ -1955,20 +4324,21 @@ function showToast(message) {
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%) translateY(12px);
-      background: #141313;
-      color: #fdfcfa;
+      background: #080808;
+      color: #ffffff;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 12px;
       letter-spacing: 0.03em;
       padding: 12px 20px;
-      border-radius: 6px;
+      border-radius: 4px;
       z-index: 99999;
       opacity: 0;
       transition: opacity 0.25s ease, transform 0.25s ease;
-      max-width: 320px;
+      max-width: 340px;
       text-align: center;
       pointer-events: none;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.18);
     `;
     document.body.appendChild(toast);
   }
@@ -1983,66 +4353,110 @@ function showToast(message) {
 }
 
 /* =========================================================================
-   SECTION 7 — EVENT HANDLERS
+   EVENT HANDLERS & INITIALIZATION
 ========================================================================= */
 modalBackdrop.addEventListener("click", (e) => {
   if (e.target === modalBackdrop) closeModal();
 });
 
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && modalBackdrop.classList.contains("open")) closeModal();
+sidebarBackdrop.addEventListener("click", (e) => {
+  if (e.target === sidebarBackdrop) closeSidebar();
 });
 
-/* =========================================================================
-   SECTION 8 — NEW HOODIES TOAST (ONE-TIME)
-========================================================================= */
-const TOAST_STORAGE_KEY = "zoroFindsHoodiesNoticeSeen";
+cartBackdrop.addEventListener("click", (e) => {
+  if (e.target === cartBackdrop) closeCartDrawer();
+});
 
-function initHoodiesToast() {
-  let seen = false;
-  try {
-    seen = localStorage.getItem(TOAST_STORAGE_KEY) === "true";
-  } catch (e) {
-    seen = false;
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    if (modalBackdrop.classList.contains("open")) closeModal();
+    if (cartBackdrop && cartBackdrop.classList.contains("open")) closeCartDrawer();
+    if (sidebarBackdrop && sidebarBackdrop.classList.contains("open")) closeSidebar();
   }
+});
 
-  if (seen) return;
-
-  const toast = document.getElementById("hoodiesToast");
-  if (!toast) return;
-
-  const markSeen = () => {
-    try {
-      localStorage.setItem(TOAST_STORAGE_KEY, "true");
-    } catch (e) {}
-    toast.classList.remove("visible");
-  };
-
-  const closeBtn = document.getElementById("closeHoodiesToast");
-  if (closeBtn) {
-    closeBtn.onclick = markSeen;
+function handleInitialRoute() {
+  const hash = window.location.hash.toLowerCase().replace(/^#/, '');
+  if (hash === 'hoodies' || hash === 'hoodie') {
+    goToCollection('HOODIES');
+  } else if (hash === 'jackets' || hash === 'jacket') {
+    goToCollection('JACKETS');
+  } else if (hash === 'archive') {
+    renderTab('ARCHIVE');
+  } else if (hash === 'info' || hash === 'guide' || hash === 'sizing') {
+    renderTab('INFO');
+  } else if (hash === 'reviews') {
+    goToReviews();
+  } else {
+    renderTab("HOME");
   }
-
-  const exploreBtn = document.getElementById("exploreHoodiesBtn");
-  if (exploreBtn) {
-    exploreBtn.onclick = () => {
-      markSeen();
-      renderTab("HOODIES");
-      const grid = document.getElementById("grid");
-      if (grid) {
-        grid.scrollIntoView({ behavior: "smooth" });
-      }
-    };
-  }
-
-  // Subtle entrance shortly after page loads (1000ms)
-  setTimeout(() => {
-    toast.classList.add("visible");
-  }, 1000);
 }
 
-renderTab("HOODIES");
-initHoodiesToast();
+window.addEventListener("hashchange", () => {
+  const hash = window.location.hash.toLowerCase().replace(/^#/, '');
+  if (hash === 'hoodies' || hash === 'hoodie') {
+    if (currentTab !== 'HOODIES') goToCollection('HOODIES');
+  } else if (hash === 'jackets' || hash === 'jacket') {
+    if (currentTab !== 'JACKETS') goToCollection('JACKETS');
+  } else if (hash === 'archive') {
+    if (currentTab !== 'ARCHIVE') renderTab('ARCHIVE');
+  } else if (hash === 'info' || hash === 'guide' || hash === 'sizing') {
+    if (currentTab !== 'INFO') renderTab('INFO');
+  } else if (hash === '' || hash === 'home') {
+    if (currentTab !== 'HOME') renderTab('HOME');
+  }
+});
+
+async function fetchProductsFromDB() {
+  try {
+    const res = await fetch("/api/products");
+    if (!res.ok) return;
+    const data = await res.json();
+    if (!data.success || !Array.isArray(data.products)) return;
+
+    const dbJackets = [];
+    const dbHoodies = [];
+
+    data.products.forEach(p => {
+      const item = {
+        id: p.id,
+        name: p.product_name,
+        price: p.price,
+        numericPrice: p.numeric_price,
+        images: Array.isArray(p.images) ? p.images : (typeof p.images === 'string' ? JSON.parse(p.images) : []),
+        sizes: Array.isArray(p.sizes) ? p.sizes : (typeof p.sizes === 'string' ? JSON.parse(p.sizes) : [p.display_size || 'Free Size']),
+        displaySize: p.display_size || p.size || 'Free Size',
+        size: p.display_size || p.size || 'Free Size',
+        measurements: { chest: p.chest || '', length: p.length || '' },
+        condition: p.condition || '9/10',
+        description: p.description || '',
+        status: (p.status === 'SOLD_OUT' || p.status === 'ARCHIVED') ? 'sold' : 'available'
+      };
+
+      if (p.category === 'HOODIES') {
+        dbHoodies.push(item);
+      } else {
+        dbJackets.push(item);
+      }
+    });
+
+    if (dbJackets.length > 0) PRODUCTS = dbJackets;
+    if (dbHoodies.length > 0) HOODIES = dbHoodies;
+
+    // Refresh active view to reflect updated database status
+    if (typeof currentTab !== 'undefined') {
+      renderTab(currentTab);
+    }
+  } catch (e) {
+    // Graceful offline fallback
+    console.warn("Using local bundled product catalogue:", e.message);
+  }
+}
+
+// Initialize route based on URL and load database catalogue
+handleInitialRoute();
+updateCartBadges();
+fetchProductsFromDB();
 
 </script>
 

@@ -1,8 +1,23 @@
-﻿{
+{
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "zoro-finds",
+  "main": "_worker.js",
   "compatibility_date": "2026-08-20",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "assets": {
-    "directory": "./dist"
+    "directory": "./dist",
+    "binding": "ASSETS"
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "zoro-finds-db",
+      "database_id": "YOUR_D1_DATABASE_ID_HERE"
+    }
+  ],
+  "vars": {
+    "RAZORPAY_KEY_ID": "rzp_test_TZbI6Firui4Ixz"
   }
 }

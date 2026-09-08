@@ -1,0 +1,25 @@
+{
+  "name": "zoro.finds-main",
+  "version": "1.0.0",
+  "description": "A curated vintage jacket catalogue built as a single-page static website. Browse one-of-one vintage pieces, view detailed slides, measurements, and condition notes, and purchase directly via WhatsApp or Instagram.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rahulkm2004/zoro.finds.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rahulkm2004/zoro.finds/issues"
+  },
+  "homepage": "https://github.com/rahulkm2004/zoro.finds#readme",
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "razorpay": "^2.9.8"
+  }
+}

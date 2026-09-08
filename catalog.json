@@ -1,0 +1,356 @@
+{
+  "ZH-001": {
+    "name": "Vintage GAP Arch Logo Pullover Hoodie — Midnight Navy",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "sold"
+  },
+  "ZH-002": {
+    "name": "Vintage Dickies Colorblock Pullover Hoodie — Red & Heather Grey",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-003": {
+    "name": "Vintage Nike Script Pullover Hoodie — Deep Plum",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "sold"
+  },
+  "ZH-004": {
+    "name": "Vintage Superdry Tokyo Track & Field Raglan Hoodie — Grey & Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "sold"
+  },
+  "ZH-005": {
+    "name": "Vintage NBA Store 'Fifth Ave' Washed Zip-Up Hoodie — Washed Grey",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-006": {
+    "name": "Vintage Superdry Tokyo Script Pullover Hoodie — Faded Navy",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-007": {
+    "name": "Official MLB Majestic LA Dodgers Cooperstown Collection Hoodie — Royal Blue",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-008": {
+    "name": "Vintage Dickies 1922 Pullover Hoodie — Sage Green",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-009": {
+    "name": "Vintage GAP Arch Logo Zip-Up Hoodie — Heather Grey",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-010": {
+    "name": "Vintage GAP Arch Logo Zip-Up Hoodie — Royal Blue & Gold",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-011": {
+    "name": "Vintage Nautica Arch Logo Quarter-Zip Sweatshirt — Black",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-012": {
+    "name": "Vintage Champion Script Pullover Hoodie — Heather Grey",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZH-013": {
+    "name": "Y2K Graphic Zip-Up Hoodie — 'Devil Script' Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-014": {
+    "name": "Disney Stella Lou Bunny Ear Pullover Hoodie — Baby Pink",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-015": {
+    "name": "Barbapapa Cartoon Graphic Pullover Hoodie — Cream White",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZH-016": {
+    "name": "Tribal Gear 1989 Demon Horn Ninja Balaclava Hoodie — Jet Black",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-017": {
+    "name": "Vintage Oakley Big Logo Contrast Hood Pullover Hoodie — Black & Burgundy",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-018": {
+    "name": "Nike Air Jordan Jumpman Zip-Up Hoodie — Black & Red",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-019": {
+    "name": "Vintage Stüssy Big Back Logo Pullover Hoodie — Slate Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-020": {
+    "name": "Vintage Adidas Originals Trefoil Colorblock Anorak Hoodie — Red, Blue & White",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-021": {
+    "name": "Concept Korea 'South Korea +82' Flag Graphic Pullover Hoodie — Jet Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-022": {
+    "name": "Moda NI Tech Quarter-Zip Fleece Hoodie — Heather Grey",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-023": {
+    "name": "New York Popular 'Houston' Varsity Raglan Zip-Up Hoodie — Heather Grey & Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-024": {
+    "name": "Vintage GAP Arch Logo Pullover Hoodie — Crimson Red",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-025": {
+    "name": "Adidas Originals Layered Sleeve Graphic Pullover Hoodie — Crisp White",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-026": {
+    "name": "Vintage Nike Mini Embroidered Swoosh Pullover Hoodie — Mineral Teal",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-027": {
+    "name": "Vintage Fila 'Stile Sportivo' Side-Tape Pullover Hoodie — Off White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-028": {
+    "name": "Harajuku Celestial White Tiger Embroidered Layered Hoodie — Pastel Pink",
+    "price": "₹1,399",
+    "numericPrice": 1399,
+    "status": "available"
+  },
+  "ZH-029": {
+    "name": "Fubon Braves Basketball Collegiate Pullover Hoodie — Navy Blue",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-030": {
+    "name": "O!Oi Studio Korea Signature Logo Pullover Hoodie — Cream Beige",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-001": {
+    "name": "Vintage 90s Adidas Track Jacket — Navy & Grey",
+    "price": "₹1,399",
+    "numericPrice": 1399,
+    "status": "available"
+  },
+  "ZF-002": {
+    "name": "Vintage Lacoste Sport Striped Track Jacket — White",
+    "price": "₹1,499",
+    "numericPrice": 1499,
+    "status": "available"
+  },
+  "ZF-003": {
+    "name": "Vintage Adidas Trefoil Track Jacket — Black & White",
+    "price": "₹1,399",
+    "numericPrice": 1399,
+    "status": "sold"
+  },
+  "ZF-004": {
+    "name": "Vintage Fila Biella Italia Track Jacket — Midnight Navy",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-005": {
+    "name": "Official NFL Seattle Seahawks Track Jacket — Navy & Neon Green",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-006": {
+    "name": "Vintage 90s Adidas Arc Track Jacket — Navy & Silver",
+    "price": "₹1,499",
+    "numericPrice": 1499,
+    "status": "sold"
+  },
+  "ZF-007": {
+    "name": "Vintage Adidas \"Pleasant Valley Vikings\" Track Jacket — Navy",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZF-008": {
+    "name": "Vintage 80s/90s Adidas Trefoil Colorblock Track Jacket — Magenta & Teal",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-009": {
+    "name": "Vintage 90s Reebok Vector Track Jacket — Electric Cyan",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-010": {
+    "name": "Vintage 80s/90s Adidas Trefoil Track Jacket — Navy, Lavender & Emerald",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-011": {
+    "name": "Vintage Adidas Performance Track Jacket — Red & Black",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZF-012": {
+    "name": "Vintage JAKO Sport Performance Track Jacket — Navy & Royal Blue",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-013": {
+    "name": "Vintage K2 Technical Outdoor Shell Jacket — Hot Pink & Fuchsia",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-014": {
+    "name": "Vintage 90s Adidas Trefoil Track Jacket — Midnight Navy & White",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-015": {
+    "name": "Vintage Y2K Eckō Unltd. 3D Geometric Camo Bomber Jacket — Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-016": {
+    "name": "Vintage 80s/90s ASICS Colorblock Half-Zip Anorak — Neon Pink & Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-017": {
+    "name": "Vintage 90s Champion Duke Blue Devils Pullover Windbreaker — Royal Blue",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-018": {
+    "name": "Vintage Champion Hooded Track Jacket — Navy, White & Red",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-019": {
+    "name": "Vintage ASICS Firenze Marathon Track Jacket — Royal Blue, Red & White",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZF-020": {
+    "name": "Vintage New Balance Outdoor Shell Track Jacket — Black & Red",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "sold"
+  },
+  "ZF-021": {
+    "name": "Vintage The North Face HyVent 2.5L Hooded Shell Jacket — Magenta",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "sold"
+  },
+  "ZF-022": {
+    "name": "Vintage 90s Nike Swoosh Track Jacket — Midnight Navy & White",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-023": {
+    "name": "Vintage Champion \"St. Francis Xavier College\" Track Jacket — Navy & Red",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-024": {
+    "name": "Vintage Kappa Technical Track Jacket — Black, Cyan & White",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZF-025": {
+    "name": "Vintage Kappa \"Moto Corse\" Racing Track Jacket — White, Black & Pink",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-026": {
+    "name": "Vintage FILA Colorblock Hooded Anorak Jacket — Soft Pink & Charcoal",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZF-027": {
+    "name": "Vintage Adidas Trefoil Asymmetric Colorblock Track Jacket — White, Teal & Magenta",
+    "price": "₹1,399",
+    "numericPrice": 1399,
+    "status": "available"
+  },
+  "ZF-028": {
+    "name": "Vintage Nike Swoosh Minimalist Track Jacket — Midnight Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-029": {
+    "name": "Vintage Nike Court Tennis Track Jacket — Midnight Navy & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  }
+}

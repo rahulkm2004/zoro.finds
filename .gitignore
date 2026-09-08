@@ -1,9 +1,14 @@
 # ─── Environment & Secrets ───────────────────────────────────────────────────
 .env
-.env.local
-.env.*.local
-.env.production
-.env.development
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+.wrangler/
+*.sqlite
+*.sqlite-*
+orders.json
+scratch/
 *.pem
 *.key
 *.cert
