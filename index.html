@@ -3424,12 +3424,13 @@ function findProductById(id) {
 }
 
 function getTabBaseItems(tab) {
-  if (tab === "HOODIES") return HOODIES.filter(p => p.status !== "sold");
-  if (tab === "JACKETS") return PRODUCTS.filter(p => p.status !== "sold");
+  if (tab === "HOODIES") return HOODIES;
+  if (tab === "JACKETS") return PRODUCTS;
   if (tab === "ARCHIVE") {
-    const soldH = HOODIES.filter(p => p.status === "sold");
-    const soldJ = PRODUCTS.filter(p => p.status === "sold");
-    return [...soldH, ...soldJ];
+    // Archive only contains items explicitly marked as archived
+    const archH = HOODIES.filter(p => p.isArchive || p.status === "archived");
+    const archJ = PRODUCTS.filter(p => p.isArchive || p.status === "archived");
+    return [...archH, ...archJ];
   }
   return [];
 }
