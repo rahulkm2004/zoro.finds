@@ -580,18 +580,42 @@ export default {
         const orderNumber = 'ZF-' + Date.now().toString().slice(-6);
 
         if (env.DB) {
-          // ATOMIC 1-OF-1 CLAIM PROTECTION:
+          // 1. Idempotency Check: if razorpay_payment_id has already been processed, return existing order
+          const existingOrder = await env.DB.prepare(
+            "SELECT * FROM orders WHERE razorpay_payment_id = ?"
+          ).bind(razorpay_payment_id).first();
+
+          if (existingOrder) {
+            return jsonResponse({
+              success: true,
+              idempotent: true,
+              message: 'Order already confirmed',
+              order_id: existingOrder.id,
+              order_number: existingOrder.order_number,
+              payment_id: existingOrder.razorpay_payment_id,
+              payment_method: existingOrder.payment_method,
+              payment_status: existingOrder.payment_status,
+              subtotal_amount: subtotalAmount,
+              shipping_charge: existingOrder.shipping_charge,
+              total_amount: existingOrder.total_amount,
+              advance_amount: existingOrder.advance_amount,
+              remaining_amount: existingOrder.remaining_amount
+            });
+          }
+
+          // 2. ATOMIC 1-OF-1 CLAIM PROTECTION:
           for (const item of items) {
             const updateRes = await env.DB.prepare(
               "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
             ).bind(now, item.id).run();
 
             if (!updateRes.meta || updateRes.meta.changes === 0) {
+              // EDGE CASE: Payment succeeded on Razorpay, but product was claimed by another customer
               return jsonResponse({
                 success: false,
-                error: 'Sorry, this item has just sold out.',
-                sold_out_product_id: item.id,
-                conflict: true
+                conflict: true,
+                error: 'Sorry, this item was just claimed by another customer. Your payment has been received and will be automatically refunded.',
+                sold_out_product_id: item.id
               }, 400);
             }
 
@@ -607,7 +631,7 @@ export default {
             }
           }
 
-          // Insert order into D1 orders table
+          // 3. Insert order into D1 orders table
           await env.DB.prepare(`
             INSERT INTO orders (
               id, order_number, customer_name, customer_phone, customer_email,

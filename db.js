@@ -41,14 +41,15 @@ function shouldInit() {
 }
 
 function initDatabase(db) {
+  const targetDb = db || (dbInstance || new DatabaseSync(DB_PATH));
   console.log('Initializing local SQLite database with schema.sql and seed_d1.sql...');
   if (fs.existsSync(SCHEMA_PATH)) {
     const schema = fs.readFileSync(SCHEMA_PATH, 'utf8');
-    db.exec(schema);
+    targetDb.exec(schema);
   }
   if (fs.existsSync(SEED_PATH)) {
     const seed = fs.readFileSync(SEED_PATH, 'utf8');
-    db.exec(seed);
+    targetDb.exec(seed);
   }
   console.log('✓ Database initialized successfully.');
 }
@@ -284,7 +285,21 @@ function confirmOrderAndMarkSoldOut(orderData) {
   db.exec('BEGIN TRANSACTION;');
 
   try {
-    // 1. Double check and atomically claim products with conditional UPDATE
+    // 1. Idempotency Check: if razorpay_payment_id already confirmed an order, return existing
+    if (orderData.razorpay_payment_id) {
+      const existing = db.prepare('SELECT id, order_number FROM orders WHERE razorpay_payment_id = ?').get(orderData.razorpay_payment_id);
+      if (existing) {
+        db.exec('COMMIT;');
+        return {
+          success: true,
+          idempotent: true,
+          order_id: existing.id,
+          order_number: existing.order_number
+        };
+      }
+    }
+
+    // 2. Double check and atomically claim products with conditional UPDATE
     if (productIds.length > 0) {
       for (const pid of productIds) {
         const updateStmt = db.prepare("UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'");
@@ -304,7 +319,7 @@ function confirmOrderAndMarkSoldOut(orderData) {
       }
     }
 
-    // 2. Insert Order Record
+    // 3. Insert Order Record
     const orderId = orderData.id || ('ORD_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
     const orderNumber = orderData.order_number || ('ZF-' + Date.now().toString().slice(-6));
 
@@ -360,6 +375,20 @@ function confirmOrderAndMarkSoldOut(orderData) {
 }
 
 /**
+ * Get order by Razorpay payment ID for idempotency check
+ */
+function getOrderByPaymentId(paymentId) {
+  if (!paymentId) return null;
+  const db = getDb();
+  const row = db.prepare('SELECT * FROM orders WHERE razorpay_payment_id = ?').get(paymentId);
+  if (!row) return null;
+  return {
+    ...row,
+    products: typeof row.products === 'string' ? JSON.parse(row.products) : row.products
+  };
+}
+
+/**
  * Get all orders
  */
 function getAllOrders() {
@@ -381,5 +410,6 @@ module.exports = {
   acquireProductReservations,
   releaseProductReservations,
   confirmOrderAndMarkSoldOut,
+  getOrderByPaymentId,
   getAllOrders
 };

@@ -87,7 +87,33 @@ export async function onRequestPost(context) {
     const orderNumber = 'ZF-' + Date.now().toString().slice(-6);
 
     if (env.DB) {
-      // ATOMIC 1-OF-1 CLAIM:
+      // 1. Idempotency Check: if razorpay_payment_id already exists, return existing order
+      const existingOrder = await env.DB.prepare(
+        "SELECT * FROM orders WHERE razorpay_payment_id = ?"
+      ).bind(razorpay_payment_id).first();
+
+      if (existingOrder) {
+        return new Response(JSON.stringify({
+          success: true,
+          idempotent: true,
+          message: 'Order already confirmed',
+          order_id: existingOrder.id,
+          order_number: existingOrder.order_number,
+          payment_id: existingOrder.razorpay_payment_id,
+          payment_method: existingOrder.payment_method,
+          payment_status: existingOrder.payment_status,
+          subtotal_amount: subtotalAmount,
+          shipping_charge: existingOrder.shipping_charge,
+          total_amount: existingOrder.total_amount,
+          advance_amount: existingOrder.advance_amount,
+          remaining_amount: existingOrder.remaining_amount
+        }), {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+        });
+      }
+
+      // 2. ATOMIC 1-OF-1 CLAIM:
       for (const item of items) {
         const updateRes = await env.DB.prepare(
           "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
@@ -96,7 +122,7 @@ export async function onRequestPost(context) {
         if (!updateRes.meta || updateRes.meta.changes === 0) {
           return new Response(JSON.stringify({
             success: false,
-            error: 'Sorry, this item has just sold out.',
+            error: 'Sorry, this item was just claimed by another customer. Your payment has been received and will be automatically refunded.',
             sold_out_product_id: item.id,
             conflict: true
           }), {
@@ -106,7 +132,7 @@ export async function onRequestPost(context) {
         }
       }
 
-      // Insert order into D1 orders table
+      // 3. Insert order into D1 orders table
       await env.DB.prepare(`
         INSERT INTO orders (
           id, order_number, customer_name, customer_phone, customer_email,
