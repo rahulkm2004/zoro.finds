@@ -771,6 +771,9 @@ function generateCustomerOrderEmailHtml(order) {
           <tr>
             <td style="padding: 0 24px 24px 24px; text-align: center;">
               <div style="font-size: 14px; color: #444444; line-height: 1.6; border-top: 1px solid #e4e4e7; padding-top: 18px;">
+                <div style="margin-bottom: 12px; color: #111111; font-weight: 600;">
+                  Your tracking ID will be sent to your WhatsApp shortly.
+                </div>
                 Thank you for choosing <strong>ZORO.FINDS</strong>. Your order means a lot to us. We'll keep you updated when your order is dispatched.
               </div>
               <div style="margin-top: 14px; font-size: 12px; color: #71717a;">
@@ -861,6 +864,8 @@ ${shippingAddress}
 ${city}, ${state} - ${pincode}
 
 ---
+Your tracking ID will be sent to your WhatsApp shortly.
+
 Thank you for choosing ZORO.FINDS. Your order means a lot to us. We'll keep you updated when your order is dispatched.
 
 Customer Support:
