@@ -45,6 +45,16 @@ function applyMigrations(db) {
       db.exec("ALTER TABLE orders ADD COLUMN customer_email_sent INTEGER DEFAULT 0;");
       db.exec("ALTER TABLE orders ADD COLUMN customer_email_sent_at TEXT;");
     }
+
+    const prodInfo = db.prepare("PRAGMA table_info(products)").all();
+    const hasSaleSource = prodInfo.some(col => col.name === 'sale_source');
+    if (!hasSaleSource) {
+      db.exec("ALTER TABLE products ADD COLUMN sale_source TEXT DEFAULT NULL;");
+    }
+    const hasSoldAt = prodInfo.some(col => col.name === 'sold_at');
+    if (!hasSoldAt) {
+      db.exec("ALTER TABLE products ADD COLUMN sold_at TEXT DEFAULT NULL;");
+    }
   } catch (e) {}
 }
 
@@ -223,8 +233,8 @@ function confirmOrderAndMarkSoldOut(orderData) {
     // 2. Double check and atomically claim products with conditional UPDATE
     if (productIds.length > 0) {
       for (const pid of productIds) {
-        const updateStmt = db.prepare("UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'");
-        const result = updateStmt.run(now, pid);
+        const updateStmt = db.prepare("UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? AND status = 'AVAILABLE'");
+        const result = updateStmt.run(now, now, pid);
         if (result.changes === 0) {
           throw new Error('Sorry, this item has just sold out.');
         }
@@ -348,6 +358,136 @@ function getOrderByPaymentId(paymentId) {
 }
 
 /**
+ * Admin: Add a new product (Jacket or Hoodie)
+ */
+function addProduct(data) {
+  const db = getDb();
+  const id = (data.id || data.product_id || '').trim();
+  if (!id) {
+    throw new Error('Product ID is required.');
+  }
+
+  // Duplicate check
+  const existing = db.prepare('SELECT id FROM products WHERE id = ?').get(id);
+  if (existing) {
+    throw new Error('Product ID already exists.');
+  }
+
+  const category = (data.category || 'JACKETS').toUpperCase();
+  if (category !== 'JACKETS' && category !== 'HOODIES') {
+    throw new Error('Category must be either JACKETS or HOODIES.');
+  }
+
+  let numericPrice = typeof data.numeric_price === 'number' ? data.numeric_price : parseFloat(data.price?.replace(/[^0-9.]/g, '')) || 0;
+  let formattedPrice = data.price ? data.price : ('₹' + numericPrice.toLocaleString('en-IN'));
+
+  const now = new Date().toISOString();
+  const images = Array.isArray(data.images) ? JSON.stringify(data.images) : (typeof data.images === 'string' ? data.images : '[]');
+  const sizes = Array.isArray(data.sizes) ? JSON.stringify(data.sizes) : (typeof data.sizes === 'string' ? data.sizes : JSON.stringify([data.display_size || 'Free Size']));
+
+  const stmt = db.prepare(`
+    INSERT INTO products (
+      id, product_name, category, price, numeric_price, description,
+      images, sizes, display_size, chest, length, condition,
+      status, sale_source, sold_at, created_at, updated_at
+    ) VALUES (
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?
+    )
+  `);
+
+  stmt.run(
+    id,
+    data.product_name || data.name || 'Curated Vintage Item',
+    category,
+    formattedPrice,
+    numericPrice,
+    data.description || '',
+    images,
+    sizes,
+    data.display_size || data.size || 'Free Size',
+    data.chest || '',
+    data.length || '',
+    data.condition || '9/10',
+    data.status || 'AVAILABLE',
+    data.sale_source || null,
+    data.sold_at || null,
+    data.created_at || now,
+    now
+  );
+
+  return getProductById(id);
+}
+
+/**
+ * Admin: Update product status (e.g. SOLD_OUT with INSTAGRAM_DM or restore to AVAILABLE)
+ */
+function updateProductStatus(productId, status, saleSource = null) {
+  const db = getDb();
+  const id = (productId || '').trim();
+  const product = db.prepare('SELECT * FROM products WHERE id = ?').get(id);
+  if (!product) {
+    throw new Error('Product not found.');
+  }
+
+  const targetStatus = (status || 'AVAILABLE').toUpperCase();
+  const now = new Date().toISOString();
+
+  let finalSaleSource = null;
+  let finalSoldAt = null;
+
+  if (targetStatus === 'SOLD_OUT') {
+    finalSaleSource = saleSource || product.sale_source || 'MANUAL';
+    finalSoldAt = product.sold_at || now;
+  } else if (targetStatus === 'AVAILABLE') {
+    finalSaleSource = null;
+    finalSoldAt = null;
+  } else if (targetStatus === 'ARCHIVED') {
+    finalSaleSource = product.sale_source;
+    finalSoldAt = product.sold_at;
+  }
+
+  db.prepare(`
+    UPDATE products 
+    SET status = ?, sale_source = ?, sold_at = ?, updated_at = ? 
+    WHERE id = ?
+  `).run(targetStatus, finalSaleSource, finalSoldAt, now, id);
+
+  return getProductById(id);
+}
+
+/**
+ * Admin: Delete a product
+ */
+function deleteProduct(productId) {
+  const db = getDb();
+  const id = (productId || '').trim();
+  const info = db.prepare('DELETE FROM products WHERE id = ?').run(id);
+  return info.changes > 0;
+}
+
+/**
+ * Admin: Get all products with full status, sale source, and linked order ID
+ */
+function getAllProductsForAdmin() {
+  const db = getDb();
+  const stmt = db.prepare(`
+    SELECT p.*, o.id as linked_order_id, o.order_number as linked_order_number, o.customer_name as linked_customer_name
+    FROM products p
+    LEFT JOIN orders o ON o.products LIKE '%' || p.id || '%'
+    ORDER BY p.created_at DESC, p.id DESC
+  `);
+  const rows = stmt.all();
+
+  return rows.map(r => ({
+    ...r,
+    images: typeof r.images === 'string' ? JSON.parse(r.images) : r.images,
+    sizes: typeof r.sizes === 'string' ? JSON.parse(r.sizes) : r.sizes
+  }));
+}
+
+/**
  * Get all orders
  */
 function getAllOrders() {
@@ -372,5 +512,9 @@ module.exports = {
   markOrderEmailSent,
   markCustomerEmailSent,
   getOrderByPaymentId,
-  getAllOrders
+  getAllOrders,
+  addProduct,
+  updateProductStatus,
+  deleteProduct,
+  getAllProductsForAdmin
 };

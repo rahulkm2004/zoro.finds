@@ -80,6 +80,112 @@ const server = http.createServer(async (req, res) => {
     return res.end();
   }
 
+  // Helper: Verify Admin Authorization
+  function verifyAdminAuth(request) {
+    const authHeader = request.headers['authorization'] || '';
+    const adminKey = request.headers['x-admin-key'] || (authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '');
+    const expectedKey = process.env.ADMIN_API_KEY || 'zoro-admin-secret-2026';
+    return !!(adminKey && adminKey === expectedKey);
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/admin/auth/verify
+  // -------------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/admin/auth/verify') {
+    if (!verifyAdminAuth(req)) {
+      return sendJSON(res, 401, { success: false, error: 'Unauthorized: Invalid admin key' });
+    }
+    return sendJSON(res, 200, { success: true, message: 'Admin authenticated successfully' });
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: GET /api/admin/products
+  // Fetches full inventory with status, sale source, and linked order ID
+  // -------------------------------------------------------------------------
+  if (req.method === 'GET' && pathname === '/api/admin/products') {
+    if (!verifyAdminAuth(req)) {
+      return sendJSON(res, 401, { success: false, error: 'Unauthorized: Invalid admin key' });
+    }
+    try {
+      const products = db.getAllProductsForAdmin();
+      return sendJSON(res, 200, {
+        success: true,
+        count: products.length,
+        products
+      });
+    } catch (err) {
+      return sendJSON(res, 500, { success: false, error: err.message });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/admin/products
+  // Manually add a new Jacket or Hoodie to catalogue
+  // -------------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/admin/products') {
+    if (!verifyAdminAuth(req)) {
+      return sendJSON(res, 401, { success: false, error: 'Unauthorized: Invalid admin key' });
+    }
+    try {
+      const data = await parseBody(req);
+      const newProduct = db.addProduct(data);
+      return sendJSON(res, 201, {
+        success: true,
+        message: 'Product added successfully',
+        product: newProduct
+      });
+    } catch (err) {
+      const isDuplicate = err.message.includes('already exists');
+      return sendJSON(res, isDuplicate ? 409 : 400, {
+        success: false,
+        error: err.message
+      });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/admin/products/status or PATCH
+  // Update product status (e.g. mark SOLD_OUT for INSTAGRAM_DM sale, or restore AVAILABLE)
+  // -------------------------------------------------------------------------
+  if ((req.method === 'POST' || req.method === 'PATCH') && pathname === '/api/admin/products/status') {
+    if (!verifyAdminAuth(req)) {
+      return sendJSON(res, 401, { success: false, error: 'Unauthorized: Invalid admin key' });
+    }
+    try {
+      const data = await parseBody(req);
+      const { id, status, sale_source } = data;
+      if (!id || !status) {
+        return sendJSON(res, 400, { success: false, error: 'Missing product id or status' });
+      }
+      const updated = db.updateProductStatus(id, status, sale_source);
+      return sendJSON(res, 200, {
+        success: true,
+        message: `Product status updated to ${status}`,
+        product: updated
+      });
+    } catch (err) {
+      return sendJSON(res, 400, { success: false, error: err.message });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: DELETE /api/admin/products
+  // -------------------------------------------------------------------------
+  if (req.method === 'DELETE' && (pathname === '/api/admin/products' || pathname.startsWith('/api/admin/products/'))) {
+    if (!verifyAdminAuth(req)) {
+      return sendJSON(res, 401, { success: false, error: 'Unauthorized: Invalid admin key' });
+    }
+    try {
+      const id = pathname.startsWith('/api/admin/products/') 
+        ? pathname.replace('/api/admin/products/', '')
+        : (await parseBody(req)).id;
+      const success = db.deleteProduct(id);
+      return sendJSON(res, 200, { success, message: 'Product deleted' });
+    } catch (err) {
+      return sendJSON(res, 400, { success: false, error: err.message });
+    }
+  }
+
   // -------------------------------------------------------------------------
   // API ROUTE: GET /api/config
   // Returns public Razorpay Key ID (never secret)

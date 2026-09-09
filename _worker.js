@@ -19,6 +19,14 @@ function jsonResponse(data, status = 200) {
   });
 }
 
+// Helper: Verify Admin Authorization Header
+function verifyAdminAuth(request, env) {
+  const authHeader = request.headers.get('Authorization') || '';
+  const adminKey = request.headers.get('x-admin-key') || (authHeader.startsWith('Bearer ') ? authHeader.slice(7) : '');
+  const expectedKey = env.ADMIN_API_KEY || env.ADMIN_SECRET || 'zoro-admin-secret-2026';
+  return !!(adminKey && adminKey === expectedKey);
+}
+
 // Helper: Verify Razorpay HMAC-SHA256 signature on Cloudflare Edge Runtime
 async function verifyRazorpaySignature(orderId, paymentId, signature, secret) {
   if (!orderId || !paymentId || !signature || !secret) return false;
@@ -190,6 +198,229 @@ export default {
           email_delivered: false,
           error: err.message
         }, 500);
+      }
+    }
+
+    // =========================================================================
+    // ADMIN API ROUTE: POST /api/admin/auth/verify
+    // =========================================================================
+    if (request.method === 'POST' && pathname === '/api/admin/auth/verify') {
+      if (!verifyAdminAuth(request, env)) {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid admin key' }, 401);
+      }
+      return jsonResponse({ success: true, message: 'Admin authenticated successfully' });
+    }
+
+    // =========================================================================
+    // ADMIN API ROUTE: GET /api/admin/products
+    // Returns full inventory with status, sale_source, sold_at, and linked orders
+    // =========================================================================
+    if (request.method === 'GET' && pathname === '/api/admin/products') {
+      if (!verifyAdminAuth(request, env)) {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid admin key' }, 401);
+      }
+      if (!env.DB) {
+        return jsonResponse({ success: false, error: 'D1 binding not found' }, 500);
+      }
+      try {
+        const { results } = await env.DB.prepare(`
+          SELECT p.*, o.id as linked_order_id, o.order_number as linked_order_number, o.customer_name as linked_customer_name
+          FROM products p
+          LEFT JOIN orders o ON o.products LIKE '%' || p.id || '%'
+          ORDER BY p.created_at DESC, p.id DESC
+        `).all();
+
+        const formatted = results.map(row => ({
+          ...row,
+          images: typeof row.images === 'string' ? JSON.parse(row.images) : row.images,
+          sizes: typeof row.sizes === 'string' ? JSON.parse(row.sizes) : row.sizes
+        }));
+
+        return jsonResponse({
+          success: true,
+          count: formatted.length,
+          products: formatted
+        });
+      } catch (err) {
+        return jsonResponse({ success: false, error: err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // ADMIN API ROUTE: POST /api/admin/products
+    // Manually add a new Jacket or Hoodie to D1
+    // =========================================================================
+    if (request.method === 'POST' && pathname === '/api/admin/products') {
+      if (!verifyAdminAuth(request, env)) {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid admin key' }, 401);
+      }
+      if (!env.DB) {
+        return jsonResponse({ success: false, error: 'D1 binding not found' }, 500);
+      }
+      try {
+        const data = await request.json();
+        const id = (data.id || data.product_id || '').trim();
+        if (!id) {
+          return jsonResponse({ success: false, error: 'Product ID is required.' }, 400);
+        }
+
+        // Duplicate Check
+        const existing = await env.DB.prepare('SELECT id FROM products WHERE id = ?').bind(id).first();
+        if (existing) {
+          return jsonResponse({ success: false, error: 'Product ID already exists.' }, 409);
+        }
+
+        const category = (data.category || 'JACKETS').toUpperCase();
+        if (category !== 'JACKETS' && category !== 'HOODIES') {
+          return jsonResponse({ success: false, error: 'Category must be either JACKETS or HOODIES.' }, 400);
+        }
+
+        let numericPrice = typeof data.numeric_price === 'number' ? data.numeric_price : parseFloat(data.price?.replace(/[^0-9.]/g, '')) || 0;
+        let formattedPrice = data.price ? data.price : ('₹' + numericPrice.toLocaleString('en-IN'));
+
+        const now = new Date().toISOString();
+        const images = Array.isArray(data.images) ? JSON.stringify(data.images) : (typeof data.images === 'string' ? data.images : '[]');
+        const sizes = Array.isArray(data.sizes) ? JSON.stringify(data.sizes) : (typeof data.sizes === 'string' ? data.sizes : JSON.stringify([data.display_size || 'Free Size']));
+
+        await env.DB.prepare(`
+          INSERT INTO products (
+            id, product_name, category, price, numeric_price, description,
+            images, sizes, display_size, chest, length, condition,
+            status, sale_source, sold_at, created_at, updated_at
+          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `).bind(
+          id,
+          data.product_name || data.name || 'Curated Vintage Item',
+          category,
+          formattedPrice,
+          numericPrice,
+          data.description || '',
+          images,
+          sizes,
+          data.display_size || data.size || 'Free Size',
+          data.chest || '',
+          data.length || '',
+          data.condition || '9/10',
+          data.status || 'AVAILABLE',
+          data.sale_source || null,
+          data.sold_at || null,
+          data.created_at || now,
+          now
+        ).run();
+
+        const createdProduct = await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(id).first();
+        return jsonResponse({
+          success: true,
+          message: 'Product added successfully',
+          product: {
+            ...createdProduct,
+            images: typeof createdProduct.images === 'string' ? JSON.parse(createdProduct.images) : createdProduct.images,
+            sizes: typeof createdProduct.sizes === 'string' ? JSON.parse(createdProduct.sizes) : createdProduct.sizes
+          }
+        }, 201);
+      } catch (err) {
+        return jsonResponse({ success: false, error: err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // ADMIN API ROUTE: POST /api/admin/products/status or PATCH
+    // Update product status (e.g. mark SOLD_OUT with INSTAGRAM_DM or restore AVAILABLE)
+    // =========================================================================
+    if ((request.method === 'POST' || request.method === 'PATCH') && pathname === '/api/admin/products/status') {
+      if (!verifyAdminAuth(request, env)) {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid admin key' }, 401);
+      }
+      if (!env.DB) {
+        return jsonResponse({ success: false, error: 'D1 binding not found' }, 500);
+      }
+      try {
+        const data = await request.json();
+        const { id, status, sale_source } = data;
+        if (!id || !status) {
+          return jsonResponse({ success: false, error: 'Missing product id or status' }, 400);
+        }
+
+        const product = await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(id).first();
+        if (!product) {
+          return jsonResponse({ success: false, error: 'Product not found' }, 404);
+        }
+
+        const targetStatus = status.toUpperCase();
+        const now = new Date().toISOString();
+
+        let finalSaleSource = null;
+        let finalSoldAt = null;
+
+        if (targetStatus === 'SOLD_OUT') {
+          finalSaleSource = sale_source || product.sale_source || 'MANUAL';
+          finalSoldAt = product.sold_at || now;
+        } else if (targetStatus === 'AVAILABLE') {
+          finalSaleSource = null;
+          finalSoldAt = null;
+        } else if (targetStatus === 'ARCHIVED') {
+          finalSaleSource = product.sale_source;
+          finalSoldAt = product.sold_at;
+        }
+
+        try {
+          await env.DB.prepare(`
+            UPDATE products 
+            SET status = ?, sale_source = ?, sold_at = ?, updated_at = ? 
+            WHERE id = ?
+          `).bind(targetStatus, finalSaleSource, finalSoldAt, now, id).run();
+        } catch (dbErr) {
+          // If columns missing in older schema, add dynamically
+          try {
+            await env.DB.prepare("ALTER TABLE products ADD COLUMN sale_source TEXT DEFAULT NULL").run();
+            await env.DB.prepare("ALTER TABLE products ADD COLUMN sold_at TEXT DEFAULT NULL").run();
+            await env.DB.prepare(`
+              UPDATE products 
+              SET status = ?, sale_source = ?, sold_at = ?, updated_at = ? 
+              WHERE id = ?
+            `).bind(targetStatus, finalSaleSource, finalSoldAt, now, id).run();
+          } catch (alterErr) {
+            await env.DB.prepare("UPDATE products SET status = ?, updated_at = ? WHERE id = ?").bind(targetStatus, now, id).run();
+          }
+        }
+
+        const updated = await env.DB.prepare('SELECT * FROM products WHERE id = ?').bind(id).first();
+        return jsonResponse({
+          success: true,
+          message: `Product status updated to ${targetStatus}`,
+          product: {
+            ...updated,
+            images: typeof updated.images === 'string' ? JSON.parse(updated.images) : updated.images,
+            sizes: typeof updated.sizes === 'string' ? JSON.parse(updated.sizes) : updated.sizes
+          }
+        });
+      } catch (err) {
+        return jsonResponse({ success: false, error: err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // ADMIN API ROUTE: DELETE /api/admin/products
+    // =========================================================================
+    if (request.method === 'DELETE' && (pathname === '/api/admin/products' || pathname.startsWith('/api/admin/products/'))) {
+      if (!verifyAdminAuth(request, env)) {
+        return jsonResponse({ success: false, error: 'Unauthorized: Invalid admin key' }, 401);
+      }
+      if (!env.DB) {
+        return jsonResponse({ success: false, error: 'D1 binding not found' }, 500);
+      }
+      try {
+        let id = '';
+        if (pathname.startsWith('/api/admin/products/')) {
+          id = pathname.replace('/api/admin/products/', '');
+        } else {
+          const body = await request.json();
+          id = body.id;
+        }
+        await env.DB.prepare('DELETE FROM products WHERE id = ?').bind(id).run();
+        return jsonResponse({ success: true, message: 'Product deleted successfully' });
+      } catch (err) {
+        return jsonResponse({ success: false, error: err.message }, 500);
       }
     }
 
@@ -606,9 +837,24 @@ export default {
 
           // 2. ATOMIC 1-OF-1 CLAIM PROTECTION:
           for (const item of items) {
-            const updateRes = await env.DB.prepare(
-              "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
-            ).bind(now, item.id).run();
+            let updateRes;
+            try {
+              updateRes = await env.DB.prepare(
+                "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
+              ).bind(now, now, item.id).run();
+            } catch (claimErr) {
+              try {
+                await env.DB.prepare("ALTER TABLE products ADD COLUMN sale_source TEXT DEFAULT NULL").run();
+                await env.DB.prepare("ALTER TABLE products ADD COLUMN sold_at TEXT DEFAULT NULL").run();
+                updateRes = await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
+                ).bind(now, now, item.id).run();
+              } catch (alterErr) {
+                updateRes = await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
+                ).bind(now, item.id).run();
+              }
+            }
 
             if (!updateRes.meta || updateRes.meta.changes === 0) {
               // EDGE CASE: Payment succeeded on Razorpay, but product was claimed by another customer
@@ -820,6 +1066,13 @@ export default {
     // =========================================================================
     // STATIC ASSETS FALLBACK (Pages / Workers Static Assets)
     // =========================================================================
+    if (pathname === '/admin') {
+      const adminUrl = new URL('/admin.html', request.url);
+      if (env.ASSETS) {
+        return env.ASSETS.fetch(new Request(adminUrl, request));
+      }
+    }
+
     if (env.ASSETS) {
       return env.ASSETS.fetch(request);
     }

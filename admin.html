@@ -1,0 +1,1209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ZORO.FINDS — Admin Inventory Management</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0a0a0c;
+      --bg-card: #121216;
+      --bg-card-hover: #18181f;
+      --border-color: #22222a;
+      --border-accent: #c89d55;
+      --text-main: #f4f4f6;
+      --text-muted: #8e8e9c;
+      --accent-gold: #c89d55;
+      --accent-green: #22c55e;
+      --accent-orange: #f59e0b;
+      --accent-red: #ef4444;
+      --font-brand: 'Cinzel', Georgia, serif;
+      --font-body: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Auth Gate Screen */
+    #auth-screen {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 24px;
+      background: radial-gradient(circle at 50% 20%, #1a1a24 0%, #0a0a0c 80%);
+    }
+
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--accent-gold);
+      border-radius: 8px;
+      padding: 36px 32px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    .auth-logo {
+      font-family: var(--font-brand);
+      font-size: 26px;
+      letter-spacing: 0.25em;
+      color: #ffffff;
+      margin-bottom: 6px;
+      text-transform: uppercase;
+    }
+
+    .auth-subtitle {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.16em;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 12px;
+      font-family: var(--font-mono);
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-input, .form-select, .form-textarea {
+      width: 100%;
+      background: #0d0d10;
+      border: 1px solid var(--border-color);
+      color: #ffffff;
+      padding: 12px 14px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      outline: none;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 0 2px rgba(200, 157, 85, 0.2);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 20px;
+      font-family: var(--font-mono);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-gold {
+      background: var(--accent-gold);
+      color: #000000;
+      width: 100%;
+    }
+
+    .btn-gold:hover {
+      background: #dfb268;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+
+    .btn-outline:hover {
+      background: var(--bg-card-hover);
+      border-color: #444;
+    }
+
+    .btn-sold {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent-orange);
+      color: var(--accent-orange);
+      padding: 6px 12px;
+      font-size: 11px;
+    }
+
+    .btn-sold:hover {
+      background: var(--accent-orange);
+      color: #000000;
+    }
+
+    .btn-restore {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid var(--accent-green);
+      color: var(--accent-green);
+      padding: 6px 12px;
+      font-size: 11px;
+    }
+
+    .btn-restore:hover {
+      background: var(--accent-green);
+      color: #000000;
+    }
+
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: var(--accent-red);
+      padding: 6px 10px;
+      font-size: 11px;
+    }
+
+    .btn-delete:hover {
+      background: var(--accent-red);
+      color: #ffffff;
+    }
+
+    .alert {
+      padding: 10px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    .alert-error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--accent-red);
+      color: #fca5a5;
+    }
+
+    .alert-success {
+      background: rgba(34, 197, 94, 0.15);
+      border: 1px solid var(--accent-green);
+      color: #86efac;
+    }
+
+    /* Main Dashboard Layout */
+    #dashboard-screen {
+      display: none;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #08080a;
+      border-bottom: 1px solid var(--border-color);
+      padding: 18px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .header-brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-title {
+      font-family: var(--font-brand);
+      font-size: 20px;
+      letter-spacing: 0.2em;
+      color: #ffffff;
+      text-transform: uppercase;
+    }
+
+    .header-badge {
+      background: rgba(200, 157, 85, 0.15);
+      color: var(--accent-gold);
+      border: 1px solid var(--border-accent);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 2px;
+      letter-spacing: 0.1em;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    main {
+      flex: 1;
+      padding: 28px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 18px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: #ffffff;
+    }
+
+    /* Controls Bar */
+    .controls-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 20px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 16px 20px;
+      border-radius: 6px;
+    }
+
+    .search-filter-group {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .search-input {
+      max-width: 260px;
+      background: #0a0a0c;
+    }
+
+    .filter-select {
+      max-width: 160px;
+      background: #0a0a0c;
+    }
+
+    /* Table */
+    .table-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 13px;
+    }
+
+    th {
+      background: #0d0d10;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      white-space: nowrap;
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: middle;
+    }
+
+    tr:hover td {
+      background: var(--bg-card-hover);
+    }
+
+    .prod-thumb {
+      width: 44px;
+      height: 44px;
+      border-radius: 4px;
+      object-fit: cover;
+      background: #000;
+      border: 1px solid #333;
+    }
+
+    .prod-id {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: #ffffff;
+      background: #000000;
+      padding: 4px 8px;
+      border-radius: 3px;
+      border: 1px solid #333;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .status-available {
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+    }
+
+    .status-sold {
+      background: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .source-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      display: inline-block;
+      white-space: nowrap;
+    }
+
+    .source-dm {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+
+    .source-website {
+      background: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.3);
+    }
+
+    .source-manual {
+      background: rgba(168, 85, 247, 0.15);
+      color: #c084fc;
+      border: 1px solid rgba(168, 85, 247, 0.3);
+    }
+
+    .actions-cell {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    /* Modal Backdrop & Box */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(4px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-top: 3px solid var(--accent-gold);
+      border-radius: 8px;
+      width: 100%;
+      max-width: 540px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 28px;
+      box-shadow: 0 25px 50px rgba(0,0,0,0.7);
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+
+    .modal-title {
+      font-family: var(--font-brand);
+      font-size: 18px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #ffffff;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 20px;
+      cursor: pointer;
+    }
+
+    .modal-close:hover {
+      color: #ffffff;
+    }
+
+    .image-preview-strip {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .img-thumb-preview {
+      width: 60px;
+      height: 60px;
+      border-radius: 4px;
+      object-fit: cover;
+      border: 1px solid #444;
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 14px 16px;
+      }
+      main {
+        padding: 16px;
+      }
+      .controls-bar {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-filter-group {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .search-input, .filter-select {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. AUTHENTICATION GATE SCREEN -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">ZORO.FINDS</div>
+      <div class="auth-subtitle">✦ ADMIN INVENTORY PORTAL ✦</div>
+
+      <div id="auth-alert" class="alert alert-error"></div>
+
+      <form id="auth-form">
+        <div class="form-group">
+          <label class="form-label" for="admin-key-input">Admin Secret Key</label>
+          <input type="password" id="admin-key-input" class="form-input" placeholder="Enter admin password / API key" required autofocus>
+        </div>
+        <button type="submit" class="btn btn-gold">
+          Unlock Inventory Portal →
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. MAIN ADMIN DASHBOARD -->
+  <div id="dashboard-screen">
+    <header>
+      <div class="header-brand">
+        <span class="header-title">ZORO.FINDS</span>
+        <span class="header-badge">INVENTORY ADMIN</span>
+      </div>
+      <div class="header-actions">
+        <a href="/" target="_blank" class="btn btn-outline" style="font-size: 11px; padding: 8px 12px;">View Live Store ↗</a>
+        <button id="btn-logout" class="btn btn-outline" style="font-size: 11px; padding: 8px 12px; color: var(--accent-red);">Logout</button>
+      </div>
+    </header>
+
+    <main>
+      <div id="global-alert" class="alert"></div>
+
+      <!-- Stats Overview -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="stat-label">Total Catalogue Pieces</span>
+          <span class="stat-value" id="stat-total">0</span>
+        </div>
+        <div class="stat-card" style="border-left: 3px solid var(--accent-green);">
+          <span class="stat-label">Available In Store</span>
+          <span class="stat-value" id="stat-available" style="color: var(--accent-green);">0</span>
+        </div>
+        <div class="stat-card" style="border-left: 3px solid var(--accent-red);">
+          <span class="stat-label">Total Sold Out</span>
+          <span class="stat-value" id="stat-sold" style="color: var(--accent-red);">0</span>
+        </div>
+        <div class="stat-card" style="border-left: 3px solid var(--accent-orange);">
+          <span class="stat-label">Instagram DM / Manual</span>
+          <span class="stat-value" id="stat-dm" style="color: var(--accent-orange);">0</span>
+        </div>
+        <div class="stat-card" style="border-left: 3px solid #3b82f6;">
+          <span class="stat-label">Website Online Sales</span>
+          <span class="stat-value" id="stat-website" style="color: #60a5fa;">0</span>
+        </div>
+      </div>
+
+      <!-- Controls & Search -->
+      <div class="controls-bar">
+        <div class="search-filter-group">
+          <input type="text" id="search-box" class="form-input search-input" placeholder="🔍 Search ID or Name...">
+          
+          <select id="filter-category" class="form-select filter-select">
+            <option value="ALL">All Categories</option>
+            <option value="JACKETS">Jackets</option>
+            <option value="HOODIES">Hoodies</option>
+          </select>
+
+          <select id="filter-status" class="form-select filter-select">
+            <option value="ALL">All Status</option>
+            <option value="AVAILABLE">Available</option>
+            <option value="SOLD_OUT">Sold Out</option>
+          </select>
+
+          <select id="filter-source" class="form-select filter-select">
+            <option value="ALL">All Sale Channels</option>
+            <option value="INSTAGRAM_DM">Instagram DM</option>
+            <option value="WEBSITE">Website Order</option>
+            <option value="MANUAL">Manual / Offline</option>
+          </select>
+        </div>
+
+        <button id="btn-open-add-modal" class="btn btn-gold" style="width: auto;">
+          + Add New Jacket / Hoodie
+        </button>
+      </div>
+
+      <!-- Inventory Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Piece</th>
+              <th>Product ID</th>
+              <th>Name & Category</th>
+              <th>Price</th>
+              <th>Status</th>
+              <th>Sale Channel</th>
+              <th>Sold Date / Order</th>
+              <th style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-table-body">
+            <tr>
+              <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-muted);">
+                Loading inventory from Cloudflare D1...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </main>
+  </div>
+
+  <!-- 3. ADD PRODUCT MODAL -->
+  <div id="add-modal" class="modal-backdrop">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">+ Add New Vintage Piece</div>
+        <button class="modal-close" onclick="closeModal('add-modal')">×</button>
+      </div>
+
+      <div id="add-modal-alert" class="alert alert-error"></div>
+
+      <form id="add-product-form">
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="new-category">Category *</label>
+            <select id="new-category" class="form-select" required onchange="suggestProductId()">
+              <option value="JACKETS">JACKETS</option>
+              <option value="HOODIES">HOODIES</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="new-id">Product ID * (Unique)</label>
+            <input type="text" id="new-id" class="form-input" placeholder="e.g. ZJ-31 / ZH-31" required>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-name">Product Name *</label>
+          <input type="text" id="new-name" class="form-input" placeholder="e.g. Vintage Carhartt Detroit Jacket" required>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 14px;">
+          <div class="form-group">
+            <label class="form-label" for="new-price">Price (₹ INR) *</label>
+            <input type="number" id="new-price" class="form-input" placeholder="e.g. 3499" required min="1">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="new-size">Display Size</label>
+            <input type="text" id="new-size" class="form-input" placeholder="e.g. L / XL / Free Size">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-description">Description & Condition</label>
+          <textarea id="new-description" class="form-textarea" rows="2" placeholder="Condition 9/10, Vintage fade, boxy fit..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="new-images">Image URLs (First image = Complete front view) *</label>
+          <textarea id="new-images" class="form-textarea" rows="3" placeholder="Enter image URLs (one per line or comma-separated)&#10;e.g. /images/jacket1.jpg&#10;https://..." required></textarea>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('add-modal')">Cancel</button>
+          <button type="submit" class="btn btn-gold" style="width: auto;">Save & Publish Piece</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. MARK SOLD OUT MODAL -->
+  <div id="sold-modal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div class="modal-title">Mark Piece as Sold Out</div>
+        <button class="modal-close" onclick="closeModal('sold-modal')">×</button>
+      </div>
+
+      <div id="sold-modal-alert" class="alert alert-error"></div>
+
+      <form id="mark-sold-form">
+        <input type="hidden" id="sold-product-id">
+
+        <p style="font-size: 14px; margin-bottom: 16px; color: var(--text-main);">
+          Mark <strong id="sold-product-label" style="color: var(--accent-gold);"></strong> as SOLD OUT in Cloudflare D1?
+        </p>
+
+        <div class="form-group">
+          <label class="form-label" for="sold-source-select">Sale Channel / Source *</label>
+          <select id="sold-source-select" class="form-select" required>
+            <option value="INSTAGRAM_DM">Instagram DM (Direct Sale)</option>
+            <option value="MANUAL">Manual / Offline Sale</option>
+            <option value="OTHER">Other Channel</option>
+          </select>
+        </div>
+
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+          ✓ The piece will remain visible in its category with a <strong>SOLD OUT</strong> label.<br>
+          ✓ Add to Cart & Buy Now will be immediately disabled.
+        </p>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('sold-modal')">Cancel</button>
+          <button type="submit" class="btn btn-gold" style="width: auto; background: var(--accent-orange);">Confirm Sold Out</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 5. RESTORE TO AVAILABLE MODAL -->
+  <div id="restore-modal" class="modal-backdrop">
+    <div class="modal-card" style="max-width: 440px;">
+      <div class="modal-header">
+        <div class="modal-title">Restore Piece to Available</div>
+        <button class="modal-close" onclick="closeModal('restore-modal')">×</button>
+      </div>
+
+      <form id="restore-product-form">
+        <input type="hidden" id="restore-product-id">
+
+        <p style="font-size: 14px; margin-bottom: 16px; color: var(--text-main);">
+          Restore <strong id="restore-product-label" style="color: var(--accent-gold);"></strong> back to <strong>AVAILABLE</strong>?
+        </p>
+
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.5;">
+          ✓ The piece will become purchasable again on the website.<br>
+          ✓ The SOLD OUT badge will be removed.
+        </p>
+
+        <div style="display: flex; justify-content: flex-end; gap: 10px;">
+          <button type="button" class="btn btn-outline" onclick="closeModal('restore-modal')">Cancel</button>
+          <button type="submit" class="btn btn-gold" style="width: auto; background: var(--accent-green);">Confirm Restore</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- JAVASCRIPT LOGIC -->
+  <script>
+    let allProducts = [];
+    let currentAdminKey = sessionStorage.getItem('zf_admin_key') || '';
+
+    // Init check
+    window.addEventListener('DOMContentLoaded', () => {
+      if (currentAdminKey) {
+        verifyAndLoadDashboard(currentAdminKey);
+      } else {
+        showAuthScreen();
+      }
+    });
+
+    // Auth Form Submit
+    document.getElementById('auth-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const key = document.getElementById('admin-key-input').value.trim();
+      if (!key) return;
+      await verifyAndLoadDashboard(key);
+    });
+
+    // Logout
+    document.getElementById('btn-logout').addEventListener('click', () => {
+      sessionStorage.removeItem('zf_admin_key');
+      currentAdminKey = '';
+      showAuthScreen();
+    });
+
+    function showAuthScreen() {
+      document.getElementById('auth-screen').style.display = 'flex';
+      document.getElementById('dashboard-screen').style.display = 'none';
+      document.getElementById('admin-key-input').value = '';
+    }
+
+    function showDashboardScreen() {
+      document.getElementById('auth-screen').style.display = 'none';
+      document.getElementById('dashboard-screen').style.display = 'flex';
+    }
+
+    async function verifyAndLoadDashboard(key) {
+      const authAlert = document.getElementById('auth-alert');
+      authAlert.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/auth/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': key
+          }
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          authAlert.textContent = data.error || 'Invalid admin key. Access denied.';
+          authAlert.style.display = 'block';
+          sessionStorage.removeItem('zf_admin_key');
+          return;
+        }
+
+        currentAdminKey = key;
+        sessionStorage.setItem('zf_admin_key', key);
+        showDashboardScreen();
+        await fetchInventory();
+      } catch (err) {
+        authAlert.textContent = 'Server connection error: ' + err.message;
+        authAlert.style.display = 'block';
+      }
+    }
+
+    // Fetch Inventory
+    async function fetchInventory() {
+      try {
+        const res = await fetch('/api/admin/products', {
+          headers: { 'x-admin-key': currentAdminKey }
+        });
+        const data = await res.json();
+        if (data.success && Array.isArray(data.products)) {
+          allProducts = data.products;
+          renderStats();
+          renderTable();
+        } else if (res.status === 401) {
+          showAuthScreen();
+        }
+      } catch (e) {
+        showGlobalAlert('Failed to load inventory: ' + e.message, 'error');
+      }
+    }
+
+    // Render Stats
+    function renderStats() {
+      const total = allProducts.length;
+      const available = allProducts.filter(p => p.status === 'AVAILABLE').length;
+      const sold = allProducts.filter(p => p.status === 'SOLD_OUT').length;
+      const dm = allProducts.filter(p => p.sale_source === 'INSTAGRAM_DM' || p.sale_source === 'MANUAL').length;
+      const website = allProducts.filter(p => p.sale_source === 'WEBSITE').length;
+
+      document.getElementById('stat-total').textContent = total;
+      document.getElementById('stat-available').textContent = available;
+      document.getElementById('stat-sold').textContent = sold;
+      document.getElementById('stat-dm').textContent = dm;
+      document.getElementById('stat-website').textContent = website;
+    }
+
+    // Render Table
+    function renderTable() {
+      const tbody = document.getElementById('inventory-table-body');
+      const search = (document.getElementById('search-box').value || '').toLowerCase().trim();
+      const catFilter = document.getElementById('filter-category').value;
+      const statusFilter = document.getElementById('filter-status').value;
+      const sourceFilter = document.getElementById('filter-source').value;
+
+      const filtered = allProducts.filter(p => {
+        const matchSearch = !search || p.id.toLowerCase().includes(search) || (p.product_name || '').toLowerCase().includes(search);
+        const matchCat = catFilter === 'ALL' || (p.category || '').toUpperCase() === catFilter;
+        const matchStatus = statusFilter === 'ALL' || (p.status || '').toUpperCase() === statusFilter;
+        const matchSource = sourceFilter === 'ALL' || (p.sale_source || '').toUpperCase() === sourceFilter;
+        return matchSearch && matchCat && matchStatus && matchSource;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; padding: 30px; color: var(--text-muted);">No products match your filters.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(p => {
+        const isAvailable = (p.status === 'AVAILABLE');
+        const img = (Array.isArray(p.images) && p.images[0]) ? p.images[0] : (typeof p.images === 'string' ? p.images : '');
+        
+        let sourceBadge = '<span style="color: var(--text-muted); font-size: 11px;">—</span>';
+        if (p.sale_source === 'INSTAGRAM_DM') {
+          sourceBadge = '<span class="source-badge source-dm">📸 Instagram DM</span>';
+        } else if (p.sale_source === 'WEBSITE') {
+          sourceBadge = '<span class="source-badge source-website">🛍 Website Order</span>';
+        } else if (p.sale_source === 'MANUAL') {
+          sourceBadge = '<span class="source-badge source-manual">🏷 Manual Sale</span>';
+        } else if (p.sale_source) {
+          sourceBadge = `<span class="source-badge source-manual">${p.sale_source}</span>`;
+        }
+
+        let dateDisplay = '<span style="color: var(--text-muted); font-size: 11px;">—</span>';
+        if (p.sold_at) {
+          try {
+            dateDisplay = new Date(p.sold_at).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+          } catch(e) {}
+        }
+        if (p.linked_order_number || p.linked_order_id) {
+          dateDisplay += ` <div style="font-size: 10px; color: var(--accent-gold); font-family: var(--font-mono); margin-top: 2px;">#${p.linked_order_number || p.linked_order_id}</div>`;
+        }
+
+        return `
+          <tr>
+            <td>
+              <img src="${img || 'data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' fill=\'%23333\'><rect width=\'40\' height=\'40\'/></svg>'}" class="prod-thumb" alt="${p.id}" onerror="this.src='data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\' width=\'40\' height=\'40\' fill=\'%23333\'><rect width=\'40\' height=\'40\'/></svg>'">
+            </td>
+            <td>
+              <span class="prod-id">${p.id}</span>
+            </td>
+            <td>
+              <div style="font-weight: 600; color: #ffffff;">${p.product_name || 'Curated Item'}</div>
+              <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">${p.category} · Size: ${p.display_size || 'Free Size'}</div>
+            </td>
+            <td>
+              <span style="font-family: var(--font-mono); font-weight: 700; color: #ffffff;">${p.price || ('₹' + (p.numeric_price || 0))}</span>
+            </td>
+            <td>
+              <span class="status-badge ${isAvailable ? 'status-available' : 'status-sold'}">
+                ${isAvailable ? '● AVAILABLE' : '✕ SOLD OUT'}
+              </span>
+            </td>
+            <td>${sourceBadge}</td>
+            <td>${dateDisplay}</td>
+            <td style="text-align: right;">
+              <div class="actions-cell" style="justify-content: flex-end;">
+                ${isAvailable ? `
+                  <button class="btn btn-sold" onclick="openSoldModal('${p.id}', '${escapeHtml(p.product_name)}')">
+                    Mark Sold Out
+                  </button>
+                ` : `
+                  <button class="btn btn-restore" onclick="openRestoreModal('${p.id}', '${escapeHtml(p.product_name)}')">
+                    Restore Available
+                  </button>
+                `}
+                <button class="btn btn-delete" title="Delete product" onclick="deleteProduct('${p.id}')">✕</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+    }
+
+    // Filter listeners
+    document.getElementById('search-box').addEventListener('input', renderTable);
+    document.getElementById('filter-category').addEventListener('change', renderTable);
+    document.getElementById('filter-status').addEventListener('change', renderTable);
+    document.getElementById('filter-source').addEventListener('change', renderTable);
+
+    // Modal Handlers
+    function openModal(modalId) {
+      document.getElementById(modalId).style.display = 'flex';
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+      const alert = document.getElementById(modalId + '-alert');
+      if (alert) alert.style.display = 'none';
+    }
+
+    document.getElementById('btn-open-add-modal').addEventListener('click', () => {
+      suggestProductId();
+      openModal('add-modal');
+    });
+
+    function suggestProductId() {
+      const cat = document.getElementById('new-category').value;
+      const prefix = cat === 'JACKETS' ? 'ZJ-' : 'ZH-';
+      // Find highest number in that category
+      const existingInCat = allProducts.filter(p => p.category === cat && p.id.startsWith(prefix));
+      let nextNum = existingInCat.length + 1;
+      const suggested = prefix + String(nextNum).padStart(2, '0');
+      document.getElementById('new-id').placeholder = `e.g. ${suggested}`;
+    }
+
+    // Add Product Form Submit
+    document.getElementById('add-product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const modalAlert = document.getElementById('add-modal-alert');
+      modalAlert.style.display = 'none';
+
+      const id = document.getElementById('new-id').value.trim();
+      const name = document.getElementById('new-name').value.trim();
+      const category = document.getElementById('new-category').value;
+      const priceNum = parseFloat(document.getElementById('new-price').value) || 0;
+      const displaySize = document.getElementById('new-size').value.trim() || 'Free Size';
+      const description = document.getElementById('new-description').value.trim();
+      
+      const rawImages = document.getElementById('new-images').value.trim();
+      const imagesList = rawImages.split(/[\n,]+/).map(s => s.trim()).filter(Boolean);
+
+      if (!id) {
+        modalAlert.textContent = 'Product ID is required.';
+        modalAlert.style.display = 'block';
+        return;
+      }
+
+      if (imagesList.length === 0) {
+        modalAlert.textContent = 'Please provide at least one product image URL.';
+        modalAlert.style.display = 'block';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/admin/products', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': currentAdminKey
+          },
+          body: JSON.stringify({
+            id,
+            product_name: name,
+            category,
+            price: '₹' + priceNum.toLocaleString('en-IN'),
+            numeric_price: priceNum,
+            display_size: displaySize,
+            description,
+            images: imagesList,
+            status: 'AVAILABLE'
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          modalAlert.textContent = data.error || 'Failed to add product.';
+          modalAlert.style.display = 'block';
+          return;
+        }
+
+        closeModal('add-modal');
+        document.getElementById('add-product-form').reset();
+        showGlobalAlert(`✓ Piece "${id}" added successfully to ${category}!`, 'success');
+        await fetchInventory();
+      } catch (err) {
+        modalAlert.textContent = 'Network error: ' + err.message;
+        modalAlert.style.display = 'block';
+      }
+    });
+
+    // Mark Sold Out Form
+    window.openSoldModal = function(id, name) {
+      document.getElementById('sold-product-id').value = id;
+      document.getElementById('sold-product-label').textContent = `${name} (${id})`;
+      openModal('sold-modal');
+    };
+
+    document.getElementById('mark-sold-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('sold-product-id').value;
+      const source = document.getElementById('sold-source-select').value;
+      const alert = document.getElementById('sold-modal-alert');
+      alert.style.display = 'none';
+
+      try {
+        const res = await fetch('/api/admin/products/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': currentAdminKey
+          },
+          body: JSON.stringify({
+            id,
+            status: 'SOLD_OUT',
+            sale_source: source
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          alert.textContent = data.error || 'Failed to update status.';
+          alert.style.display = 'block';
+          return;
+        }
+
+        closeModal('sold-modal');
+        showGlobalAlert(`✓ Piece ${id} marked SOLD OUT via ${source}.`, 'success');
+        await fetchInventory();
+      } catch (err) {
+        alert.textContent = 'Error: ' + err.message;
+        alert.style.display = 'block';
+      }
+    });
+
+    // Restore to Available Form
+    window.openRestoreModal = function(id, name) {
+      document.getElementById('restore-product-id').value = id;
+      document.getElementById('restore-product-label').textContent = `${name} (${id})`;
+      openModal('restore-modal');
+    };
+
+    document.getElementById('restore-product-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('restore-product-id').value;
+
+      try {
+        const res = await fetch('/api/admin/products/status', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': currentAdminKey
+          },
+          body: JSON.stringify({
+            id,
+            status: 'AVAILABLE'
+          })
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          alert('Failed to restore piece: ' + (data.error || 'Unknown error'));
+          return;
+        }
+
+        closeModal('restore-modal');
+        showGlobalAlert(`✓ Piece ${id} restored to AVAILABLE status.`, 'success');
+        await fetchInventory();
+      } catch (err) {
+        alert('Error: ' + err.message);
+      }
+    });
+
+    // Delete Product
+    window.deleteProduct = async function(id) {
+      if (!confirm(`Are you sure you want to permanently delete product ${id}?`)) return;
+
+      try {
+        const res = await fetch('/api/admin/products', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-admin-key': currentAdminKey
+          },
+          body: JSON.stringify({ id })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          showGlobalAlert(`✓ Piece ${id} deleted.`, 'success');
+          await fetchInventory();
+        } else {
+          alert('Error: ' + data.error);
+        }
+      } catch (err) {
+        alert('Network error: ' + err.message);
+      }
+    };
+
+    function showGlobalAlert(msg, type = 'success') {
+      const alert = document.getElementById('global-alert');
+      alert.className = `alert alert-${type}`;
+      alert.textContent = msg;
+      alert.style.display = 'block';
+      setTimeout(() => {
+        alert.style.display = 'none';
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

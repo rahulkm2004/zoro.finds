@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS products (
   length TEXT,                -- Measurement: Length
   condition TEXT,             -- Condition grade (e.g. 9/10, 8.5/10)
   status TEXT NOT NULL DEFAULT 'AVAILABLE' CHECK(status IN ('AVAILABLE', 'SOLD_OUT', 'ARCHIVED')),
+  sale_source TEXT DEFAULT NULL CHECK(sale_source IN ('WEBSITE', 'INSTAGRAM_DM', 'MANUAL', 'OTHER') OR sale_source IS NULL),
+  sold_at TEXT DEFAULT NULL,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );
