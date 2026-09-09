@@ -32,7 +32,7 @@ export async function onRequestGet(context) {
       query += ' WHERE ' + conditions.join(' AND ');
     }
 
-    query += ' ORDER BY id ASC';
+    query += ' ORDER BY created_at DESC, id DESC';
 
     const { results } = await env.DB.prepare(query).bind(...params).all();
 

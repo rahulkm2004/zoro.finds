@@ -3389,7 +3389,7 @@ let HOODIES = [
 const FILTER_SIZES = ["S", "M", "L", "XL", "XXL"];
 let currentTab = "HOME";
 let currentSize = "ALL";
-let currentSort = "high-low";
+let currentSort = "newest";
 let lastFocused = null;
 
 const mainEl = document.getElementById("mainContent");
@@ -3724,7 +3724,7 @@ function goToHome() {
 function goToCollection(categoryName) {
   currentTab = categoryName;
   currentSize = "ALL";
-  currentSort = "high-low";
+  currentSort = "newest";
   if (categoryName === "HOODIES") {
     if (window.location.hash !== "#hoodies") {
       try { history.pushState(null, null, "#hoodies"); } catch (e) { window.location.hash = "hoodies"; }
@@ -3929,14 +3929,22 @@ function renderActiveCollection() {
   }
 
   displayItems = [...displayItems].sort((a, b) => {
-    const pa = parsePrice(a.price);
-    const pb = parsePrice(b.price);
     if (currentSort === "low-high") {
+      const pa = parsePrice(a.price);
+      const pb = parsePrice(b.price);
       if (pa !== pb) return pa - pb;
-    } else {
+    } else if (currentSort === "high-low") {
+      const pa = parsePrice(a.price);
+      const pb = parsePrice(b.price);
       if (pa !== pb) return pb - pa;
+    } else {
+      // Default: NEWEST FIRST (by created_at timestamp)
+      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
+      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
+      if (timeA !== timeB) return timeB - timeA;
     }
-    return a.id.localeCompare(b.id);
+    // Fallback/secondary newest-first by ID (higher ID numbers appear first)
+    return b.id.localeCompare(a.id, undefined, { numeric: true, sensitivity: 'base' });
   });
 
   renderCatalogueView(displayItems);
@@ -3968,7 +3976,8 @@ function renderCatalogueView(items) {
       </div>
       <div class="toolbar-section sort-section">
         <span class="toolbar-label mono">Sort:</span>
-        <div class="toolbar-pills" role="radiogroup" aria-label="Sort by price">
+        <div class="toolbar-pills" role="radiogroup" aria-label="Sort products">
+          <button type="button" class="toolbar-btn mono ${currentSort === 'newest' ? 'active' : ''}" onclick="setSortOrder('newest')" aria-pressed="${currentSort === 'newest'}">NEWEST FIRST</button>
           <button type="button" class="toolbar-btn mono ${currentSort === 'high-low' ? 'active' : ''}" onclick="setSortOrder('high-low')" aria-pressed="${currentSort === 'high-low'}">PRICE: HIGH TO LOW</button>
           <button type="button" class="toolbar-btn mono ${currentSort === 'low-high' ? 'active' : ''}" onclick="setSortOrder('low-high')" aria-pressed="${currentSort === 'low-high'}">PRICE: LOW TO HIGH</button>
         </div>
@@ -5021,6 +5030,8 @@ async function fetchProductsFromDB() {
     const dbHoodies = [];
 
     data.products.forEach(p => {
+      const isSold = (p.status === 'SOLD_OUT' || p.status === 'sold');
+      const isArchived = (p.status === 'ARCHIVED');
       const item = {
         id: p.id,
         name: p.product_name,
@@ -5033,7 +5044,9 @@ async function fetchProductsFromDB() {
         measurements: { chest: p.chest || '', length: p.length || '' },
         condition: p.condition || '9/10',
         description: p.description || '',
-        status: (p.status === 'SOLD_OUT' || p.status === 'ARCHIVED') ? 'sold' : 'available'
+        status: isSold ? 'sold' : (isArchived ? 'archived' : 'available'),
+        isArchive: isArchived,
+        created_at: p.created_at || null
       };
 
       if (p.category === 'HOODIES') {

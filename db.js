@@ -77,7 +77,7 @@ function getAllProducts(options = {}) {
     query += ' WHERE ' + conditions.join(' AND ');
   }
 
-  query += ' ORDER BY id ASC';
+  query += ' ORDER BY created_at DESC, id DESC';
 
   const stmt = db.prepare(query);
   const rows = stmt.all(...params);
