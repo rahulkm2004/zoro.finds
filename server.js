@@ -462,14 +462,26 @@ const server = http.createServer(async (req, res) => {
         };
 
         try {
-          import('./email-service.js').then(({ sendAdminOrderNotification }) => {
+          import('./email-service.js').then(({ sendAdminOrderNotification, sendCustomerOrderConfirmation }) => {
+            // 1. Send Admin packing notification
             sendAdminOrderNotification(orderPayload, process.env).then(emailRes => {
               if (emailRes && emailRes.success) {
                 db.markOrderEmailSent(dbResult.order_id);
               }
             }).catch(err => {
-              console.error('[Mailjet] Background email error:', err.message);
+              console.error('[Mailjet] Background admin email error:', err.message);
             });
+
+            // 2. Send Customer confirmation email
+            if (customer.email && customer.email.includes('@')) {
+              sendCustomerOrderConfirmation(orderPayload, process.env).then(custRes => {
+                if (custRes && custRes.success) {
+                  db.markCustomerEmailSent(dbResult.order_id);
+                }
+              }).catch(err => {
+                console.error('[Mailjet] Background customer email error:', err.message);
+              });
+            }
           }).catch(err => {
             console.error('[Mailjet] Service load error:', err.message);
           });

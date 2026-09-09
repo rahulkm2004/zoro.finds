@@ -4,7 +4,7 @@
  * Permanent database for Products, 1-of-1 Availability, 10-Minute Temporary Reservations, Orders, and Razorpay Payments.
  */
 
-import { sendAdminOrderNotification } from './email-service.js';
+import { sendAdminOrderNotification, sendCustomerOrderConfirmation } from './email-service.js';
 
 // Helper: JSON response with CORS headers
 function jsonResponse(data, status = 200) {
@@ -545,7 +545,7 @@ export default {
 
           if (existingOrder) {
             // DUPLICATE EMAIL PROTECTION:
-            // If email was not previously sent (e.g. earlier network glitch), attempt sending once
+            // 1. Admin packing email retry if not yet sent
             if (!existingOrder.admin_email_sent) {
               try {
                 const parsedProducts = typeof existingOrder.products === 'string' ? JSON.parse(existingOrder.products) : existingOrder.products;
@@ -562,6 +562,28 @@ export default {
                 }
               } catch (e) {
                 console.warn('[Mailjet] Retry admin notification failed:', e.message);
+              }
+            }
+
+            // 2. Customer confirmation email retry if not yet sent
+            if (!existingOrder.customer_email_sent && (existingOrder.customer_email || customer.email)) {
+              try {
+                const parsedProducts = typeof existingOrder.products === 'string' ? JSON.parse(existingOrder.products) : existingOrder.products;
+                const custRes = await sendCustomerOrderConfirmation({
+                  ...existingOrder,
+                  customer_email: existingOrder.customer_email || customer.email,
+                  customer_name: existingOrder.customer_name || customer.name,
+                  products: parsedProducts,
+                  subtotal_amount: subtotalAmount
+                }, env);
+                if (custRes && custRes.success) {
+                  try {
+                    await env.DB.prepare("UPDATE orders SET customer_email_sent = 1, customer_email_sent_at = ? WHERE id = ?")
+                      .bind(now, existingOrder.id).run();
+                  } catch (e) {}
+                }
+              } catch (e) {
+                console.warn('[Mailjet] Retry customer confirmation failed:', e.message);
               }
             }
 
@@ -617,8 +639,8 @@ export default {
                 id, order_number, customer_name, customer_phone, customer_email,
                 shipping_address, city, state, pincode, products, shipping_charge, total_amount,
                 payment_method, payment_status, order_status, razorpay_order_id,
-                razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, created_at, updated_at
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+                razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, customer_email_sent, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, 0, ?, ?)
             `).bind(
               orderId,
               orderNumber,
@@ -643,40 +665,73 @@ export default {
               now
             ).run();
           } catch (insertErr) {
-            // Fallback if admin_email_sent column not yet migrated
-            await env.DB.prepare(`
-              INSERT INTO orders (
-                id, order_number, customer_name, customer_phone, customer_email,
-                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
-                payment_method, payment_status, order_status, razorpay_order_id,
-                razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `).bind(
-              orderId,
-              orderNumber,
-              customer.name || 'Customer',
-              customer.phone || '',
-              customer.email || '',
-              customer.address || '',
-              customer.city || '',
-              customer.state || '',
-              customer.pincode || '',
-              JSON.stringify(items),
-              shippingCharge,
-              totalAmount,
-              paymentMethod,
-              paymentStatus,
-              'CONFIRMED',
-              razorpay_order_id,
-              razorpay_payment_id,
-              advanceAmount,
-              remainingAmount,
-              now,
-              now
-            ).run();
+            // Fallback if email tracking columns not yet in older table
+            try {
+              await env.DB.prepare(`
+                INSERT INTO orders (
+                  id, order_number, customer_name, customer_phone, customer_email,
+                  shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                  payment_method, payment_status, order_status, razorpay_order_id,
+                  razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+              `).bind(
+                orderId,
+                orderNumber,
+                customer.name || 'Customer',
+                customer.phone || '',
+                customer.email || '',
+                customer.address || '',
+                customer.city || '',
+                customer.state || '',
+                customer.pincode || '',
+                JSON.stringify(items),
+                shippingCharge,
+                totalAmount,
+                paymentMethod,
+                paymentStatus,
+                'CONFIRMED',
+                razorpay_order_id,
+                razorpay_payment_id,
+                advanceAmount,
+                remainingAmount,
+                now,
+                now
+              ).run();
+            } catch (fbErr) {
+              await env.DB.prepare(`
+                INSERT INTO orders (
+                  id, order_number, customer_name, customer_phone, customer_email,
+                  shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                  payment_method, payment_status, order_status, razorpay_order_id,
+                  razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+              `).bind(
+                orderId,
+                orderNumber,
+                customer.name || 'Customer',
+                customer.phone || '',
+                customer.email || '',
+                customer.address || '',
+                customer.city || '',
+                customer.state || '',
+                customer.pincode || '',
+                JSON.stringify(items),
+                shippingCharge,
+                totalAmount,
+                paymentMethod,
+                paymentStatus,
+                'CONFIRMED',
+                razorpay_order_id,
+                razorpay_payment_id,
+                advanceAmount,
+                remainingAmount,
+                now,
+                now
+              ).run();
+            }
           }
 
-          // 4. Send Admin Notification Email via Mailjet (Guarded & Duplicate Protected)
+          // 4. Send Admin Packing Notification Email via Mailjet (Independent & Protected)
           const orderPayload = {
             id: orderId,
             order_number: orderNumber,
@@ -708,7 +763,6 @@ export default {
                 await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?")
                   .bind(now, orderId).run();
               } catch (dbErr) {
-                // If column is missing in older schema, add it dynamically
                 try {
                   await env.DB.prepare("ALTER TABLE orders ADD COLUMN admin_email_sent INTEGER DEFAULT 0").run();
                   await env.DB.prepare("ALTER TABLE orders ADD COLUMN admin_email_sent_at TEXT").run();
@@ -719,6 +773,28 @@ export default {
             }
           } catch (emailErr) {
             console.error('[Admin Email Error]:', emailErr.message);
+          }
+
+          // 5. Send Customer Confirmation Email via Mailjet (Independent & Protected)
+          if (customer.email && customer.email.includes('@')) {
+            try {
+              const custEmailResult = await sendCustomerOrderConfirmation(orderPayload, env);
+              if (custEmailResult && custEmailResult.success) {
+                try {
+                  await env.DB.prepare("UPDATE orders SET customer_email_sent = 1, customer_email_sent_at = ? WHERE id = ?")
+                    .bind(now, orderId).run();
+                } catch (dbErr) {
+                  try {
+                    await env.DB.prepare("ALTER TABLE orders ADD COLUMN customer_email_sent INTEGER DEFAULT 0").run();
+                    await env.DB.prepare("ALTER TABLE orders ADD COLUMN customer_email_sent_at TEXT").run();
+                    await env.DB.prepare("UPDATE orders SET customer_email_sent = 1, customer_email_sent_at = ? WHERE id = ?")
+                      .bind(now, orderId).run();
+                  } catch (alterErr) {}
+                }
+              }
+            } catch (custEmailErr) {
+              console.error('[Customer Email Error]:', custEmailErr.message);
+            }
           }
         }
 

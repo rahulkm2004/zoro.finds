@@ -48,6 +48,8 @@ CREATE TABLE IF NOT EXISTS orders (
   remaining_amount REAL DEFAULT 0,
   admin_email_sent INTEGER DEFAULT 0,
   admin_email_sent_at TEXT,
+  customer_email_sent INTEGER DEFAULT 0,
+  customer_email_sent_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );

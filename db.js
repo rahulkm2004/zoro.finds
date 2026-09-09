@@ -40,6 +40,11 @@ function applyMigrations(db) {
       db.exec("ALTER TABLE orders ADD COLUMN admin_email_sent INTEGER DEFAULT 0;");
       db.exec("ALTER TABLE orders ADD COLUMN admin_email_sent_at TEXT;");
     }
+    const hasCustomerEmailSent = tableInfo.some(col => col.name === 'customer_email_sent');
+    if (!hasCustomerEmailSent) {
+      db.exec("ALTER TABLE orders ADD COLUMN customer_email_sent INTEGER DEFAULT 0;");
+      db.exec("ALTER TABLE orders ADD COLUMN customer_email_sent_at TEXT;");
+    }
   } catch (e) {}
 }
 
@@ -311,6 +316,24 @@ function markOrderEmailSent(orderId) {
 }
 
 /**
+ * Mark customer email as sent for an order
+ */
+function markCustomerEmailSent(orderId) {
+  if (!orderId) return;
+  const db = getDb();
+  const now = new Date().toISOString();
+  try {
+    db.prepare('UPDATE orders SET customer_email_sent = 1, customer_email_sent_at = ? WHERE id = ?').run(now, orderId);
+  } catch (e) {
+    try {
+      db.prepare('ALTER TABLE orders ADD COLUMN customer_email_sent INTEGER DEFAULT 0').run();
+      db.prepare('ALTER TABLE orders ADD COLUMN customer_email_sent_at TEXT').run();
+      db.prepare('UPDATE orders SET customer_email_sent = 1, customer_email_sent_at = ? WHERE id = ?').run(now, orderId);
+    } catch (err) {}
+  }
+}
+
+/**
  * Get order by Razorpay payment ID for idempotency check
  */
 function getOrderByPaymentId(paymentId) {
@@ -347,6 +370,7 @@ module.exports = {
   releaseProductReservations,
   confirmOrderAndMarkSoldOut,
   markOrderEmailSent,
+  markCustomerEmailSent,
   getOrderByPaymentId,
   getAllOrders
 };
