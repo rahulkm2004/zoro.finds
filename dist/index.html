@@ -3938,7 +3938,7 @@ function renderActiveCollection() {
       const pb = parsePrice(b.price);
       if (pa !== pb) return pb - pa;
     } else {
-      // Default: NEWEST FIRST (by created_at timestamp)
+      // Default: automatic newest ordering by created_at timestamp
       const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
       const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
       if (timeA !== timeB) return timeB - timeA;
@@ -3976,8 +3976,7 @@ function renderCatalogueView(items) {
       </div>
       <div class="toolbar-section sort-section">
         <span class="toolbar-label mono">Sort:</span>
-        <div class="toolbar-pills" role="radiogroup" aria-label="Sort products">
-          <button type="button" class="toolbar-btn mono ${currentSort === 'newest' ? 'active' : ''}" onclick="setSortOrder('newest')" aria-pressed="${currentSort === 'newest'}">NEWEST FIRST</button>
+        <div class="toolbar-pills" role="radiogroup" aria-label="Sort by price">
           <button type="button" class="toolbar-btn mono ${currentSort === 'high-low' ? 'active' : ''}" onclick="setSortOrder('high-low')" aria-pressed="${currentSort === 'high-low'}">PRICE: HIGH TO LOW</button>
           <button type="button" class="toolbar-btn mono ${currentSort === 'low-high' ? 'active' : ''}" onclick="setSortOrder('low-high')" aria-pressed="${currentSort === 'low-high'}">PRICE: LOW TO HIGH</button>
         </div>
