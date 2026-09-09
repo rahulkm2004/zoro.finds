@@ -3581,7 +3581,7 @@ function saveCart(cart) {
 }
 
 /**
- * Validates all cart items against live database availability and active reservations.
+ * Validates all cart items against live database availability.
  * Automatically purges stale/sold-out products and recalculates totals.
  */
 async function syncAndValidateCart(notifyUser = false) {
@@ -3595,17 +3595,16 @@ async function syncAndValidateCart(notifyUser = false) {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items: currentCart,
-        session_id: getSessionId()
+        items: currentCart
       })
     });
 
     if (res.ok) {
       const data = await res.json();
-      const unavailableIds = [...(data.sold_items || []), ...(data.reserved_items || [])];
+      const unavailableIds = data.sold_items || [];
 
       if (!data.valid && unavailableIds.length > 0) {
-        // Filter out sold-out or externally reserved items from local cart
+        // Filter out sold-out items from local cart
         const updatedCart = currentCart.filter(item => !unavailableIds.includes(item.id));
         try {
           localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedCart));
@@ -3627,11 +3626,7 @@ async function syncAndValidateCart(notifyUser = false) {
         fetchProductsFromDB();
 
         if (notifyUser) {
-          if (data.reserved_items && data.reserved_items.length > 0) {
-            showToast("Sorry, this item is currently being purchased by another customer.");
-          } else {
-            showToast("Sorry, this item has just sold out.");
-          }
+          showToast("Sorry, this item has just sold out.");
         }
 
         return { valid: false, cart: updatedCart, removed: unavailableIds };
@@ -3658,23 +3653,16 @@ async function addToCart(productId, sizeChoice, openDrawer = false, suppressSoun
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items: [{ id: productId }],
-        session_id: getSessionId()
+        items: [{ id: productId }]
       })
     });
     if (res.ok) {
       const data = await res.json();
-      if (!data.valid) {
-        if (data.reserved_items && data.reserved_items.includes(productId)) {
-          showToast("Sorry, this item is currently being purchased by another customer.");
-          return false;
-        }
-        if (data.sold_items && data.sold_items.includes(productId)) {
-          showToast("Sorry, this item has just sold out.");
-          p.status = "sold";
-          fetchProductsFromDB();
-          return false;
-        }
+      if (!data.valid && data.sold_items && data.sold_items.includes(productId)) {
+        showToast("Sorry, this item has just sold out.");
+        p.status = "sold";
+        fetchProductsFromDB();
+        return false;
       }
     }
   } catch (e) {}
@@ -4221,44 +4209,8 @@ function renderReviews() {
 }
 
 /* =========================================================================
-   CHECKOUT PAGE & ORDER PLACEMENT FLOW (10-MINUTE RESERVATION)
+   CHECKOUT PAGE & ORDER PLACEMENT FLOW (1-OF-1 ATOMIC CHECKOUT)
 ========================================================================= */
-let checkoutReservationExpiresAt = null;
-let checkoutReservationTimerInterval = null;
-
-function startReservationCountdown() {
-  clearInterval(checkoutReservationTimerInterval);
-  const timerEl = document.getElementById("checkoutReservationTimer");
-  if (!timerEl || !checkoutReservationExpiresAt) return;
-
-  function updateDisplay() {
-    const now = new Date().getTime();
-    const diff = checkoutReservationExpiresAt.getTime() - now;
-
-    if (diff <= 0) {
-      clearInterval(checkoutReservationTimerInterval);
-      if (timerEl) {
-        timerEl.textContent = "00:00 (EXPIRED)";
-        timerEl.style.color = "#dc2626";
-      }
-      showToast("Checkout reservation expired. Revalidating item availability...");
-      syncAndValidateCart(true);
-      return;
-    }
-
-    const minutes = Math.floor(diff / (1000 * 60));
-    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-    const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-
-    if (timerEl) {
-      timerEl.textContent = formatted;
-    }
-  }
-
-  updateDisplay();
-  checkoutReservationTimerInterval = setInterval(updateDisplay, 1000);
-}
-
 async function startCheckout() {
   const validation = await syncAndValidateCart(true);
   const cart = validation.cart;
@@ -4267,38 +4219,9 @@ async function startCheckout() {
     return false;
   }
 
-  // Acquire temporary 10-minute server-side reservation in D1
-  try {
-    const res = await fetch("/api/reserve", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        items: cart,
-        session_id: getSessionId()
-      })
-    });
-
-    const resData = await res.json();
-    if (!res.ok || !resData.success) {
-      if (resData.reason === 'RESERVED') {
-        showToast("Sorry, this item is currently being purchased by another customer.");
-      } else {
-        showToast(resData.error || "Sorry, this item has just sold out.");
-      }
-      await syncAndValidateCart(false);
-      return false;
-    }
-
-    checkoutReservationExpiresAt = resData.expires_at ? new Date(resData.expires_at) : new Date(Date.now() + 10 * 60 * 1000);
-  } catch (err) {
-    console.warn("Reservation check error:", err.message);
-    checkoutReservationExpiresAt = new Date(Date.now() + 10 * 60 * 1000);
-  }
-
   currentTab = "CHECKOUT";
   renderTab("CHECKOUT");
   window.scrollTo({ top: 0, behavior: "instant" });
-  startReservationCountdown();
   return true;
 }
 
@@ -4456,16 +4379,6 @@ function renderCheckout() {
         <button type="button" class="checkout-back-btn mono" onclick="goToHome()">← CONTINUE SHOPPING</button>
       </div>
 
-      <!-- TEMPORARY 10-MINUTE RESERVATION BADGE -->
-      <div style="background: #111; color: #fff; border-left: 3px solid #c89d55; padding: 12px 16px; margin-bottom: 24px; border-radius: 2px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-        <div class="mono" style="font-size: 0.76rem; letter-spacing: 0.06em;">
-          ✦ 1-OF-1 PIECE HELD FOR YOUR CHECKOUT
-        </div>
-        <div class="mono" style="font-size: 0.8rem; color: #c89d55; font-weight: 700;">
-          RESERVATION EXPIRES IN: <span id="checkoutReservationTimer">10:00</span>
-        </div>
-      </div>
-
       <div class="checkout-grid">
         <div class="checkout-form-card">
           <div class="checkout-section-title mono">1. SHIPPING & CONTACT DETAILS</div>
@@ -4605,7 +4518,6 @@ function renderCheckout() {
       </div>
     </div>
   `;
-  startReservationCountdown();
 }
 
 async function handlePlaceOrder(e) {
@@ -4729,7 +4641,6 @@ async function handlePlaceOrder(e) {
           const verifyData = await verifyRes.json();
 
           if (verifyRes.ok && verifyData.success) {
-            clearInterval(checkoutReservationTimerInterval);
             localStorage.removeItem(CART_STORAGE_KEY);
             updateCartBadges();
             await fetchProductsFromDB();

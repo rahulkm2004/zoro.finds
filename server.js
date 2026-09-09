@@ -130,72 +130,38 @@ const server = http.createServer(async (req, res) => {
 
   // -------------------------------------------------------------------------
   // API ROUTE: POST /api/reserve
-  // Creates a 10-minute temporary server-side checkout reservation in D1
+  // Compatibility route
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/reserve') {
-    try {
-      const data = await parseBody(req);
-      const items = data.items || [];
-      const sessionId = data.session_id || data.sessionId;
-
-      if (!sessionId) {
-        return sendJSON(res, 400, { error: 'Session ID is required for checkout reservation' });
-      }
-
-      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-      const resResult = db.acquireProductReservations(itemIds, sessionId, 10);
-
-      if (!resResult.success) {
-        return sendJSON(res, 400, resResult);
-      }
-
-      return sendJSON(res, 200, resResult);
-    } catch (err) {
-      console.error('Error in /api/reserve:', err.message);
-      return sendJSON(res, 500, { error: 'Reservation failed: ' + err.message });
-    }
+    return sendJSON(res, 200, { success: true, expires_at: null });
   }
 
   // -------------------------------------------------------------------------
   // API ROUTE: POST /api/release-reservation
-  // Releases temporary reservation if customer leaves checkout or cancels
+  // Compatibility route
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/release-reservation') {
-    try {
-      const data = await parseBody(req);
-      const sessionId = data.session_id || data.sessionId;
-      const items = data.items || [];
-      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-
-      db.releaseProductReservations(sessionId, itemIds);
-      return sendJSON(res, 200, { success: true });
-    } catch (err) {
-      console.error('Error in /api/release-reservation:', err.message);
-      return sendJSON(res, 500, { error: 'Release failed: ' + err.message });
-    }
+    return sendJSON(res, 200, { success: true });
   }
 
   // -------------------------------------------------------------------------
   // API ROUTE: POST /api/validate-cart
-  // Validates cart items against real-time availability and active reservations
+  // Validates cart items against real-time availability (AVAILABLE vs SOLD_OUT)
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/validate-cart') {
     try {
       const data = await parseBody(req);
       const items = data.items || [];
-      const sessionId = data.session_id || data.sessionId || null;
       const validatedItems = [];
       const soldItems = [];
-      const reservedItems = [];
 
       const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-      const check = db.checkProductsAvailability(itemIds, sessionId);
+      const check = db.checkProductsAvailability(itemIds);
 
       for (const item of items) {
         const itemId = typeof item === 'string' ? item : item.id;
         const prod = db.getProductById(itemId);
         const isSold = check.soldItems.some(s => s.id === itemId);
-        const isReserved = check.reservedItems.some(r => r.id === itemId);
 
         if (isSold) {
           soldItems.push(itemId);
@@ -208,37 +174,27 @@ const server = http.createServer(async (req, res) => {
             reason: 'SOLD_OUT',
             message: 'Sorry, this item has just sold out.'
           });
-        } else if (isReserved) {
-          reservedItems.push(itemId);
-          validatedItems.push({
-            id: itemId,
-            name: prod?.product_name || item.name || itemId,
-            status: 'RESERVED',
-            numeric_price: prod?.numeric_price || item.numericPrice || 0,
-            available: false,
-            reason: 'RESERVED',
-            message: 'Sorry, this item is currently being purchased by another customer.'
-          });
         } else {
           validatedItems.push({
             id: itemId,
-            name: prod?.product_name || item.name || itemId,
+            name: prod ? prod.product_name : (item.name || itemId),
             status: 'AVAILABLE',
-            numeric_price: prod?.numeric_price || item.numericPrice || 0,
+            numeric_price: prod ? prod.numeric_price : (item.numericPrice || 0),
+            price: prod ? prod.price : (item.price || '₹0'),
             available: true
           });
         }
       }
 
       return sendJSON(res, 200, {
-        valid: (soldItems.length === 0 && reservedItems.length === 0),
+        valid: (soldItems.length === 0),
         items: validatedItems,
         sold_items: soldItems,
-        reserved_items: reservedItems
+        reserved_items: []
       });
     } catch (err) {
       console.error('Error in /api/validate-cart:', err.message);
-      return sendJSON(res, 500, { error: 'Failed to validate cart: ' + err.message });
+      return sendJSON(res, 500, { error: 'Validation failed: ' + err.message });
     }
   }
 

@@ -152,136 +152,32 @@ export default {
 
     // =========================================================================
     // API ROUTE: POST /api/reserve
-    // Creates a 10-minute temporary server-side checkout reservation in D1
+    // Compatibility route: No inventory blocking prior to payment
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/reserve') {
-      try {
-        const data = await request.json();
-        const items = data.items || [];
-        const sessionId = data.session_id || data.sessionId;
-
-        if (!sessionId) {
-          return jsonResponse({ error: 'Session ID is required for checkout reservation' }, 400);
-        }
-
-        const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-        if (itemIds.length === 0) {
-          return jsonResponse({ success: true, expires_at: null });
-        }
-
-        if (env.DB) {
-          await purgeExpiredReservations(env.DB);
-          const now = new Date().toISOString();
-          const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
-          // 1. Check availability and competing reservations
-          for (const pid of itemIds) {
-            const product = await env.DB.prepare('SELECT id, product_name, status FROM products WHERE id = ?')
-              .bind(pid)
-              .first();
-
-            if (!product || product.status !== 'AVAILABLE') {
-              return jsonResponse({
-                success: false,
-                reason: 'SOLD_OUT',
-                product_id: pid,
-                product_name: product?.product_name || pid,
-                error: 'Sorry, this item has just sold out.'
-              }, 400);
-            }
-
-            const competing = await env.DB.prepare(
-              "SELECT id, session_id, expires_at FROM product_reservations WHERE product_id = ? AND status = 'ACTIVE' AND expires_at > ? AND session_id != ?"
-            ).bind(pid, now, sessionId).first();
-
-            if (competing) {
-              return jsonResponse({
-                success: false,
-                reason: 'RESERVED',
-                product_id: pid,
-                product_name: product.product_name,
-                error: 'Sorry, this item is currently being purchased by another customer.'
-              }, 400);
-            }
-          }
-
-          // 2. Insert or refresh reservations
-          for (const pid of itemIds) {
-            await env.DB.prepare(
-              "UPDATE product_reservations SET status = 'EXPIRED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'"
-            ).bind(now, pid, sessionId).run();
-
-            const resId = 'RES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-            await env.DB.prepare(`
-              INSERT INTO product_reservations (
-                id, product_id, session_id, reserved_at, expires_at, status, created_at, updated_at
-              ) VALUES (?, ?, ?, ?, ?, 'ACTIVE', ?, ?)
-            `).bind(resId, pid, sessionId, now, expiresAt, now, now).run();
-          }
-
-          return jsonResponse({
-            success: true,
-            expires_at: expiresAt,
-            session_id: sessionId,
-            product_ids: itemIds
-          });
-        }
-
-        return jsonResponse({ success: true });
-      } catch (err) {
-        return jsonResponse({ error: 'Reservation error: ' + err.message }, 500);
-      }
+      return jsonResponse({ success: true, expires_at: null });
     }
 
     // =========================================================================
     // API ROUTE: POST /api/release-reservation
-    // Releases active reservation when customer abandons checkout
+    // Compatibility route
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/release-reservation') {
-      try {
-        const data = await request.json();
-        const sessionId = data.session_id || data.sessionId;
-        const items = data.items || [];
-        const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-
-        if (env.DB && sessionId) {
-          const now = new Date().toISOString();
-          if (itemIds.length > 0) {
-            for (const pid of itemIds) {
-              await env.DB.prepare(
-                "UPDATE product_reservations SET status = 'CANCELLED', updated_at = ? WHERE session_id = ? AND product_id = ? AND status = 'ACTIVE'"
-              ).bind(now, sessionId, pid).run();
-            }
-          } else {
-            await env.DB.prepare(
-              "UPDATE product_reservations SET status = 'CANCELLED', updated_at = ? WHERE session_id = ? AND status = 'ACTIVE'"
-            ).bind(now, sessionId).run();
-          }
-        }
-
-        return jsonResponse({ success: true });
-      } catch (err) {
-        return jsonResponse({ error: 'Release error: ' + err.message }, 500);
-      }
+      return jsonResponse({ success: true });
     }
 
     // =========================================================================
     // API ROUTE: POST /api/validate-cart
-    // Validates real-time product availability and active 10-min reservations in D1
+    // Validates real-time product availability (AVAILABLE vs SOLD_OUT) in D1
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/validate-cart') {
       try {
         const data = await request.json();
         const items = data.items || [];
-        const sessionId = data.session_id || data.sessionId || null;
         const validatedItems = [];
         const soldItems = [];
-        const reservedItems = [];
 
         if (env.DB) {
-          await purgeExpiredReservations(env.DB);
-          const now = new Date().toISOString();
-
           for (const item of items) {
             const itemId = typeof item === 'string' ? item : item.id;
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?')
@@ -299,30 +195,6 @@ export default {
                 reason: 'SOLD_OUT',
                 message: 'Sorry, this item has just sold out.'
               });
-              continue;
-            }
-
-            // Check if actively reserved by another customer
-            let resQuery = "SELECT id, session_id, expires_at FROM product_reservations WHERE product_id = ? AND status = 'ACTIVE' AND expires_at > ?";
-            const resParams = [itemId, now];
-            if (sessionId) {
-              resQuery += " AND session_id != ?";
-              resParams.push(sessionId);
-            }
-
-            const competingRes = await env.DB.prepare(resQuery).bind(...resParams).first();
-
-            if (competingRes) {
-              reservedItems.push(itemId);
-              validatedItems.push({
-                id: itemId,
-                name: product.product_name,
-                status: 'RESERVED',
-                numeric_price: product.numeric_price,
-                available: false,
-                reason: 'RESERVED',
-                message: 'Sorry, this item is currently being purchased by another customer.'
-              });
             } else {
               validatedItems.push({
                 id: itemId,
@@ -337,10 +209,10 @@ export default {
         }
 
         return jsonResponse({
-          valid: (soldItems.length === 0 && reservedItems.length === 0),
+          valid: (soldItems.length === 0),
           items: validatedItems,
           sold_items: soldItems,
-          reserved_items: reservedItems
+          reserved_items: []
         });
       } catch (err) {
         return jsonResponse({ error: 'Failed to validate cart: ' + err.message }, 500);
@@ -349,27 +221,21 @@ export default {
 
     // =========================================================================
     // API ROUTE: POST /api/create-order
-    // Availability verification, 10-minute hold, & Razorpay order creation via D1
+    // Availability verification & Razorpay order creation via D1
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/create-order') {
       try {
         const data = await request.json();
         const items = data.items || [];
         const customer = data.customer || {};
-        const sessionId = data.session_id || data.sessionId;
+        const sessionId = data.session_id || '';
 
         if (!Array.isArray(items) || items.length === 0) {
           return jsonResponse({ error: 'Invalid or empty items list' }, 400);
         }
 
-        const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
-
-        // Check availability and reservation in Cloudflare D1
+        // Check availability in Cloudflare D1
         if (env.DB) {
-          await purgeExpiredReservations(env.DB);
-          const now = new Date().toISOString();
-          const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
-
           for (const item of items) {
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price FROM products WHERE id = ?')
               .bind(item.id)
@@ -382,32 +248,6 @@ export default {
                 sold_out_product_id: item.id,
                 sold_out_product_name: product?.product_name || item.id
               }, 400);
-            }
-
-            if (sessionId) {
-              const competing = await env.DB.prepare(
-                "SELECT id, session_id, expires_at FROM product_reservations WHERE product_id = ? AND status = 'ACTIVE' AND expires_at > ? AND session_id != ?"
-              ).bind(item.id, now, sessionId).first();
-
-              if (competing) {
-                return jsonResponse({
-                  error: 'Sorry, this item is currently being purchased by another customer.',
-                  reserved_items: [item.id],
-                  reserved: true
-                }, 400);
-              }
-
-              // Lock/refresh 10-minute hold for this session
-              await env.DB.prepare(
-                "UPDATE product_reservations SET status = 'EXPIRED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'"
-              ).bind(now, item.id, sessionId).run();
-
-              const resId = 'RES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-              await env.DB.prepare(`
-                INSERT INTO product_reservations (
-                  id, product_id, session_id, reserved_at, expires_at, status, created_at, updated_at
-                ) VALUES (?, ?, ?, ?, ?, 'ACTIVE', ?, ?)
-              `).bind(resId, item.id, sessionId, now, expiresAt, now, now).run();
             }
           }
         }

@@ -42,7 +42,7 @@ export async function onRequestPost(context) {
     }
 
     // Calculate total amount securely
-    let calculatedTotalRupees = 0;
+    let calculatedSubtotalRupees = 0;
     for (const item of items) {
       let price = 0;
       if (env.DB) {
