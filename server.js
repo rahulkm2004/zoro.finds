@@ -4,7 +4,6 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const db = require('./db.js');
-const emailService = require('./email-service.js');
 
 let Razorpay;
 try {
@@ -463,12 +462,16 @@ const server = http.createServer(async (req, res) => {
         };
 
         try {
-          emailService.sendAdminOrderNotification(orderPayload, process.env).then(emailRes => {
-            if (emailRes && emailRes.success) {
-              db.markOrderEmailSent(dbResult.order_id);
-            }
+          import('./email-service.js').then(({ sendAdminOrderNotification }) => {
+            sendAdminOrderNotification(orderPayload, process.env).then(emailRes => {
+              if (emailRes && emailRes.success) {
+                db.markOrderEmailSent(dbResult.order_id);
+              }
+            }).catch(err => {
+              console.error('[Mailjet] Background email error:', err.message);
+            });
           }).catch(err => {
-            console.error('[Mailjet] Background email error:', err.message);
+            console.error('[Mailjet] Service load error:', err.message);
           });
         } catch (e) {
           console.error('[Mailjet] Email send invocation error:', e.message);

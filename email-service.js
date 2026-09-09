@@ -536,16 +536,13 @@ async function sendAdminOrderNotification(order, env = {}) {
   }
 }
 
-// Support both ES Module and CommonJS
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    generateAdminOrderEmailHtml,
-    generateAdminOrderEmailText,
-    sendAdminOrderNotification,
-    formatINR,
-    formatOrderDate
-  };
-}
+export default {
+  generateAdminOrderEmailHtml,
+  generateAdminOrderEmailText,
+  sendAdminOrderNotification,
+  formatINR,
+  formatOrderDate
+};
 
 export {
   generateAdminOrderEmailHtml,
