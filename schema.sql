@@ -46,6 +46,8 @@ CREATE TABLE IF NOT EXISTS orders (
   razorpay_payment_id TEXT,
   advance_amount REAL DEFAULT 0,
   remaining_amount REAL DEFAULT 0,
+  admin_email_sent INTEGER DEFAULT 0,
+  admin_email_sent_at TEXT,
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL
 );

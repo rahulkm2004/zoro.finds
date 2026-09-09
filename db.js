@@ -25,9 +25,22 @@ function getDb() {
 
     if (isNew || shouldInit()) {
       initDatabase(dbInstance);
+    } else {
+      applyMigrations(dbInstance);
     }
   }
   return dbInstance;
+}
+
+function applyMigrations(db) {
+  try {
+    const tableInfo = db.prepare("PRAGMA table_info(orders)").all();
+    const hasAdminEmailSent = tableInfo.some(col => col.name === 'admin_email_sent');
+    if (!hasAdminEmailSent) {
+      db.exec("ALTER TABLE orders ADD COLUMN admin_email_sent INTEGER DEFAULT 0;");
+      db.exec("ALTER TABLE orders ADD COLUMN admin_email_sent_at TEXT;");
+    }
+  } catch (e) {}
 }
 
 function shouldInit() {
@@ -231,12 +244,12 @@ function confirmOrderAndMarkSoldOut(orderData) {
         id, order_number, customer_name, customer_phone, customer_email,
         shipping_address, city, state, pincode, products, shipping_charge, total_amount,
         payment_method, payment_status, order_status, razorpay_order_id,
-        razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
+        razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, created_at, updated_at
       ) VALUES (
         ?, ?, ?, ?, ?,
         ?, ?, ?, ?, ?, ?, ?,
         ?, ?, ?, ?,
-        ?, ?, ?, ?, ?
+        ?, ?, ?, 0, ?, ?
       )
     `);
 
@@ -279,6 +292,25 @@ function confirmOrderAndMarkSoldOut(orderData) {
 }
 
 /**
+ * Mark admin email as sent for an order
+ */
+function markOrderEmailSent(orderId) {
+  if (!orderId) return;
+  const db = getDb();
+  const now = new Date().toISOString();
+  try {
+    db.prepare('UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?').run(now, orderId);
+  } catch (e) {
+    // If column missing in existing SQLite file, alter table
+    try {
+      db.prepare('ALTER TABLE orders ADD COLUMN admin_email_sent INTEGER DEFAULT 0').run();
+      db.prepare('ALTER TABLE orders ADD COLUMN admin_email_sent_at TEXT').run();
+      db.prepare('UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?').run(now, orderId);
+    } catch (err) {}
+  }
+}
+
+/**
  * Get order by Razorpay payment ID for idempotency check
  */
 function getOrderByPaymentId(paymentId) {
@@ -314,6 +346,7 @@ module.exports = {
   acquireProductReservations,
   releaseProductReservations,
   confirmOrderAndMarkSoldOut,
+  markOrderEmailSent,
   getOrderByPaymentId,
   getAllOrders
 };

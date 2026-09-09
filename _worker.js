@@ -4,6 +4,8 @@
  * Permanent database for Products, 1-of-1 Availability, 10-Minute Temporary Reservations, Orders, and Razorpay Payments.
  */
 
+import { sendAdminOrderNotification } from './email-service.js';
+
 // Helper: JSON response with CORS headers
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -426,6 +428,27 @@ export default {
           ).bind(razorpay_payment_id).first();
 
           if (existingOrder) {
+            // DUPLICATE EMAIL PROTECTION:
+            // If email was not previously sent (e.g. earlier network glitch), attempt sending once
+            if (!existingOrder.admin_email_sent) {
+              try {
+                const parsedProducts = typeof existingOrder.products === 'string' ? JSON.parse(existingOrder.products) : existingOrder.products;
+                const emailRes = await sendAdminOrderNotification({
+                  ...existingOrder,
+                  products: parsedProducts,
+                  subtotal_amount: subtotalAmount
+                }, env);
+                if (emailRes && emailRes.success) {
+                  try {
+                    await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?")
+                      .bind(now, existingOrder.id).run();
+                  } catch (e) {}
+                }
+              } catch (e) {
+                console.warn('[Mailjet] Retry admin notification failed:', e.message);
+              }
+            }
+
             return jsonResponse({
               success: true,
               idempotent: true,
@@ -472,36 +495,115 @@ export default {
           }
 
           // 3. Insert order into D1 orders table
-          await env.DB.prepare(`
-            INSERT INTO orders (
-              id, order_number, customer_name, customer_phone, customer_email,
-              shipping_address, city, state, pincode, products, shipping_charge, total_amount,
-              payment_method, payment_status, order_status, razorpay_order_id,
-              razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-          `).bind(
-            orderId,
-            orderNumber,
-            customer.name || 'Customer',
-            customer.phone || '',
-            customer.email || '',
-            customer.address || '',
-            customer.city || '',
-            customer.state || '',
-            customer.pincode || '',
-            JSON.stringify(items),
-            shippingCharge,
-            totalAmount,
-            paymentMethod,
-            paymentStatus,
-            'CONFIRMED',
-            razorpay_order_id,
-            razorpay_payment_id,
-            advanceAmount,
-            remainingAmount,
-            now,
-            now
-          ).run();
+          try {
+            await env.DB.prepare(`
+              INSERT INTO orders (
+                id, order_number, customer_name, customer_phone, customer_email,
+                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                payment_method, payment_status, order_status, razorpay_order_id,
+                razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?)
+            `).bind(
+              orderId,
+              orderNumber,
+              customer.name || 'Customer',
+              customer.phone || '',
+              customer.email || '',
+              customer.address || '',
+              customer.city || '',
+              customer.state || '',
+              customer.pincode || '',
+              JSON.stringify(items),
+              shippingCharge,
+              totalAmount,
+              paymentMethod,
+              paymentStatus,
+              'CONFIRMED',
+              razorpay_order_id,
+              razorpay_payment_id,
+              advanceAmount,
+              remainingAmount,
+              now,
+              now
+            ).run();
+          } catch (insertErr) {
+            // Fallback if admin_email_sent column not yet migrated
+            await env.DB.prepare(`
+              INSERT INTO orders (
+                id, order_number, customer_name, customer_phone, customer_email,
+                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                payment_method, payment_status, order_status, razorpay_order_id,
+                razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `).bind(
+              orderId,
+              orderNumber,
+              customer.name || 'Customer',
+              customer.phone || '',
+              customer.email || '',
+              customer.address || '',
+              customer.city || '',
+              customer.state || '',
+              customer.pincode || '',
+              JSON.stringify(items),
+              shippingCharge,
+              totalAmount,
+              paymentMethod,
+              paymentStatus,
+              'CONFIRMED',
+              razorpay_order_id,
+              razorpay_payment_id,
+              advanceAmount,
+              remainingAmount,
+              now,
+              now
+            ).run();
+          }
+
+          // 4. Send Admin Notification Email via Mailjet (Guarded & Duplicate Protected)
+          const orderPayload = {
+            id: orderId,
+            order_number: orderNumber,
+            customer_name: customer.name || 'Customer',
+            customer_phone: customer.phone || '',
+            customer_email: customer.email || '',
+            shipping_address: customer.address || '',
+            city: customer.city || '',
+            state: customer.state || '',
+            pincode: customer.pincode || '',
+            products: items,
+            subtotal_amount: subtotalAmount,
+            shipping_charge: shippingCharge,
+            total_amount: totalAmount,
+            payment_method: paymentMethod,
+            payment_status: paymentStatus,
+            order_status: 'CONFIRMED',
+            razorpay_order_id: razorpay_order_id,
+            razorpay_payment_id: razorpay_payment_id,
+            advance_amount: advanceAmount,
+            remaining_amount: remainingAmount,
+            created_at: now
+          };
+
+          try {
+            const emailResult = await sendAdminOrderNotification(orderPayload, env);
+            if (emailResult && emailResult.success) {
+              try {
+                await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?")
+                  .bind(now, orderId).run();
+              } catch (dbErr) {
+                // If column is missing in older schema, add it dynamically
+                try {
+                  await env.DB.prepare("ALTER TABLE orders ADD COLUMN admin_email_sent INTEGER DEFAULT 0").run();
+                  await env.DB.prepare("ALTER TABLE orders ADD COLUMN admin_email_sent_at TEXT").run();
+                  await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?")
+                    .bind(now, orderId).run();
+                } catch (alterErr) {}
+              }
+            }
+          } catch (emailErr) {
+            console.error('[Admin Email Error]:', emailErr.message);
+          }
         }
 
         return jsonResponse({

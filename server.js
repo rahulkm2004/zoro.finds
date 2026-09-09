@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const db = require('./db.js');
+const emailService = require('./email-service.js');
 
 let Razorpay;
 try {
@@ -433,6 +434,45 @@ const server = http.createServer(async (req, res) => {
           success: false,
           error: dbErr.message || 'Failed to record order in database'
         });
+      }
+
+      // Send Admin Notification Email via Mailjet (Guarded & Duplicate Protected)
+      if (dbResult && dbResult.success) {
+        const orderPayload = {
+          id: dbResult.order_id,
+          order_number: dbResult.order_number,
+          customer_name: customer.name || '',
+          customer_phone: customer.phone || '',
+          customer_email: customer.email || '',
+          shipping_address: customer.address || '',
+          city: customer.city || '',
+          state: customer.state || '',
+          pincode: customer.pincode || '',
+          products: items,
+          subtotal_amount: subtotalAmount,
+          shipping_charge: shippingCharge,
+          total_amount: totalAmount,
+          payment_method: paymentMethod,
+          payment_status: paymentStatus,
+          order_status: 'CONFIRMED',
+          razorpay_order_id: razorpay_order_id,
+          razorpay_payment_id: razorpay_payment_id,
+          advance_amount: advanceAmount,
+          remaining_amount: remainingAmount,
+          created_at: new Date().toISOString()
+        };
+
+        try {
+          emailService.sendAdminOrderNotification(orderPayload, process.env).then(emailRes => {
+            if (emailRes && emailRes.success) {
+              db.markOrderEmailSent(dbResult.order_id);
+            }
+          }).catch(err => {
+            console.error('[Mailjet] Background email error:', err.message);
+          });
+        } catch (e) {
+          console.error('[Mailjet] Email send invocation error:', e.message);
+        }
       }
 
       return sendJSON(res, 200, {
