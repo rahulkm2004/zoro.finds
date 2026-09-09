@@ -3468,6 +3468,92 @@ function goToReviews() {
 ========================================================================= */
 const CART_STORAGE_KEY = "zoroFindsCartItems";
 
+/* =========================================================================
+   SUBTLE UI SOUND EFFECTS (ADD TO CART & BUY NOW)
+========================================================================= */
+let zfAudioCtx = null;
+let lastSoundPlayTime = 0;
+const SOUND_DEBOUNCE_MS = 250;
+
+function getAudioContext() {
+  try {
+    if (!zfAudioCtx) {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (AudioCtx) {
+        zfAudioCtx = new AudioCtx();
+      }
+    }
+    if (zfAudioCtx && zfAudioCtx.state === 'suspended') {
+      zfAudioCtx.resume().catch(() => {});
+    }
+    return zfAudioCtx;
+  } catch (e) {
+    return null;
+  }
+}
+
+function playAddToCartSound() {
+  const now = Date.now();
+  if (now - lastSoundPlayTime < SOUND_DEBOUNCE_MS) return;
+  lastSoundPlayTime = now;
+
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    // Soft subtle harmonic rise (warm boutique pop): 520Hz -> 780Hz over 0.12s
+    osc.frequency.setValueAtTime(520, t);
+    osc.frequency.exponentialRampToValueAtTime(780, t + 0.12);
+
+    // Subtle gentle volume envelope (max ~0.14)
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(0.14, t + 0.015);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.18);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 0.20);
+  } catch (err) {}
+}
+
+function playBuyNowSound() {
+  const now = Date.now();
+  if (now - lastSoundPlayTime < SOUND_DEBOUNCE_MS) return;
+  lastSoundPlayTime = now;
+
+  try {
+    const ctx = getAudioContext();
+    if (!ctx) return;
+
+    const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+
+    osc.type = "sine";
+    // Crisp affirmative click/chime: 460Hz -> 690Hz over 0.09s
+    osc.frequency.setValueAtTime(460, t);
+    osc.frequency.exponentialRampToValueAtTime(690, t + 0.09);
+
+    // Subtle crisp volume envelope (max ~0.15)
+    gain.gain.setValueAtTime(0.001, t);
+    gain.gain.linearRampToValueAtTime(0.15, t + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.14);
+
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+
+    osc.start(t);
+    osc.stop(t + 0.16);
+  } catch (err) {}
+}
+
 function getSessionId() {
   let sid = sessionStorage.getItem("zf_checkout_session_id");
   if (!sid) {
@@ -3558,7 +3644,7 @@ async function syncAndValidateCart(notifyUser = false) {
   return { valid: true, cart: getCart(), removed: [] };
 }
 
-async function addToCart(productId, sizeChoice, openDrawer = false) {
+async function addToCart(productId, sizeChoice, openDrawer = false, suppressSound = false) {
   const p = findProductById(productId);
   if (!p || p.status === "sold") {
     showToast("Sorry, this item has just sold out.");
@@ -3611,6 +3697,9 @@ async function addToCart(productId, sizeChoice, openDrawer = false) {
     });
     saveCart(cart);
     showToast("✓ Added " + p.name + " (" + selectedSize + ") to Bag");
+    if (!suppressSound) {
+      playAddToCartSound();
+    }
   }
 
   if (openDrawer) {
@@ -4175,7 +4264,7 @@ async function startCheckout() {
   const cart = validation.cart;
   if (!cart || cart.length === 0) {
     showToast("Your shopping bag is empty");
-    return;
+    return false;
   }
 
   // Acquire temporary 10-minute server-side reservation in D1
@@ -4197,7 +4286,7 @@ async function startCheckout() {
         showToast(resData.error || "Sorry, this item has just sold out.");
       }
       await syncAndValidateCart(false);
-      return;
+      return false;
     }
 
     checkoutReservationExpiresAt = resData.expires_at ? new Date(resData.expires_at) : new Date(Date.now() + 10 * 60 * 1000);
@@ -4210,6 +4299,7 @@ async function startCheckout() {
   renderTab("CHECKOUT");
   window.scrollTo({ top: 0, behavior: "instant" });
   startReservationCountdown();
+  return true;
 }
 
 let checkoutPaymentMethod = "online";
@@ -4802,9 +4892,11 @@ function selectModalSize(size, btn) {
 async function addCurrentProductToCart() {
   if (!activeModalProduct) return;
   const p = activeModalProduct;
+  if (p.status === "sold") return;
+
   const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
   
-  const added = await addToCart(p.id, size, false);
+  const added = await addToCart(p.id, size, false, false);
   if (!added) return;
   
   const btn = document.getElementById("modalAddToCartBtn");
@@ -4828,12 +4920,22 @@ async function addCurrentProductToCart() {
 async function buyNowCurrentProduct() {
   if (!activeModalProduct) return;
   const p = activeModalProduct;
+  if (p.status === "sold") return;
+
   const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
   
-  const added = await addToCart(p.id, size, false);
-  if (!added) return;
+  const cart = getCart();
+  const alreadyInCart = cart.some(item => item.id === p.id && item.size === size);
+  if (!alreadyInCart) {
+    const added = await addToCart(p.id, size, false, true);
+    if (!added) return;
+  }
+
   closeModal();
-  await startCheckout();
+  const checkoutStarted = await startCheckout();
+  if (checkoutStarted) {
+    playBuyNowSound();
+  }
 }
 
 function openModal(p) {
