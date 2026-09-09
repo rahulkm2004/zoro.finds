@@ -3459,7 +3459,7 @@ function goToReviews() {
 }
 
 /* =========================================================================
-   SHOPPING CART & LOCAL STORAGE MANAGEMENT
+   SHOPPING CART & REAL-TIME LOCAL STORAGE VALIDATION
 ========================================================================= */
 const CART_STORAGE_KEY = "zoroFindsCartItems";
 
@@ -3480,13 +3480,86 @@ function saveCart(cart) {
   renderCartDrawer();
 }
 
-function addToCart(productId, sizeChoice, openDrawer = false) {
+/**
+ * Validates all cart items against live database availability.
+ * Automatically purges stale/sold-out products and recalculates totals.
+ */
+async function syncAndValidateCart(notifyUser = false) {
+  const currentCart = getCart();
+  if (!currentCart || currentCart.length === 0) {
+    return { valid: true, cart: [], removed: [] };
+  }
+
+  try {
+    const res = await fetch("/api/validate-cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: currentCart })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      if (!data.valid && Array.isArray(data.sold_items) && data.sold_items.length > 0) {
+        // Filter out sold-out items from local cart
+        const updatedCart = currentCart.filter(item => !data.sold_items.includes(item.id));
+        try {
+          localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(updatedCart));
+        } catch (e) {}
+
+        updateCartBadges();
+
+        // If cart drawer is open, re-render drawer immediately
+        if (cartBackdrop && cartBackdrop.classList.contains("open")) {
+          renderCartDrawer();
+        }
+
+        // If user is currently on checkout view, re-render checkout summary
+        if (typeof currentTab !== 'undefined' && currentTab === "CHECKOUT") {
+          renderCheckout();
+        }
+
+        // Sync catalog to reflect SOLD OUT tags across the website
+        fetchProductsFromDB();
+
+        if (notifyUser) {
+          showToast("Sorry, this item has just sold out.");
+        }
+
+        return { valid: false, cart: updatedCart, removed: data.sold_items };
+      }
+    }
+  } catch (err) {
+    console.warn("Real-time cart validation error:", err.message);
+  }
+
+  return { valid: true, cart: getCart(), removed: [] };
+}
+
+async function addToCart(productId, sizeChoice, openDrawer = false) {
   const p = findProductById(productId);
-  if (!p) return false;
-  if (p.status === "sold") {
-    showToast("This item has been sold out.");
+  if (!p || p.status === "sold") {
+    showToast("Sorry, this item has just sold out.");
+    fetchProductsFromDB();
     return false;
   }
+
+  // Real-time backend validation before adding
+  try {
+    const res = await fetch("/api/validate-cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: [{ id: productId }] })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (!data.valid || (data.sold_items && data.sold_items.includes(productId))) {
+        showToast("Sorry, this item has just sold out.");
+        p.status = "sold";
+        fetchProductsFromDB();
+        return false;
+      }
+    }
+  } catch (e) {}
 
   const cart = getCart();
   const selectedSize = sizeChoice || p.displaySize || p.size || "Free Size";
@@ -3539,10 +3612,12 @@ function updateCartBadges() {
   if (cartDrawerCount) cartDrawerCount.textContent = totalCount;
 }
 
-function openCartDrawer() {
+async function openCartDrawer() {
   renderCartDrawer();
   cartBackdrop.classList.add("open");
   document.body.style.overflow = "hidden";
+  // Validate items against database status in real-time
+  await syncAndValidateCart(true);
 }
 
 function closeCartDrawer() {
@@ -3997,9 +4072,10 @@ function renderReviews() {
 /* =========================================================================
    CHECKOUT PAGE & ORDER PLACEMENT FLOW
 ========================================================================= */
-function startCheckout() {
-  const cart = getCart();
-  if (cart.length === 0) {
+async function startCheckout() {
+  const validation = await syncAndValidateCart(true);
+  const cart = validation.cart;
+  if (!cart || cart.length === 0) {
     showToast("Your shopping bag is empty");
     return;
   }
@@ -4313,9 +4389,11 @@ async function handlePlaceOrder(e) {
   const pincode = document.getElementById("custPincode").value.trim();
   const state = document.getElementById("custState").value.trim();
 
-  const cart = getCart();
-  if (cart.length === 0) {
-    showToast("Shopping bag is empty");
+  // Validate cart against backend database before initiating order
+  const validation = await syncAndValidateCart(true);
+  const cart = validation.cart;
+  if (!validation.valid || !cart || cart.length === 0) {
+    showToast("Sorry, this item has just sold out.");
     return;
   }
 
@@ -4353,9 +4431,7 @@ async function handlePlaceOrder(e) {
 
     if (!orderRes.ok || !orderData.order_id) {
       showToast(orderData.error || "Order Creation Error: Unable to initialize order");
-      if (orderData.error && orderData.error.includes("sold out")) {
-        fetchProductsFromDB();
-      }
+      await syncAndValidateCart(true);
       resetBtn();
       return;
     }
@@ -4435,10 +4511,8 @@ async function handlePlaceOrder(e) {
               remainingAmount: verifyData.remaining_amount || orderData.remaining_amount || 0
             });
           } else {
-            showToast("Payment verification failed: " + (verifyData.error || "Signature mismatch"));
-            if (verifyData.error && verifyData.error.includes("sold out")) {
-              await fetchProductsFromDB();
-            }
+            showToast(verifyData.error || "Payment verification failed");
+            await syncAndValidateCart(true);
             resetBtn();
           }
         } catch (verifyErr) {
@@ -4579,12 +4653,13 @@ function selectModalSize(size, btn) {
   if (btn) btn.classList.add("active");
 }
 
-function addCurrentProductToCart() {
+async function addCurrentProductToCart() {
   if (!activeModalProduct) return;
   const p = activeModalProduct;
   const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
   
-  addToCart(p.id, size, false);
+  const added = await addToCart(p.id, size, false);
+  if (!added) return;
   
   const btn = document.getElementById("modalAddToCartBtn");
   if (btn) {
@@ -4604,14 +4679,15 @@ function addCurrentProductToCart() {
   }
 }
 
-function buyNowCurrentProduct() {
+async function buyNowCurrentProduct() {
   if (!activeModalProduct) return;
   const p = activeModalProduct;
   const size = activeModalSelectedSize || p.displaySize || p.size || "Free Size";
   
-  addToCart(p.id, size, false);
+  const added = await addToCart(p.id, size, false);
+  if (!added) return;
   closeModal();
-  startCheckout();
+  await startCheckout();
 }
 
 function openModal(p) {
@@ -4687,6 +4763,23 @@ function openModal(p) {
   modalBackdrop.classList.add("open");
   document.body.style.overflow = "hidden";
   document.getElementById("closeBtn").focus();
+
+  // Validate live status in background
+  if (!isSold) {
+    fetch("/api/validate-cart", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: [{ id: p.id }] })
+    }).then(res => res.json()).then(data => {
+      if (data && (!data.valid || (data.sold_items && data.sold_items.includes(p.id)))) {
+        p.status = "sold";
+        if (activeModalProduct && activeModalProduct.id === p.id) {
+          openModal(p);
+        }
+        fetchProductsFromDB();
+      }
+    }).catch(() => {});
+  }
 }
 
 function closeModal() {

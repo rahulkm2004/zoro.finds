@@ -129,6 +129,50 @@ const server = http.createServer(async (req, res) => {
   }
 
   // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/validate-cart
+  // Validates cart items against real-time database availability
+  // -------------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/validate-cart') {
+    try {
+      const data = await parseBody(req);
+      const items = data.items || [];
+      const validatedItems = [];
+      const soldItems = [];
+
+      for (const item of items) {
+        const prod = db.getProductById(item.id);
+        if (!prod || prod.status !== 'AVAILABLE') {
+          soldItems.push(item.id);
+          validatedItems.push({
+            id: item.id,
+            name: prod?.product_name || item.name || item.id,
+            status: prod?.status || 'SOLD_OUT',
+            numeric_price: prod?.numeric_price || item.numericPrice || 0,
+            available: false
+          });
+        } else {
+          validatedItems.push({
+            id: item.id,
+            name: prod.product_name,
+            status: 'AVAILABLE',
+            numeric_price: prod.numeric_price,
+            available: true
+          });
+        }
+      }
+
+      return sendJSON(res, 200, {
+        valid: soldItems.length === 0,
+        items: validatedItems,
+        sold_items: soldItems
+      });
+    } catch (err) {
+      console.error('Error in /api/validate-cart:', err.message);
+      return sendJSON(res, 500, { error: 'Failed to validate cart: ' + err.message });
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // API ROUTE: POST /api/create-order
   // Checks product availability in D1 and creates a secure Razorpay order
   // -------------------------------------------------------------------------

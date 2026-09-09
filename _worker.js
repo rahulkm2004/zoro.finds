@@ -1,7 +1,7 @@
 /**
- * Cloudflare Worker / Pages Functions Handler for ZORO.FINDS
+ * Cloudflare Worker Handler for ZORO.FINDS
  * Integrates Cloudflare D1 Database (binding: env.DB)
- * Permanent database for Products, Availability, Orders, and Razorpay Payments.
+ * Permanent database for Products, 1-of-1 Availability, Orders, and Razorpay Payments.
  */
 
 // Helper: JSON response with CORS headers
@@ -114,8 +114,82 @@ export default {
     }
 
     // =========================================================================
+    // API ROUTE: GET /api/orders
+    // Fetches confirmed orders from D1 database
+    // =========================================================================
+    if (request.method === 'GET' && pathname === '/api/orders') {
+      if (!env.DB) {
+        return jsonResponse({ error: 'Cloudflare D1 Database binding is not configured.' }, 500);
+      }
+      try {
+        const { results } = await env.DB.prepare('SELECT * FROM orders ORDER BY created_at DESC').all();
+        const formatted = results.map(row => ({
+          ...row,
+          products: typeof row.products === 'string' ? JSON.parse(row.products) : row.products
+        }));
+        return jsonResponse({
+          success: true,
+          count: formatted.length,
+          orders: formatted
+        });
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to fetch orders: ' + err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // API ROUTE: POST /api/validate-cart
+    // Validates real-time product availability for shopping cart & checkout
+    // =========================================================================
+    if (request.method === 'POST' && pathname === '/api/validate-cart') {
+      try {
+        const data = await request.json();
+        const items = data.items || [];
+        const validatedItems = [];
+        const soldItems = [];
+
+        if (env.DB) {
+          for (const item of items) {
+            const itemId = typeof item === 'string' ? item : item.id;
+            const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?')
+              .bind(itemId)
+              .first();
+
+            if (!product || product.status !== 'AVAILABLE') {
+              soldItems.push(itemId);
+              validatedItems.push({
+                id: itemId,
+                name: product?.product_name || item.name || itemId,
+                status: product?.status || 'SOLD_OUT',
+                numeric_price: product?.numeric_price || item.numericPrice || 0,
+                available: false
+              });
+            } else {
+              validatedItems.push({
+                id: itemId,
+                name: product.product_name,
+                status: 'AVAILABLE',
+                numeric_price: product.numeric_price,
+                price: product.price,
+                available: true
+              });
+            }
+          }
+        }
+
+        return jsonResponse({
+          valid: soldItems.length === 0,
+          items: validatedItems,
+          sold_items: soldItems
+        });
+      } catch (err) {
+        return jsonResponse({ error: 'Failed to validate cart: ' + err.message }, 500);
+      }
+    }
+
+    // =========================================================================
     // API ROUTE: POST /api/create-order
-    // Double purchase protection & Razorpay order creation via D1
+    // Availability verification & Razorpay order creation via D1
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/create-order') {
       try {
@@ -135,12 +209,13 @@ export default {
               .first();
 
             if (!product) {
-              return jsonResponse({ error: `Product ${item.id} not found in catalog` }, 400);
+              return jsonResponse({ error: `Product ${item.id} not found in catalog`, sold_items: [item.id] }, 400);
             }
 
             if (product.status !== 'AVAILABLE') {
               return jsonResponse({
                 error: 'Sorry, this item has just sold out.',
+                sold_items: [item.id],
                 sold_out_product_id: item.id,
                 sold_out_product_name: product.product_name
               }, 400);
@@ -148,7 +223,7 @@ export default {
           }
         }
 
-        // Calculate subtotal amount securely
+        // Calculate subtotal amount securely from database
         let calculatedSubtotalRupees = 0;
         for (const item of items) {
           let price = 0;
@@ -252,7 +327,7 @@ export default {
 
     // =========================================================================
     // API ROUTE: POST /api/verify-payment
-    // Razorpay Signature Verification + Atomic D1 Order & Sold Out Update
+    // Razorpay Signature Verification + ATOMIC D1 1-of-1 Claim & Order Confirmation
     // =========================================================================
     if (request.method === 'POST' && pathname === '/api/verify-payment') {
       try {
@@ -314,66 +389,56 @@ export default {
         const orderNumber = 'ZF-' + Date.now().toString().slice(-6);
 
         if (env.DB) {
-          // 1. Double check availability in D1 before committing
+          // ATOMIC 1-OF-1 CLAIM PROTECTION:
+          // Attempt to conditionally update each product where status is AVAILABLE.
+          // If changes === 0, the item was already claimed by a concurrent customer.
           for (const item of items) {
-            const product = await env.DB.prepare('SELECT status FROM products WHERE id = ?')
-              .bind(item.id)
-              .first();
-            if (product && product.status !== 'AVAILABLE') {
+            const updateRes = await env.DB.prepare(
+              "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
+            ).bind(now, item.id).run();
+
+            if (!updateRes.meta || updateRes.meta.changes === 0) {
+              // Edge case: Payment succeeded in Razorpay, but product was claimed moments before this verification
               return jsonResponse({
                 success: false,
-                error: 'Sorry, this item has just sold out.'
+                error: 'Sorry, this item has just sold out.',
+                sold_out_product_id: item.id,
+                conflict: true
               }, 400);
             }
           }
 
-          // 2. Prepare atomic batch statements
-          const statements = [];
-
-          // Mark products as SOLD_OUT
-          for (const item of items) {
-            statements.push(
-              env.DB.prepare("UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ?")
-                .bind(now, item.id)
-            );
-          }
-
           // Insert order into D1 orders table
-          statements.push(
-            env.DB.prepare(`
-              INSERT INTO orders (
-                id, order_number, customer_name, customer_phone, customer_email,
-                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
-                payment_method, payment_status, order_status, razorpay_order_id,
-                razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `).bind(
-              orderId,
-              orderNumber,
-              customer.name || 'Customer',
-              customer.phone || '',
-              customer.email || '',
-              customer.address || '',
-              customer.city || '',
-              customer.state || '',
-              customer.pincode || '',
-              JSON.stringify(items),
-              shippingCharge,
-              totalAmount,
-              paymentMethod,
-              paymentStatus,
-              'CONFIRMED',
-              razorpay_order_id,
-              razorpay_payment_id,
-              advanceAmount,
-              remainingAmount,
-              now,
-              now
-            )
-          );
-
-          // Execute batch transaction in D1
-          await env.DB.batch(statements);
+          await env.DB.prepare(`
+            INSERT INTO orders (
+              id, order_number, customer_name, customer_phone, customer_email,
+              shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+              payment_method, payment_status, order_status, razorpay_order_id,
+              razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+          `).bind(
+            orderId,
+            orderNumber,
+            customer.name || 'Customer',
+            customer.phone || '',
+            customer.email || '',
+            customer.address || '',
+            customer.city || '',
+            customer.state || '',
+            customer.pincode || '',
+            JSON.stringify(items),
+            shippingCharge,
+            totalAmount,
+            paymentMethod,
+            paymentStatus,
+            'CONFIRMED',
+            razorpay_order_id,
+            razorpay_payment_id,
+            advanceAmount,
+            remainingAmount,
+            now,
+            now
+          ).run();
         }
 
         return jsonResponse({

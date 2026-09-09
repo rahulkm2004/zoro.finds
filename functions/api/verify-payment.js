@@ -87,15 +87,18 @@ export async function onRequestPost(context) {
     const orderNumber = 'ZF-' + Date.now().toString().slice(-6);
 
     if (env.DB) {
-      // 1. Double check availability in D1 before committing
+      // ATOMIC 1-OF-1 CLAIM:
       for (const item of items) {
-        const product = await env.DB.prepare('SELECT status FROM products WHERE id = ?')
-          .bind(item.id)
-          .first();
-        if (product && product.status !== 'AVAILABLE') {
+        const updateRes = await env.DB.prepare(
+          "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
+        ).bind(now, item.id).run();
+
+        if (!updateRes.meta || updateRes.meta.changes === 0) {
           return new Response(JSON.stringify({
             success: false,
-            error: 'Sorry, this item has just sold out.'
+            error: 'Sorry, this item has just sold out.',
+            sold_out_product_id: item.id,
+            conflict: true
           }), {
             status: 400,
             headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
@@ -103,53 +106,37 @@ export async function onRequestPost(context) {
         }
       }
 
-      // 2. Prepare atomic batch statements
-      const statements = [];
-
-      // Mark products as SOLD_OUT
-      for (const item of items) {
-        statements.push(
-          env.DB.prepare("UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ?")
-            .bind(now, item.id)
-        );
-      }
-
       // Insert order into D1 orders table
-      statements.push(
-        env.DB.prepare(`
-          INSERT INTO orders (
-            id, order_number, customer_name, customer_phone, customer_email,
-            shipping_address, city, state, pincode, products, shipping_charge, total_amount,
-            payment_method, payment_status, order_status, razorpay_order_id,
-            razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
-          ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        `).bind(
-          orderId,
-          orderNumber,
-          customer.name || 'Customer',
-          customer.phone || '',
-          customer.email || '',
-          customer.address || '',
-          customer.city || '',
-          customer.state || '',
-          customer.pincode || '',
-          JSON.stringify(items),
-          shippingCharge,
-          totalAmount,
-          paymentMethod,
-          paymentStatus,
-          'CONFIRMED',
-          razorpay_order_id,
-          razorpay_payment_id,
-          advanceAmount,
-          remainingAmount,
-          now,
-          now
-        )
-      );
-
-      // Execute batch transaction in D1
-      await env.DB.batch(statements);
+      await env.DB.prepare(`
+        INSERT INTO orders (
+          id, order_number, customer_name, customer_phone, customer_email,
+          shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+          payment_method, payment_status, order_status, razorpay_order_id,
+          razorpay_payment_id, advance_amount, remaining_amount, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      `).bind(
+        orderId,
+        orderNumber,
+        customer.name || 'Customer',
+        customer.phone || '',
+        customer.email || '',
+        customer.address || '',
+        customer.city || '',
+        customer.state || '',
+        customer.pincode || '',
+        JSON.stringify(items),
+        shippingCharge,
+        totalAmount,
+        paymentMethod,
+        paymentStatus,
+        'CONFIRMED',
+        razorpay_order_id,
+        razorpay_payment_id,
+        advanceAmount,
+        remainingAmount,
+        now,
+        now
+      ).run();
     }
 
     return new Response(JSON.stringify({

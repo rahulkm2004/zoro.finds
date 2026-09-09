@@ -152,25 +152,18 @@ function confirmOrderAndMarkSoldOut(orderData) {
   db.exec('BEGIN TRANSACTION;');
 
   try {
-    // 1. Double check availability inside transaction
+    // 1. Double check and atomically claim products with conditional UPDATE
     if (productIds.length > 0) {
-      const placeholders = productIds.map(() => '?').join(',');
-      const checkStmt = db.prepare(`SELECT id, product_name, status FROM products WHERE id IN (${placeholders})`);
-      const existingProducts = checkStmt.all(...productIds);
-
       for (const pid of productIds) {
-        const prod = existingProducts.find(p => p.id === pid);
-        if (!prod || prod.status !== 'AVAILABLE') {
+        const updateStmt = db.prepare("UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'");
+        const result = updateStmt.run(now, pid);
+        if (result.changes === 0) {
           throw new Error('Sorry, this item has just sold out.');
         }
       }
-
-      // 2. Mark products as SOLD_OUT
-      const updateStmt = db.prepare(`UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id IN (${placeholders})`);
-      updateStmt.run(now, ...productIds);
     }
 
-    // 3. Insert Order Record
+    // 2. Insert Order Record
     const orderId = orderData.id || ('ORD_' + Date.now() + '_' + Math.floor(Math.random() * 1000));
     const orderNumber = orderData.order_number || ('ZF-' + Date.now().toString().slice(-6));
 
