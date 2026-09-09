@@ -129,42 +129,112 @@ const server = http.createServer(async (req, res) => {
   }
 
   // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/reserve
+  // Creates a 10-minute temporary server-side checkout reservation in D1
+  // -------------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/reserve') {
+    try {
+      const data = await parseBody(req);
+      const items = data.items || [];
+      const sessionId = data.session_id || data.sessionId;
+
+      if (!sessionId) {
+        return sendJSON(res, 400, { error: 'Session ID is required for checkout reservation' });
+      }
+
+      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
+      const resResult = db.acquireProductReservations(itemIds, sessionId, 10);
+
+      if (!resResult.success) {
+        return sendJSON(res, 400, resResult);
+      }
+
+      return sendJSON(res, 200, resResult);
+    } catch (err) {
+      console.error('Error in /api/reserve:', err.message);
+      return sendJSON(res, 500, { error: 'Reservation failed: ' + err.message });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // API ROUTE: POST /api/release-reservation
+  // Releases temporary reservation if customer leaves checkout or cancels
+  // -------------------------------------------------------------------------
+  if (req.method === 'POST' && pathname === '/api/release-reservation') {
+    try {
+      const data = await parseBody(req);
+      const sessionId = data.session_id || data.sessionId;
+      const items = data.items || [];
+      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
+
+      db.releaseProductReservations(sessionId, itemIds);
+      return sendJSON(res, 200, { success: true });
+    } catch (err) {
+      console.error('Error in /api/release-reservation:', err.message);
+      return sendJSON(res, 500, { error: 'Release failed: ' + err.message });
+    }
+  }
+
+  // -------------------------------------------------------------------------
   // API ROUTE: POST /api/validate-cart
-  // Validates cart items against real-time database availability
+  // Validates cart items against real-time availability and active reservations
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/validate-cart') {
     try {
       const data = await parseBody(req);
       const items = data.items || [];
+      const sessionId = data.session_id || data.sessionId || null;
       const validatedItems = [];
       const soldItems = [];
+      const reservedItems = [];
+
+      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
+      const check = db.checkProductsAvailability(itemIds, sessionId);
 
       for (const item of items) {
-        const prod = db.getProductById(item.id);
-        if (!prod || prod.status !== 'AVAILABLE') {
-          soldItems.push(item.id);
+        const itemId = typeof item === 'string' ? item : item.id;
+        const prod = db.getProductById(itemId);
+        const isSold = check.soldItems.some(s => s.id === itemId);
+        const isReserved = check.reservedItems.some(r => r.id === itemId);
+
+        if (isSold) {
+          soldItems.push(itemId);
           validatedItems.push({
-            id: item.id,
-            name: prod?.product_name || item.name || item.id,
+            id: itemId,
+            name: prod?.product_name || item.name || itemId,
             status: prod?.status || 'SOLD_OUT',
             numeric_price: prod?.numeric_price || item.numericPrice || 0,
-            available: false
+            available: false,
+            reason: 'SOLD_OUT',
+            message: 'Sorry, this item has just sold out.'
+          });
+        } else if (isReserved) {
+          reservedItems.push(itemId);
+          validatedItems.push({
+            id: itemId,
+            name: prod?.product_name || item.name || itemId,
+            status: 'RESERVED',
+            numeric_price: prod?.numeric_price || item.numericPrice || 0,
+            available: false,
+            reason: 'RESERVED',
+            message: 'Sorry, this item is currently being purchased by another customer.'
           });
         } else {
           validatedItems.push({
-            id: item.id,
-            name: prod.product_name,
+            id: itemId,
+            name: prod?.product_name || item.name || itemId,
             status: 'AVAILABLE',
-            numeric_price: prod.numeric_price,
+            numeric_price: prod?.numeric_price || item.numericPrice || 0,
             available: true
           });
         }
       }
 
       return sendJSON(res, 200, {
-        valid: soldItems.length === 0,
+        valid: (soldItems.length === 0 && reservedItems.length === 0),
         items: validatedItems,
-        sold_items: soldItems
+        sold_items: soldItems,
+        reserved_items: reservedItems
       });
     } catch (err) {
       console.error('Error in /api/validate-cart:', err.message);
@@ -174,29 +244,37 @@ const server = http.createServer(async (req, res) => {
 
   // -------------------------------------------------------------------------
   // API ROUTE: POST /api/create-order
-  // Checks product availability in D1 and creates a secure Razorpay order
+  // Checks product availability / reservation and creates a secure Razorpay order
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/create-order') {
     try {
       const data = await parseBody(req);
       const items = data.items || [];
       const customer = data.customer || {};
+      const sessionId = data.session_id || data.sessionId;
 
       if (!Array.isArray(items) || items.length === 0) {
-        return sendJSON(res, 400, {
-          error: 'Invalid or empty items list'
-        });
+        return sendJSON(res, 400, { error: 'Invalid or empty items list' });
       }
 
-      // DOUBLE PURCHASE PROTECTION: Check product availability in database
-      const itemIds = items.map(i => i.id).filter(Boolean);
-      const availCheck = db.checkProductsAvailability(itemIds);
+      const itemIds = items.map(i => (typeof i === 'string' ? i : i.id)).filter(Boolean);
 
-      if (!availCheck.available) {
-        return sendJSON(res, 400, {
-          error: 'Sorry, this item has just sold out.',
-          sold_items: availCheck.soldItems
-        });
+      // Re-acquire / extend temporary reservation for this session
+      if (sessionId) {
+        const resCheck = db.acquireProductReservations(itemIds, sessionId, 10);
+        if (!resCheck.success) {
+          return sendJSON(res, 400, resCheck);
+        }
+      } else {
+        const availCheck = db.checkProductsAvailability(itemIds, sessionId);
+        if (!availCheck.available) {
+          const soldMsg = availCheck.soldItems.length > 0 ? 'Sorry, this item has just sold out.' : 'Sorry, this item is currently being purchased by another customer.';
+          return sendJSON(res, 400, {
+            error: soldMsg,
+            sold_items: availCheck.soldItems,
+            reserved_items: availCheck.reservedItems
+          });
+        }
       }
 
       // Calculate subtotal securely from database catalog
@@ -275,6 +353,7 @@ const server = http.createServer(async (req, res) => {
         currency: 'INR',
         receipt: receiptId,
         notes: {
+          session_id: sessionId || '',
           payment_method: paymentMethod,
           product_subtotal: '₹' + calculatedSubtotalRupees,
           shipping_charge: '₹' + shippingChargeRupees + (paymentMethod === 'cod' ? ' (COD Fee)' : ' (FREE)'),
@@ -313,7 +392,7 @@ const server = http.createServer(async (req, res) => {
 
   // -------------------------------------------------------------------------
   // API ROUTE: POST /api/verify-payment
-  // Secure HMAC-SHA256 signature verification + Atomic D1 Order & Sold Out Update
+  // Secure signature verification + Atomic D1 Order, Sold Out & Completed Reservation Update
   // -------------------------------------------------------------------------
   if (req.method === 'POST' && pathname === '/api/verify-payment') {
     try {
@@ -352,6 +431,7 @@ const server = http.createServer(async (req, res) => {
 
       const items = data.items || [];
       const customer = data.customer || {};
+      const sessionId = data.session_id || data.sessionId || null;
       const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
       const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
 
@@ -373,6 +453,7 @@ const server = http.createServer(async (req, res) => {
       try {
         dbResult = db.confirmOrderAndMarkSoldOut({
           products: items,
+          session_id: sessionId,
           customer_name: customer.name || '',
           customer_phone: customer.phone || '',
           customer_email: customer.email || '',
@@ -422,54 +503,37 @@ const server = http.createServer(async (req, res) => {
   }
 
   // -------------------------------------------------------------------------
-  // STATIC FILE SERVING WITH VIDEO STREAMING (HTTP 206)
+  // STATIC FILE HANDLER
+  // Serves HTML, CSS, JS, Images, Videos from workspace
   // -------------------------------------------------------------------------
-  let reqPath = decodeURIComponent(pathname);
-  if (reqPath === '/') reqPath = '/index.html';
-
-  const filePath = path.join(__dirname, reqPath);
+  let filePath = path.join(__dirname, pathname === '/' ? 'index.html' : pathname);
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
-      res.writeHead(404, { 'Content-Type': 'text/plain' });
-      res.end('404 Not Found');
-      return;
+      filePath = path.join(__dirname, 'index.html');
     }
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
-    const fileSize = stats.size;
 
-    // Handle Range requests for video streaming
-    const range = req.headers.range;
-    if (range && (ext === '.mp4' || ext === '.webm' || ext === '.mov')) {
-      const parts = range.replace(/bytes=/, '').split('-');
-      const start = parseInt(parts[0], 10);
-      const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
-      const chunksize = (end - start) + 1;
-      const fileStream = fs.createReadStream(filePath, { start, end });
-
-      res.writeHead(206, {
-        'Content-Range': 'bytes ' + start + '-' + end + '/' + fileSize,
-        'Accept-Ranges': 'bytes',
-        'Content-Length': chunksize,
-        'Content-Type': contentType
-      });
-      fileStream.pipe(res);
-    } else {
+    fs.readFile(filePath, (readErr, content) => {
+      if (readErr) {
+        res.writeHead(500, { 'Content-Type': 'text/plain' });
+        return res.end('500 Internal Server Error');
+      }
       res.writeHead(200, {
-        'Content-Length': fileSize,
         'Content-Type': contentType,
-        'Accept-Ranges': 'bytes',
-        'Cache-Control': 'no-cache, no-store, must-revalidate',
-        'Pragma': 'no-cache',
-        'Expires': '0'
+        'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600'
       });
-      fs.createReadStream(filePath).pipe(res);
-    }
+      res.end(content);
+    });
   });
 });
 
 server.listen(PORT, () => {
-  console.log('ZORO.FINDS server with D1 SQLite database & Razorpay running at http://localhost:' + PORT);
+  console.log(`\n====================================================`);
+  console.log(`🚀 ZORO.FINDS Local Server running at http://localhost:${PORT}`);
+  console.log(`💳 Razorpay Key ID: ${process.env.RAZORPAY_KEY_ID ? 'Configured (' + process.env.RAZORPAY_KEY_ID + ')' : 'NOT CONFIGURED'}`);
+  console.log(`🗄️  D1 / SQLite DB: Connected (${path.join(__dirname, 'zoro_d1.sqlite')})`);
+  console.log(`====================================================\n`);
 });

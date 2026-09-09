@@ -105,41 +105,172 @@ function getProductById(id) {
 }
 
 /**
- * Check if all given product IDs are AVAILABLE
- * Returns { available: boolean, soldItems: string[] }
+ * Purge or mark expired active reservations
  */
-function checkProductsAvailability(productIds) {
+function purgeExpiredReservations(db) {
+  const now = new Date().toISOString();
+  db.prepare("UPDATE product_reservations SET status = 'EXPIRED', updated_at = ? WHERE status = 'ACTIVE' AND expires_at <= ?")
+    .run(now, now);
+}
+
+/**
+ * Check product availability considering 1-of-1 status and active session reservations
+ */
+function checkProductsAvailability(productIds, sessionId = null) {
   const db = getDb();
   if (!Array.isArray(productIds) || productIds.length === 0) {
-    return { available: true, soldItems: [] };
+    return { available: true, soldItems: [], reservedItems: [] };
   }
 
-  const placeholders = productIds.map(() => '?').join(',');
-  const stmt = db.prepare(`SELECT id, product_name, status FROM products WHERE id IN (${placeholders})`);
-  const rows = stmt.all(...productIds);
+  purgeExpiredReservations(db);
+  const now = new Date().toISOString();
 
-  const foundIds = new Set(rows.map(r => r.id));
   const soldItems = [];
+  const reservedItems = [];
 
   for (const pid of productIds) {
-    if (!foundIds.has(pid)) {
-      soldItems.push({ id: pid, name: pid, reason: 'Item not found in catalog' });
+    const product = db.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?').get(pid);
+    if (!product || product.status !== 'AVAILABLE') {
+      soldItems.push({
+        id: pid,
+        name: product?.product_name || pid,
+        status: product?.status || 'SOLD_OUT',
+        message: 'Sorry, this item has just sold out.'
+      });
       continue;
     }
-    const product = rows.find(r => r.id === pid);
-    if (product.status !== 'AVAILABLE') {
-      soldItems.push({ id: pid, name: product.product_name, status: product.status });
+
+    // Check if reserved by another session
+    let resQuery = "SELECT id, session_id, expires_at FROM product_reservations WHERE product_id = ? AND status = 'ACTIVE' AND expires_at > ?";
+    const resParams = [pid, now];
+    if (sessionId) {
+      resQuery += " AND session_id != ?";
+      resParams.push(sessionId);
+    }
+
+    const activeRes = db.prepare(resQuery).get(...resParams);
+    if (activeRes) {
+      reservedItems.push({
+        id: pid,
+        name: product.product_name,
+        expires_at: activeRes.expires_at,
+        message: 'Sorry, this item is currently being purchased by another customer.'
+      });
     }
   }
 
   return {
-    available: soldItems.length === 0,
-    soldItems
+    available: (soldItems.length === 0 && reservedItems.length === 0),
+    soldItems,
+    reservedItems
   };
 }
 
 /**
- * Atomically creates an order in D1 / SQLite and marks product(s) SOLD_OUT.
+ * Acquire temporary 10-minute server-side checkout reservations in database
+ */
+function acquireProductReservations(productIds, sessionId, durationMinutes = 10) {
+  const db = getDb();
+  if (!sessionId) throw new Error('Session ID is required for checkout reservation');
+  if (!Array.isArray(productIds) || productIds.length === 0) {
+    return { success: true, expires_at: null };
+  }
+
+  const now = new Date().toISOString();
+  const expiresAt = new Date(Date.now() + durationMinutes * 60 * 1000).toISOString();
+
+  db.exec('BEGIN TRANSACTION;');
+
+  try {
+    purgeExpiredReservations(db);
+
+    // 1. Verify availability and no competing active reservations
+    for (const pid of productIds) {
+      const product = db.prepare('SELECT id, product_name, status FROM products WHERE id = ?').get(pid);
+      if (!product || product.status !== 'AVAILABLE') {
+        throw new Error(`SOLD_OUT:${pid}:${product?.product_name || pid}`);
+      }
+
+      const competing = db.prepare(
+        "SELECT id, session_id, expires_at FROM product_reservations WHERE product_id = ? AND status = 'ACTIVE' AND expires_at > ? AND session_id != ?"
+      ).get(pid, now, sessionId);
+
+      if (competing) {
+        throw new Error(`RESERVED:${pid}:${product.product_name}`);
+      }
+    }
+
+    // 2. Insert or update active reservation for each item under this session
+    for (const pid of productIds) {
+      // Deactivate any existing active reservation for this session/product
+      db.prepare("UPDATE product_reservations SET status = 'EXPIRED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'")
+        .run(now, pid, sessionId);
+
+      const resId = 'RES_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+      db.prepare(`
+        INSERT INTO product_reservations (
+          id, product_id, session_id, reserved_at, expires_at, status, created_at, updated_at
+        ) VALUES (?, ?, ?, ?, ?, 'ACTIVE', ?, ?)
+      `).run(resId, pid, sessionId, now, expiresAt, now, now);
+    }
+
+    db.exec('COMMIT;');
+
+    return {
+      success: true,
+      expires_at: expiresAt,
+      session_id: sessionId,
+      product_ids: productIds
+    };
+  } catch (err) {
+    db.exec('ROLLBACK;');
+    if (err.message.startsWith('SOLD_OUT:')) {
+      const [, pid, name] = err.message.split(':');
+      return {
+        success: false,
+        reason: 'SOLD_OUT',
+        product_id: pid,
+        product_name: name,
+        error: 'Sorry, this item has just sold out.'
+      };
+    }
+    if (err.message.startsWith('RESERVED:')) {
+      const [, pid, name] = err.message.split(':');
+      return {
+        success: false,
+        reason: 'RESERVED',
+        product_id: pid,
+        product_name: name,
+        error: 'Sorry, this item is currently being purchased by another customer.'
+      };
+    }
+    throw err;
+  }
+}
+
+/**
+ * Release active reservation for a session
+ */
+function releaseProductReservations(sessionId, productIds = null) {
+  const db = getDb();
+  if (!sessionId) return { success: true };
+
+  const now = new Date().toISOString();
+  if (Array.isArray(productIds) && productIds.length > 0) {
+    for (const pid of productIds) {
+      db.prepare("UPDATE product_reservations SET status = 'CANCELLED', updated_at = ? WHERE session_id = ? AND product_id = ? AND status = 'ACTIVE'")
+        .run(now, sessionId, pid);
+    }
+  } else {
+    db.prepare("UPDATE product_reservations SET status = 'CANCELLED', updated_at = ? WHERE session_id = ? AND status = 'ACTIVE'")
+      .run(now, sessionId);
+  }
+
+  return { success: true };
+}
+
+/**
+ * Atomically creates an order in D1 / SQLite, completes reservations, and marks product(s) SOLD_OUT.
  * Protects against double-purchase concurrency.
  */
 function confirmOrderAndMarkSoldOut(orderData) {
@@ -147,6 +278,7 @@ function confirmOrderAndMarkSoldOut(orderData) {
   const now = new Date().toISOString();
 
   const productIds = (orderData.products || []).map(p => p.id).filter(Boolean);
+  const sessionId = orderData.session_id || orderData.sessionId || null;
 
   // Run in a transaction
   db.exec('BEGIN TRANSACTION;');
@@ -159,6 +291,15 @@ function confirmOrderAndMarkSoldOut(orderData) {
         const result = updateStmt.run(now, pid);
         if (result.changes === 0) {
           throw new Error('Sorry, this item has just sold out.');
+        }
+
+        // Complete any active reservation for this product
+        if (sessionId) {
+          db.prepare("UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'")
+            .run(now, pid, sessionId);
+        } else {
+          db.prepare("UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND status = 'ACTIVE'")
+            .run(now, pid);
         }
       }
     }
@@ -237,6 +378,8 @@ module.exports = {
   getAllProducts,
   getProductById,
   checkProductsAvailability,
+  acquireProductReservations,
+  releaseProductReservations,
   confirmOrderAndMarkSoldOut,
   getAllOrders
 };

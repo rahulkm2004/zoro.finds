@@ -53,3 +53,18 @@ CREATE TABLE IF NOT EXISTS orders (
 CREATE INDEX IF NOT EXISTS idx_orders_customer_phone ON orders(customer_phone);
 CREATE INDEX IF NOT EXISTS idx_orders_razorpay_order_id ON orders(razorpay_order_id);
 CREATE INDEX IF NOT EXISTS idx_orders_status ON orders(order_status);
+
+-- Reservations Table (10-Minute Temporary Server-Side Checkout Hold)
+CREATE TABLE IF NOT EXISTS product_reservations (
+  id TEXT PRIMARY KEY,
+  product_id TEXT NOT NULL,
+  session_id TEXT NOT NULL,
+  reserved_at TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'ACTIVE' CHECK(status IN ('ACTIVE', 'COMPLETED', 'CANCELLED', 'EXPIRED')),
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL
+);
+
+CREATE INDEX IF NOT EXISTS idx_reservations_product_status ON product_reservations(product_id, status, expires_at);
+CREATE INDEX IF NOT EXISTS idx_reservations_session ON product_reservations(session_id);
