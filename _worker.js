@@ -78,6 +78,122 @@ export default {
     }
 
     // =========================================================================
+    // API ROUTE: POST /api/test-mailjet
+    // Safe admin test to verify Mailjet configuration and connectivity
+    // =========================================================================
+    if (request.method === 'POST' && pathname === '/api/test-mailjet') {
+      const apiKey = env.MAILJET_API_KEY;
+      const apiSecret = env.MAILJET_API_SECRET;
+      const senderEmail = env.MAILJET_SENDER_EMAIL;
+      const senderName = env.MAILJET_SENDER_NAME || 'ZORO.FINDS';
+      const adminEmail = env.ADMIN_ORDER_EMAIL;
+
+      const detected = {
+        MAILJET_API_KEY: !!apiKey,
+        MAILJET_API_SECRET: !!apiSecret,
+        MAILJET_SENDER_EMAIL: !!senderEmail,
+        MAILJET_SENDER_NAME: !!senderName,
+        ADMIN_ORDER_EMAIL: !!adminEmail
+      };
+
+      const allConfigured = apiKey && apiSecret && senderEmail && adminEmail;
+
+      if (!allConfigured) {
+        return jsonResponse({
+          configuration_detected: false,
+          variables_detected: detected,
+          email_api_successful: false,
+          email_delivered: false,
+          error: 'Missing one or more required Mailjet environment variables in Cloudflare runtime.'
+        }, 400);
+      }
+
+      const authHeader = 'Basic ' + btoa(`${apiKey}:${apiSecret}`);
+      const payload = {
+        Messages: [
+          {
+            From: {
+              Email: senderEmail.trim(),
+              Name: senderName.trim()
+            },
+            To: [
+              {
+                Email: adminEmail.trim(),
+                Name: 'ZORO.FINDS Admin'
+              }
+            ],
+            Subject: 'ZORO.FINDS — MAILJET TEST EMAIL',
+            HTMLPart: `
+              <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e5e5; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
+                <div style="background: #080808; padding: 22px; text-align: center; border-bottom: 3px solid #c89d55;">
+                  <h1 style="color: #ffffff; font-family: 'Georgia', serif; font-size: 22px; letter-spacing: 0.22em; margin: 0; text-transform: uppercase;">ZORO.FINDS</h1>
+                  <p style="color: #c89d55; font-family: 'Courier New', Courier, monospace; font-size: 11px; margin: 6px 0 0 0; letter-spacing: 0.12em; text-transform: uppercase;">ADMIN NOTIFICATION SYSTEM TEST</p>
+                </div>
+                <div style="padding: 26px;">
+                  <h2 style="font-size: 16px; color: #111111; margin-top: 0; font-family: 'Courier New', Courier, monospace; font-weight: bold; letter-spacing: 0.05em;">MAILJET TEST EMAIL</h2>
+                  <p style="color: #333333; font-size: 14px; line-height: 1.6; margin: 12px 0;">This is a test of the admin order notification system.</p>
+                  <div style="background: #f4f4f5; border-left: 3px solid #15803d; padding: 14px 16px; border-radius: 2px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #27272a; margin-top: 20px;">
+                    <div style="color: #15803d; font-weight: bold; margin-bottom: 6px;">✓ SYSTEM VERIFICATION SUCCESSFUL</div>
+                    <div>• Cloudflare Worker: Connected</div>
+                    <div>• Mailjet API v3.1: Active</div>
+                    <div>• Recipient: ADMIN_ORDER_EMAIL</div>
+                    <div>• Timestamp: ${new Date().toISOString()}</div>
+                  </div>
+                </div>
+                <div style="background: #fafafa; padding: 14px 20px; text-align: center; border-top: 1px solid #e5e5e5; font-size: 11px; font-family: 'Courier New', Courier, monospace; color: #71717a;">
+                  ZORO.FINDS STORE ENGINE · CONFIDENTIAL ADMIN TEST
+                </div>
+              </div>
+            `,
+            TextPart: `ZORO.FINDS\nMAILJET TEST EMAIL\nThis is a test of the admin order notification system.`
+          }
+        ]
+      };
+
+      try {
+        const response = await fetch('https://api.mailjet.com/v3.1/send', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authHeader
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok) {
+          return jsonResponse({
+            configuration_detected: true,
+            email_api_successful: false,
+            email_delivered: false,
+            api_status: response.status,
+            error: result.ErrorMessage || result.message || 'Mailjet API responded with an error.'
+          }, response.status);
+        }
+
+        const msgStatus = result.Messages?.[0]?.Status;
+        const isSuccess = msgStatus === 'success';
+
+        return jsonResponse({
+          configuration_detected: true,
+          variables_detected: detected,
+          email_api_successful: true,
+          email_delivered: isSuccess,
+          message_status: msgStatus,
+          message_id: result.Messages?.[0]?.To?.[0]?.MessageID || null
+        });
+      } catch (err) {
+        return jsonResponse({
+          configuration_detected: true,
+          email_api_successful: false,
+          email_delivered: false,
+          error: err.message
+        }, 500);
+      }
+    }
+
+    // =========================================================================
     // API ROUTE: GET /api/products
     // Fetches live product catalogue from Cloudflare D1
     // =========================================================================
