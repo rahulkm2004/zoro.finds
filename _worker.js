@@ -122,7 +122,7 @@ export default {
                 Name: 'ZORO.FINDS Admin'
               }
             ],
-            Subject: 'ZORO.FINDS — MAILJET TEST EMAIL',
+            Subject: 'ZORO.FINDS — Mailjet Test',
             HTMLPart: `
               <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 520px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e5e5; border-radius: 6px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.06);">
                 <div style="background: #080808; padding: 22px; text-align: center; border-bottom: 3px solid #c89d55;">
@@ -130,13 +130,13 @@ export default {
                   <p style="color: #c89d55; font-family: 'Courier New', Courier, monospace; font-size: 11px; margin: 6px 0 0 0; letter-spacing: 0.12em; text-transform: uppercase;">ADMIN NOTIFICATION SYSTEM TEST</p>
                 </div>
                 <div style="padding: 26px;">
-                  <h2 style="font-size: 16px; color: #111111; margin-top: 0; font-family: 'Courier New', Courier, monospace; font-weight: bold; letter-spacing: 0.05em;">MAILJET TEST EMAIL</h2>
-                  <p style="color: #333333; font-size: 14px; line-height: 1.6; margin: 12px 0;">This is a test of the admin order notification system.</p>
+                  <h2 style="font-size: 16px; color: #111111; margin-top: 0; font-family: 'Courier New', Courier, monospace; font-weight: bold; letter-spacing: 0.05em;">ZORO.FINDS</h2>
+                  <p style="color: #111111; font-size: 15px; font-weight: 600; line-height: 1.6; margin: 12px 0;">Mailjet admin notification is working successfully.</p>
+                  <p style="color: #666666; font-size: 13px; line-height: 1.5; margin: 8px 0;">This is a test email only.</p>
                   <div style="background: #f4f4f5; border-left: 3px solid #15803d; padding: 14px 16px; border-radius: 2px; font-family: 'Courier New', Courier, monospace; font-size: 12px; color: #27272a; margin-top: 20px;">
                     <div style="color: #15803d; font-weight: bold; margin-bottom: 6px;">✓ SYSTEM VERIFICATION SUCCESSFUL</div>
                     <div>• Cloudflare Worker: Connected</div>
                     <div>• Mailjet API v3.1: Active</div>
-                    <div>• Recipient: ADMIN_ORDER_EMAIL</div>
                     <div>• Timestamp: ${new Date().toISOString()}</div>
                   </div>
                 </div>
@@ -145,7 +145,7 @@ export default {
                 </div>
               </div>
             `,
-            TextPart: `ZORO.FINDS\nMAILJET TEST EMAIL\nThis is a test of the admin order notification system.`
+            TextPart: `ZORO.FINDS\n\nMailjet admin notification is working successfully.\n\nThis is a test email only.`
           }
         ]
       };
