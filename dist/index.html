@@ -4,6 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZORO.FINDS — Curated Vintage & 1-of-1 Thrift Archive</title>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1083062804179185');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1083062804179185&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -3684,6 +3701,14 @@ async function addToCart(productId, sizeChoice, openDrawer = false, suppressSoun
       quantity: 1
     });
     saveCart(cart);
+    if (typeof fbq === 'function') {
+      fbq('track', 'AddToCart', {
+        content_ids: [p.id],
+        content_type: 'product',
+        value: p.numericPrice || parsePrice(p.price),
+        currency: 'INR'
+      });
+    }
     showToast("✓ Added " + p.name + " (" + selectedSize + ") to Bag");
     if (!suppressSound) {
       playAddToCartSound();
@@ -4219,6 +4244,17 @@ async function startCheckout() {
     return false;
   }
 
+  if (typeof fbq === 'function') {
+    fbq('track', 'InitiateCheckout', {
+      content_ids: cart.map(item => item.id),
+      content_type: 'product',
+      value: cart.reduce((total, item) =>
+        total + (item.numericPrice || 0) * (item.quantity || 1), 0
+      ),
+      currency: 'INR'
+    });
+  }
+
   currentTab = "CHECKOUT";
   renderTab("CHECKOUT");
   window.scrollTo({ top: 0, behavior: "instant" });
@@ -4641,6 +4677,14 @@ async function handlePlaceOrder(e) {
           const verifyData = await verifyRes.json();
 
           if (verifyRes.ok && verifyData.success) {
+            if (typeof fbq === 'function') {
+              fbq('track', 'Purchase', {
+                content_ids: cart.map(item => item.id),
+                content_type: 'product',
+                value: verifyData.total_amount || orderData.total_amount,
+                currency: 'INR'
+              });
+            }
             localStorage.removeItem(CART_STORAGE_KEY);
             updateCartBadges();
             await fetchProductsFromDB();
@@ -4855,6 +4899,15 @@ function openModal(p) {
   const isSold = p.status === "sold";
   const imgs = safeImages(p);
   const m = p.measurements || {};
+
+  if (!isSold && typeof fbq === 'function') {
+    fbq('track', 'ViewContent', {
+      content_ids: [p.id],
+      content_type: 'product',
+      value: p.numericPrice || parsePrice(p.price),
+      currency: 'INR'
+    });
+  }
 
   const availSizes = (Array.isArray(p.sizes) && p.sizes.length > 0) ? p.sizes : (p.size ? [p.size] : []);
   activeModalSelectedSize = availSizes[0] || p.displaySize || p.size || "Free Size";
