@@ -4039,24 +4039,19 @@ function renderActiveCollection() {
     displayItems = displayItems.filter(p => Array.isArray(p.sizes) && p.sizes.includes(currentSize));
   }
 
-  displayItems = [...displayItems].sort((a, b) => {
-    if (currentSort === "low-high") {
+  if (currentSort === "low-high") {
+    displayItems = [...displayItems].sort((a, b) => {
       const pa = parsePrice(a.price);
       const pb = parsePrice(b.price);
-      if (pa !== pb) return pa - pb;
-    } else if (currentSort === "high-low") {
+      return pa - pb;
+    });
+  } else if (currentSort === "high-low") {
+    displayItems = [...displayItems].sort((a, b) => {
       const pa = parsePrice(a.price);
       const pb = parsePrice(b.price);
-      if (pa !== pb) return pb - pa;
-    } else {
-      // Default: automatic newest ordering by created_at timestamp
-      const timeA = a.created_at ? new Date(a.created_at).getTime() : 0;
-      const timeB = b.created_at ? new Date(b.created_at).getTime() : 0;
-      if (timeA !== timeB) return timeB - timeA;
-    }
-    // Fallback/secondary newest-first by ID (higher ID numbers appear first)
-    return b.id.localeCompare(a.id, undefined, { numeric: true, sensitivity: 'base' });
-  });
+      return pb - pa;
+    });
+  }
 
   renderCatalogueView(displayItems);
 }
