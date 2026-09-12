@@ -352,5 +352,11 @@
     "price": "₹999",
     "numericPrice": 999,
     "status": "available"
+  },
+  "ZF-030": {
+    "name": "Vintage Converse All Star 'V-Hawk Basketball' Track Jacket — Navy & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "sold"
   }
 }
