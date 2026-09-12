@@ -371,14 +371,14 @@ const server = http.createServer(async (req, res) => {
       let remainingAmountRupees = 0;
 
       if (paymentMethod === 'cod') {
-        if (calculatedSubtotalRupees < 200) {
+        if (calculatedSubtotalRupees < 199) {
           return sendJSON(res, 400, {
-            error: 'Minimum order subtotal for Cash on Delivery is ₹200'
+            error: 'Minimum order subtotal for Cash on Delivery is ₹199'
           });
         }
-        chargeRupees = 200; // Mandatory ₹200 advance payment
-        advanceAmountRupees = 200;
-        remainingAmountRupees = calculatedTotalRupees - 200;
+        chargeRupees = 199; // Mandatory ₹199 advance payment
+        advanceAmountRupees = 199;
+        remainingAmountRupees = calculatedTotalRupees - 199;
       }
 
       const amountInPaise = chargeRupees * 100;
@@ -507,8 +507,8 @@ const server = http.createServer(async (req, res) => {
       }
       const shippingCharge = paymentMethod === 'COD' ? 100 : 0;
       const totalAmount = subtotalAmount + shippingCharge;
-      const advanceAmount = paymentMethod === 'COD' ? 200 : totalAmount;
-      const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 200) : 0;
+      const advanceAmount = paymentMethod === 'COD' ? 199 : totalAmount;
+      const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 199) : 0;
 
       // ATOMIC TRANSACTION: Confirm order in D1 database and mark products SOLD_OUT
       let dbResult;

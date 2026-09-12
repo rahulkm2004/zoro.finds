@@ -50,8 +50,8 @@ function generateAdminOrderEmailHtml(order) {
   const subtotal = order.subtotal_amount ?? order.subtotalAmount ?? 0;
   const shippingCharge = order.shipping_charge ?? order.shippingCharge ?? (isCod ? 100 : 0);
   const totalAmount = order.total_amount ?? order.totalAmount ?? (subtotal + shippingCharge);
-  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 200 : totalAmount);
-  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 200) : 0);
+  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 199 : totalAmount);
+  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 199) : 0);
 
   const rawProducts = order.products || order.items || [];
   const products = Array.isArray(rawProducts) ? rawProducts : (typeof rawProducts === 'string' ? JSON.parse(rawProducts) : []);
@@ -388,8 +388,8 @@ function generateAdminOrderEmailText(order) {
   const subtotal = order.subtotal_amount ?? order.subtotalAmount ?? 0;
   const shippingCharge = order.shipping_charge ?? order.shippingCharge ?? (isCod ? 100 : 0);
   const totalAmount = order.total_amount ?? order.totalAmount ?? (subtotal + shippingCharge);
-  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 200 : totalAmount);
-  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 200) : 0);
+  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 199 : totalAmount);
+  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 199) : 0);
 
   const rawProducts = order.products || order.items || [];
   const products = Array.isArray(rawProducts) ? rawProducts : (typeof rawProducts === 'string' ? JSON.parse(rawProducts) : []);
@@ -555,8 +555,8 @@ function generateCustomerOrderEmailHtml(order) {
   const subtotal = order.subtotal_amount ?? order.subtotalAmount ?? 0;
   const shippingCharge = order.shipping_charge ?? order.shippingCharge ?? (isCod ? 100 : 0);
   const totalAmount = order.total_amount ?? order.totalAmount ?? (subtotal + shippingCharge);
-  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 200 : totalAmount);
-  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 200) : 0);
+  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 199 : totalAmount);
+  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 199) : 0);
 
   const rawProducts = order.products || order.items || [];
   const products = Array.isArray(rawProducts) ? rawProducts : (typeof rawProducts === 'string' ? JSON.parse(rawProducts) : []);
@@ -739,7 +739,7 @@ function generateCustomerOrderEmailHtml(order) {
 
                 ${isCod ? `
                 <div style="margin-top: 12px; font-size: 12px; color: #b45309; background: #fef3c7; border: 1px solid #fde68a; padding: 10px 12px; border-radius: 4px; line-height: 1.5;">
-                  <strong>Cash on Delivery Note:</strong> ₹200 advance payment has been received. The remaining <strong>${formatINR(remainingToCollect)}</strong> will be collected at the time of delivery.
+                  <strong>Cash on Delivery Note:</strong> ₹199 advance payment has been received. The remaining <strong>${formatINR(remainingToCollect)}</strong> will be collected at the time of delivery.
                 </div>
                 ` : `
                 <div style="margin-top: 10px; font-size: 12px; color: #15803d; background: #eefbf2; border: 1px solid rgba(21, 128, 61, 0.2); padding: 8px 12px; border-radius: 4px;">
@@ -821,8 +821,8 @@ function generateCustomerOrderEmailText(order) {
   const subtotal = order.subtotal_amount ?? order.subtotalAmount ?? 0;
   const shippingCharge = order.shipping_charge ?? order.shippingCharge ?? (isCod ? 100 : 0);
   const totalAmount = order.total_amount ?? order.totalAmount ?? (subtotal + shippingCharge);
-  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 200 : totalAmount);
-  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 200) : 0);
+  const advancePaid = order.advance_amount ?? order.advancePaid ?? (isCod ? 199 : totalAmount);
+  const remainingToCollect = order.remaining_amount ?? order.remainingAmount ?? (isCod ? Math.max(0, totalAmount - 199) : 0);
 
   const rawProducts = order.products || order.items || [];
   const products = Array.isArray(rawProducts) ? rawProducts : (typeof rawProducts === 'string' ? JSON.parse(rawProducts) : []);
@@ -857,7 +857,7 @@ ${itemsText}
 Subtotal: ${formatINR(subtotal)}
 Shipping: ${isCod ? '+₹100 (COD Fee)' : 'FREE (Pan-India Express)'}
 Total: ${formatINR(totalAmount)}
-${isCod ? `COD Advance Paid: ${formatINR(advancePaid)}\nRemaining Amount To Be Paid At Delivery: ${formatINR(remainingToCollect)}\n(₹200 advance payment has been received. The remaining ${formatINR(remainingToCollect)} will be collected at the time of delivery.)` : `Amount Paid: ${formatINR(totalAmount)}\nRemaining: ₹0`}
+${isCod ? `COD Advance Paid: ${formatINR(advancePaid)}\nRemaining Amount To Be Paid At Delivery: ${formatINR(remainingToCollect)}\n(₹199 advance payment has been received. The remaining ${formatINR(remainingToCollect)} will be collected at the time of delivery.)` : `Amount Paid: ${formatINR(totalAmount)}\nRemaining: ₹0`}
 
 --- SHIPPING ADDRESS ---
 ${shippingAddress}

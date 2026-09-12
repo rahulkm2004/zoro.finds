@@ -636,12 +636,12 @@ export default {
         let remainingAmountRupees = 0;
 
         if (paymentMethod === 'cod') {
-          if (calculatedSubtotalRupees < 200) {
-            return jsonResponse({ error: 'Minimum order subtotal for Cash on Delivery is ₹200' }, 400);
+          if (calculatedSubtotalRupees < 199) {
+            return jsonResponse({ error: 'Minimum order subtotal for Cash on Delivery is ₹199' }, 400);
           }
-          chargeRupees = 200; // ₹200 mandatory advance
-          advanceAmountRupees = 200;
-          remainingAmountRupees = calculatedTotalRupees - 200;
+          chargeRupees = 199; // ₹199 mandatory advance
+          advanceAmountRupees = 199;
+          remainingAmountRupees = calculatedTotalRupees - 199;
         }
 
         const amountInPaise = chargeRupees * 100;
@@ -762,8 +762,8 @@ export default {
 
         const shippingCharge = paymentMethod === 'COD' ? 100 : 0;
         const totalAmount = subtotalAmount + shippingCharge;
-        const advanceAmount = paymentMethod === 'COD' ? 200 : totalAmount;
-        const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 200) : 0;
+        const advanceAmount = paymentMethod === 'COD' ? 199 : totalAmount;
+        const remainingAmount = paymentMethod === 'COD' ? Math.max(0, totalAmount - 199) : 0;
         const now = new Date().toISOString();
         const orderId = 'ORD_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
         const orderNumber = 'ZF-' + Date.now().toString().slice(-6);

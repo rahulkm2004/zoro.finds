@@ -4271,7 +4271,7 @@ function setCheckoutPaymentMethod(method) {
   const isCod = (method === "cod");
   const shippingCharge = isCod ? 100 : 0;
   const orderTotal = subtotal + shippingCharge;
-  const remaining = isCod ? Math.max(0, orderTotal - 200) : 0;
+  const remaining = isCod ? Math.max(0, orderTotal - 199) : 0;
   
   // Update selection card classes and radio buttons
   document.querySelectorAll(".payment-method-card").forEach(el => {
@@ -4321,7 +4321,7 @@ function setCheckoutPaymentMethod(method) {
           </div>
           <div class="cod-breakdown-row highlight" style="background: rgba(245, 158, 11, 0.12); padding: 8px 6px; border-radius: 2px;">
             <span>PAY NOW (ADVANCE)</span>
-            <span class="mono" style="color: #b45309; font-size: 0.92rem;">₹200</span>
+            <span class="mono" style="color: #b45309; font-size: 0.92rem;">₹199</span>
           </div>
           <div class="cod-breakdown-row highlight" style="background: rgba(21, 128, 61, 0.08); padding: 8px 6px; border-radius: 2px; margin-top: 4px;">
             <span>PAY AT DELIVERY</span>
@@ -4329,7 +4329,7 @@ function setCheckoutPaymentMethod(method) {
           </div>
           <div class="cod-breakdown-notice">
             <strong>• Cash on Delivery includes a ₹100 shipping charge.</strong><br>
-            <strong>• ₹200 advance payment is required to confirm your COD order.</strong><br>
+            <strong>• ₹199 advance payment is required to confirm your COD order.</strong><br>
             The remaining balance of <strong>₹${remaining.toLocaleString('en-IN')}</strong> will be paid at the time of delivery.
           </div>
         </div>
@@ -4354,7 +4354,7 @@ function setCheckoutPaymentMethod(method) {
 
   if (btn) {
     if (isCod) {
-      btn.innerHTML = `PAY ₹200 ADVANCE (CONFIRM COD) →`;
+      btn.innerHTML = `PAY ₹199 ADVANCE (CONFIRM COD) →`;
     } else {
       btn.innerHTML = `PROCEED TO PAY (₹${subtotal.toLocaleString('en-IN')}) →`;
     }
@@ -4362,8 +4362,8 @@ function setCheckoutPaymentMethod(method) {
 
   if (badgeTitle && badgeDesc) {
     if (isCod) {
-      badgeTitle.textContent = "PAYMENT: ₹200 ADVANCE VIA SECURE RAZORPAY";
-      badgeDesc.textContent = "Cash on Delivery includes a ₹100 shipping charge. Total order: ₹" + orderTotal.toLocaleString('en-IN') + ". Pay ₹200 advance now to confirm. Pay the remaining ₹" + remaining.toLocaleString('en-IN') + " at delivery.";
+      badgeTitle.textContent = "PAYMENT: ₹199 ADVANCE VIA SECURE RAZORPAY";
+      badgeDesc.textContent = "Cash on Delivery includes a ₹100 shipping charge. Total order: ₹" + orderTotal.toLocaleString('en-IN') + ". Pay ₹199 advance now to confirm. Pay the remaining ₹" + remaining.toLocaleString('en-IN') + " at delivery.";
     } else {
       badgeTitle.textContent = "PAYMENT: 100% SECURE RAZORPAY CHECKOUT";
       badgeDesc.textContent = "FREE Pan-India Shipping. Pay full amount (₹" + subtotal.toLocaleString('en-IN') + ") securely online via UPI, Cards, NetBanking, or Wallet.";
@@ -4403,7 +4403,7 @@ function renderCheckout() {
   const isCod = (checkoutPaymentMethod === 'cod');
   const codShipping = 100;
   const codTotal = subtotal + codShipping;
-  const codRemaining = Math.max(0, codTotal - 200);
+  const codRemaining = Math.max(0, codTotal - 199);
 
   mainEl.innerHTML = `
     <div class="checkout-view">
@@ -4474,19 +4474,19 @@ function renderCheckout() {
                 <div class="payment-method-content">
                   <div class="payment-method-header">
                     <span class="payment-method-name mono">○ Cash on Delivery (COD)</span>
-                    <span class="payment-method-tag cod mono">+₹100 SHIPPING · ₹200 ADVANCE</span>
+                    <span class="payment-method-tag cod mono">+₹100 SHIPPING · ₹199 ADVANCE</span>
                   </div>
-                  <div class="payment-method-desc">Cash on Delivery includes a ₹100 shipping charge. Pay ₹200 advance now to confirm your order. The remaining ₹${codRemaining.toLocaleString('en-IN')} is paid at delivery.</div>
+                  <div class="payment-method-desc">Cash on Delivery includes a ₹100 shipping charge. Pay ₹199 advance now to confirm your order. The remaining ₹${codRemaining.toLocaleString('en-IN')} is paid at delivery.</div>
                 </div>
               </div>
             </div>
 
             <div class="payment-badge-box">
-              <div class="payment-badge-title mono" id="paymentBadgeTitle">${isCod ? 'PAYMENT: ₹200 ADVANCE VIA SECURE RAZORPAY' : 'PAYMENT: 100% SECURE RAZORPAY CHECKOUT'}</div>
-              <div class="payment-badge-desc" id="paymentBadgeDesc">${isCod ? 'Cash on Delivery includes a ₹100 shipping charge. Total order: ₹' + codTotal.toLocaleString('en-IN') + '. Pay ₹200 advance now to confirm. Pay the remaining ₹' + codRemaining.toLocaleString('en-IN') + ' upon delivery.' : 'FREE Pan-India Shipping. Pay full amount (₹' + subtotal.toLocaleString('en-IN') + ') securely online via UPI, Cards, NetBanking, or Wallet.'}</div>
+              <div class="payment-badge-title mono" id="paymentBadgeTitle">${isCod ? 'PAYMENT: ₹199 ADVANCE VIA SECURE RAZORPAY' : 'PAYMENT: 100% SECURE RAZORPAY CHECKOUT'}</div>
+              <div class="payment-badge-desc" id="paymentBadgeDesc">${isCod ? 'Cash on Delivery includes a ₹100 shipping charge. Total order: ₹' + codTotal.toLocaleString('en-IN') + '. Pay ₹199 advance now to confirm. Pay the remaining ₹' + codRemaining.toLocaleString('en-IN') + ' upon delivery.' : 'FREE Pan-India Shipping. Pay full amount (₹' + subtotal.toLocaleString('en-IN') + ') securely online via UPI, Cards, NetBanking, or Wallet.'}</div>
             </div>
 
-            <button type="submit" class="place-order-btn" id="placeOrderBtn">${isCod ? 'PAY ₹200 ADVANCE (CONFIRM COD) →' : `PROCEED TO PAY (₹${subtotal.toLocaleString('en-IN')}) →`}</button>
+            <button type="submit" class="place-order-btn" id="placeOrderBtn">${isCod ? 'PAY ₹199 ADVANCE (CONFIRM COD) →' : `PROCEED TO PAY (₹${subtotal.toLocaleString('en-IN')}) →`}</button>
           </form>
         </div>
 
@@ -4525,7 +4525,7 @@ function renderCheckout() {
                 </div>
                 <div class="cod-breakdown-row highlight" style="background: rgba(245, 158, 11, 0.12); padding: 8px 6px; border-radius: 2px;">
                   <span>PAY NOW (ADVANCE)</span>
-                  <span class="mono" style="color: #b45309; font-size: 0.92rem;">₹200</span>
+                  <span class="mono" style="color: #b45309; font-size: 0.92rem;">₹199</span>
                 </div>
                 <div class="cod-breakdown-row highlight" style="background: rgba(21, 128, 61, 0.08); padding: 8px 6px; border-radius: 2px; margin-top: 4px;">
                   <span>PAY AT DELIVERY</span>
@@ -4533,7 +4533,7 @@ function renderCheckout() {
                 </div>
                 <div class="cod-breakdown-notice">
                   <strong>• Cash on Delivery includes a ₹100 shipping charge.</strong><br>
-                  <strong>• ₹200 advance payment is required to confirm your COD order.</strong><br>
+                  <strong>• ₹199 advance payment is required to confirm your COD order.</strong><br>
                   The remaining balance of <strong>₹${codRemaining.toLocaleString('en-IN')}</strong> will be paid at the time of delivery.
                 </div>
               </div>
@@ -4622,7 +4622,7 @@ async function handlePlaceOrder(e) {
 
     const isCod = (orderData.payment_method === 'cod');
     const orderDescription = isCod 
-      ? "ZORO.FINDS ₹200 COD Advance Payment" 
+      ? "ZORO.FINDS ₹199 COD Advance Payment" 
       : "ZORO.FINDS Curated 1-of-1 Thrift Archive Order (FREE Shipping)";
 
     const rzpOptions = {
@@ -4739,7 +4739,7 @@ function renderOrderSuccess(orderData) {
           <div class="order-success-num mono">ORDER ID: ${escapeHtml(orderData.orderId)}</div>
           
           <div class="mono" style="font-size: 0.76rem; color: #b45309; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.08em;">
-            ✦ PAYMENT STATUS: ₹200 ADVANCE PAID
+            ✦ PAYMENT STATUS: ₹199 ADVANCE PAID
           </div>
           <div class="mono" style="font-size: 0.72rem; color: #15803d; margin-bottom: 24px; font-weight: 600;">
             ✦ RAZORPAY PAYMENT ID: ${escapeHtml(orderData.paymentId || "SUCCESS")}
