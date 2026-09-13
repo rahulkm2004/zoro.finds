@@ -54,6 +54,22 @@ export async function onRequestPost(context) {
 
     const items = data.items || [];
     const customer = data.customer || {};
+    const customerEmail = (customer.email || '').trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!customerEmail) {
+      return new Response(JSON.stringify({ success: false, error: 'Email address is required to place your order.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    if (!emailRegex.test(customerEmail)) {
+      return new Response(JSON.stringify({ success: false, error: 'Please enter a valid email address.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+
     const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
     const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
 

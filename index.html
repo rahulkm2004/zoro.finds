@@ -4426,8 +4426,8 @@ function renderCheckout() {
                 <input class="form-input" type="tel" id="custPhone" required placeholder="e.g. 9876543210">
               </div>
               <div>
-                <label class="form-label" for="custEmail">Email (Optional)</label>
-                <input class="form-input" type="email" id="custEmail" placeholder="name@example.com">
+                <label class="form-label" for="custEmail">Email *</label>
+                <input class="form-input" type="email" id="custEmail" required placeholder="name@example.com">
               </div>
             </div>
             <div class="form-row">
@@ -4557,11 +4557,24 @@ async function handlePlaceOrder(e) {
   e.preventDefault();
   const name = document.getElementById("custName").value.trim();
   const phone = document.getElementById("custPhone").value.trim();
-  const email = document.getElementById("custEmail") ? document.getElementById("custEmail").value.trim() : "";
+  const emailInput = document.getElementById("custEmail");
+  const email = emailInput ? emailInput.value.trim() : "";
   const address = document.getElementById("custAddress").value.trim();
   const city = document.getElementById("custCity").value.trim();
   const pincode = document.getElementById("custPincode").value.trim();
   const state = document.getElementById("custState").value.trim();
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!email) {
+    showToast("Email address is required to place your order.");
+    if (emailInput) emailInput.focus();
+    return;
+  }
+  if (!emailRegex.test(email)) {
+    showToast("Please enter a valid email address.");
+    if (emailInput) emailInput.focus();
+    return;
+  }
 
   // Validate cart against backend database before initiating order
   const validation = await syncAndValidateCart(true);

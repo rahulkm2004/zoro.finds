@@ -6,6 +6,21 @@ export async function onRequestPost(context) {
     const data = await request.json();
     const items = data.items || [];
     const customer = data.customer || {};
+    const customerEmail = (customer.email || '').trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!customerEmail) {
+      return new Response(JSON.stringify({ error: 'Email address is required to place your order.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
+    if (!emailRegex.test(customerEmail)) {
+      return new Response(JSON.stringify({ error: 'Please enter a valid email address.' }), {
+        status: 400,
+        headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
+      });
+    }
 
     if (!Array.isArray(items) || items.length === 0) {
       return new Response(JSON.stringify({ error: 'Invalid or empty items list' }), {

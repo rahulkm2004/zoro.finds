@@ -314,6 +314,15 @@ const server = http.createServer(async (req, res) => {
       const items = data.items || [];
       const customer = data.customer || {};
       const sessionId = data.session_id || data.sessionId;
+      const customerEmail = (customer.email || '').trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!customerEmail) {
+        return sendJSON(res, 400, { error: 'Email address is required to place your order.' });
+      }
+      if (!emailRegex.test(customerEmail)) {
+        return sendJSON(res, 400, { error: 'Please enter a valid email address.' });
+      }
 
       if (!Array.isArray(items) || items.length === 0) {
         return sendJSON(res, 400, { error: 'Invalid or empty items list' });
@@ -494,6 +503,16 @@ const server = http.createServer(async (req, res) => {
       const items = data.items || [];
       const customer = data.customer || {};
       const sessionId = data.session_id || data.sessionId || null;
+      const customerEmail = (customer.email || '').trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!customerEmail) {
+        return sendJSON(res, 400, { success: false, error: 'Email address is required to place your order.' });
+      }
+      if (!emailRegex.test(customerEmail)) {
+        return sendJSON(res, 400, { success: false, error: 'Please enter a valid email address.' });
+      }
+
       const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
       const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
 

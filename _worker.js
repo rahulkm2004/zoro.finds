@@ -578,6 +578,15 @@ export default {
         const items = data.items || [];
         const customer = data.customer || {};
         const sessionId = data.session_id || '';
+        const customerEmail = (customer.email || '').trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!customerEmail) {
+          return jsonResponse({ error: 'Email address is required to place your order.' }, 400);
+        }
+        if (!emailRegex.test(customerEmail)) {
+          return jsonResponse({ error: 'Please enter a valid email address.' }, 400);
+        }
 
         if (!Array.isArray(items) || items.length === 0) {
           return jsonResponse({ error: 'Invalid or empty items list' }, 400);
@@ -736,6 +745,16 @@ export default {
         const items = data.items || [];
         const customer = data.customer || {};
         const sessionId = data.session_id || data.sessionId || null;
+        const customerEmail = (customer.email || '').trim();
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!customerEmail) {
+          return jsonResponse({ success: false, error: 'Email address is required to place your order.' }, 400);
+        }
+        if (!emailRegex.test(customerEmail)) {
+          return jsonResponse({ success: false, error: 'Please enter a valid email address.' }, 400);
+        }
+
         const paymentMethod = data.payment_method === 'cod' ? 'COD' : 'ONLINE';
         const paymentStatus = paymentMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
 
