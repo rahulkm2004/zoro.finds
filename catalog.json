@@ -69,13 +69,13 @@
     "name": "Nike Collegiate Applique Full-Zip Hoodie — Crisp White & Blue",
     "price": "₹999",
     "numericPrice": 999,
-    "status": "available"
+    "status": "sold_out"
   },
   "ZH-043": {
     "name": "Forever 21 'STAY LIT' Flame Graphic Pullover Hoodie — Tangerine Orange",
     "price": "₹1,099",
     "numericPrice": 1099,
-    "status": "sold_out"
+    "status": "available"
   },
   "ZH-044": {
     "name": "Champion Hoodie",
