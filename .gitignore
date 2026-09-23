@@ -80,3 +80,17 @@ zoro-finds-archive*.html
 
 # ─── Raw uploads ───────────────────────────────────────────────────────────────
 hoodies 4/
+hoodies 5/
+
+# Local-only maintenance / dev scripts (not needed in production)
+fix_local_db.js
+sync_db_statuses.js
+add_zf030.js
+extract_statuses.js
+final_verify.js
+final_api_check.js
+update_h46_h60_details.js
+verify_html.js
+check_block.js
+check_jackets.js
+

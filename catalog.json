@@ -1,4 +1,94 @@
 {
+  "ZH-046": {
+    "name": "McGregor Full-Zip Tech Fleece Hoodie — Heather Grey & Dusty Pink",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-047": {
+    "name": "Disney Mickey Mouse Embroidered Pullover Hoodie — Charcoal Grey",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-048": {
+    "name": "Japanese Kawaii Bunny Fair-Isle Pattern Colorblock Hoodie — Red & Cream",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-049": {
+    "name": "Camo Woodland Colorblock Pullover Hoodie — Army Green Camo & Charcoal",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-050": {
+    "name": "New Balance Graphic Layered Double-Sleeve Hoodie — Crimson Red & Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-051": {
+    "name": "Minimalist Sherpa-Sleeve Oversized Blank Hoodie — Washed Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-052": {
+    "name": "Oriental Botanical Floral & Cockatoo Embroidered Boxy Hoodie — Black & White Striped Trim",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-053": {
+    "name": "Superdry Japan Sherpa Fleece Lined Full-Zip Hoodie — Marl Navy & Neon Orange",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-054": {
+    "name": "Adidas Originals Big Trefoil Graphic Pullover Hoodie — Magenta Pink",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-055": {
+    "name": "Off-White 'TEMPERATURE' Mona Lisa Graphic Pullover Hoodie — Jet Black",
+    "price": "₹1,299",
+    "numericPrice": 1299,
+    "status": "available"
+  },
+  "ZH-056": {
+    "name": "NFL Philadelphia Eagles Embroidered Colorblock Pullover Hoodie — Midnight Green & Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-057": {
+    "name": "Vincent Van Gogh 'Irises 1890' Fine Art Graphic Pullover Hoodie — Pale Butter Cream",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-058": {
+    "name": "Mishka NYC Bloodshot Eyeball Graphic Full-Zip Hoodie — Faded Charcoal",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-059": {
+    "name": "Vintage Nike Gothic Arch Embroidered Center-Swoosh Pullover Hoodie — Heather Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-060": {
+    "name": "Adidas Originals 3-Stripes Trefoil Zip Hoodie — Optic White & Navy",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
   "ZH-031": {
     "name": "Adidas Originals Big Trefoil Graphic Pullover Hoodie — Washed Black",
     "price": "₹1,199",
