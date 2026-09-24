@@ -1,26 +1,28 @@
 {
-  "name": "zoro.finds-main",
-  "version": "1.0.0",
-  "description": "A curated vintage jacket catalogue built as a single-page static website. Browse one-of-one vintage pieces, view detailed slides, measurements, and condition notes, and purchase directly via WhatsApp or Instagram.",
-  "main": "server.js",
-  "scripts": {
-    "build": "node -e \"const fs=require('fs'); if(!fs.existsSync('dist')) fs.mkdirSync('dist'); fs.copyFileSync('index.html', 'dist/index.html'); if(fs.existsSync('admin.html')) fs.copyFileSync('admin.html', 'dist/admin.html'); if(fs.existsSync('CNAME')) fs.copyFileSync('CNAME', 'dist/CNAME'); console.log('✓ Build complete');\"",
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/rahulkm2004/zoro.finds.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/rahulkm2004/zoro.finds/issues"
-  },
-  "homepage": "https://github.com/rahulkm2004/zoro.finds#readme",
-  "dependencies": {
-    "dotenv": "^17.4.2",
-    "razorpay": "^2.9.8"
-  }
+    "name":  "zoro.finds-main",
+    "version":  "1.0.0",
+    "description":  "A curated vintage jacket catalogue built as a single-page static website. Browse one-of-one vintage pieces, view detailed slides, measurements, and condition notes, and purchase directly via WhatsApp or Instagram.",
+    "main":  "server.js",
+    "scripts":  {
+                    "build":  "node -e \"const fs=require(\u0027fs\u0027); if(!fs.existsSync(\u0027dist\u0027)) fs.mkdirSync(\u0027dist\u0027); fs.copyFileSync(\u0027index.html\u0027, \u0027dist/index.html\u0027); if(fs.existsSync(\u0027admin.html\u0027)) fs.copyFileSync(\u0027admin.html\u0027, \u0027dist/admin.html\u0027); if(fs.existsSync(\u0027CNAME\u0027)) fs.copyFileSync(\u0027CNAME\u0027, \u0027dist/CNAME\u0027); if(fs.existsSync(\u0027images\u0027)) fs.cpSync(\u0027images\u0027, \u0027dist/images\u0027, {recursive:true}); console.log(\u0027Build complete\u0027);\"",
+                    "start":  "node server.js",
+                    "test":  "echo \"Error: no test specified\" \u0026\u0026 exit 1"
+                },
+    "repository":  {
+                       "type":  "git",
+                       "url":  "git+https://github.com/rahulkm2004/zoro.finds.git"
+                   },
+    "keywords":  [
+
+                 ],
+    "author":  "",
+    "license":  "ISC",
+    "bugs":  {
+                 "url":  "https://github.com/rahulkm2004/zoro.finds/issues"
+             },
+    "homepage":  "https://github.com/rahulkm2004/zoro.finds#readme",
+    "dependencies":  {
+                         "dotenv":  "^17.4.2",
+                         "razorpay":  "^2.9.8"
+                     }
 }
