@@ -3131,6 +3131,297 @@ footer {
         transform-origin: 50% 70%;
     }
 }
+
+/* =========================================================================
+   COMPREHENSIVE MOBILE RESPONSIVENESS (768px, 480px, 430px, 380px, 320px)
+========================================================================= */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    max-width: 100vw !important;
+    width: 100% !important;
+  }
+
+  .editorial-hero-wrapper {
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+  }
+
+  .hero-video-container {
+    height: clamp(520px, 85vh, 680px) !important;
+    width: 100%;
+    max-width: 100vw;
+    overflow: hidden;
+  }
+
+  .cinematic-layout {
+    padding: 30px 18px 24px !important;
+    justify-content: flex-end !important;
+    gap: 16px !important;
+  }
+
+  .hero-branding {
+    max-width: 100% !important;
+    gap: 10px !important;
+    z-index: 10;
+  }
+
+  .oversize-brand {
+    font-size: clamp(2.4rem, 11vw, 4.4rem) !important;
+    line-height: 0.95 !important;
+    letter-spacing: -0.02em !important;
+    word-break: break-word;
+  }
+
+  .editorial-text {
+    font-size: clamp(0.85rem, 3.4vw, 1.1rem) !important;
+    line-height: 1.35 !important;
+    padding-left: 12px !important;
+    border-left: 2px solid var(--white) !important;
+    margin: 0 !important;
+  }
+
+  .cinematic-actions {
+    flex-direction: column !important;
+    align-self: stretch !important;
+    width: 100% !important;
+    gap: 10px !important;
+    margin-top: 14px !important;
+    z-index: 10;
+  }
+
+  .modern-btn {
+    width: 100% !important;
+    padding: 14px 20px !important;
+    font-size: 0.8rem !important;
+    justify-content: center !important;
+    min-height: 48px !important;
+  }
+
+  .hero-char-panel {
+    right: 0 !important;
+    bottom: 0 !important;
+    height: clamp(260px, 50vh, 420px) !important;
+    opacity: 0.8 !important;
+    pointer-events: none !important;
+    z-index: 5 !important;
+  }
+
+  /* BRAND STORY SECTION */
+  .brand-story-section {
+    flex-direction: column !important;
+    text-align: center !important;
+    padding: 7vh 5vw !important;
+    gap: 24px !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  .story-container {
+    align-items: center !important;
+    width: 100% !important;
+    gap: 14px !important;
+    transform: none !important;
+  }
+
+  .reveal-text {
+    font-size: clamp(2.2rem, 9.5vw, 3.6rem) !important;
+    line-height: 1 !important;
+    letter-spacing: -0.02em !important;
+    transform: none !important;
+    opacity: 1 !important;
+    word-break: break-word;
+  }
+
+  .story-image-overlay {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    margin-top: 12px !important;
+    transform: none !important;
+  }
+
+  .story-img {
+    max-width: 290px !important;
+    width: 80% !important;
+    height: auto !important;
+    border-radius: 6px !important;
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important;
+    transform: none !important;
+    opacity: 1 !important;
+    cursor: pointer !important;
+    pointer-events: auto !important;
+  }
+
+  /* HORIZONTAL SCROLL MARQUEE */
+  .marquee-section {
+    padding: 5vh 0 !important;
+    width: 100% !important;
+    max-width: 100vw !important;
+    overflow: hidden !important;
+  }
+
+  .marquee-img {
+    height: clamp(200px, 32vh, 320px) !important;
+    aspect-ratio: 4/5 !important;
+  }
+
+  .marquee-set {
+    gap: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  /* SERVICES SECTION */
+  .services-info-section {
+    padding: 7vh 5vw !important;
+  }
+
+  .service-item {
+    padding: 3vh 0 !important;
+  }
+
+  .service-num {
+    width: 42px !important;
+    font-size: 0.95rem !important;
+  }
+
+  .service-title {
+    font-size: clamp(1.4rem, 5.5vw, 2.2rem) !important;
+  }
+
+  .service-arrow {
+    font-size: 1.5rem !important;
+    opacity: 0.8 !important;
+  }
+
+  /* ARCHIVE SHOWCASE */
+  .archive-showcase-section {
+    padding-bottom: 10vh !important;
+  }
+
+  .sticky-container {
+    height: 85vh !important;
+  }
+
+  .archive-title {
+    top: 4vh !important;
+    left: 5vw !important;
+    font-size: clamp(1.6rem, 6vw, 2.5rem) !important;
+  }
+
+  .archive-card {
+    width: clamp(240px, 78vw, 360px) !important;
+  }
+
+  /* EDITORIAL COMPOSITION */
+  .editorial-image-composition {
+    height: 90vh !important;
+  }
+
+  .comp-bg {
+    width: 94% !important;
+  }
+
+  .comp-fg-1 {
+    width: 55% !important;
+    left: 4% !important;
+    bottom: 8% !important;
+  }
+
+  .comp-fg-2 {
+    width: 48% !important;
+    right: 4% !important;
+    top: 10% !important;
+  }
+
+  /* WHITE INFO DROP SECTION */
+  .white-info-section {
+    padding: 9vh 5vw !important;
+  }
+
+  .drop-heading {
+    font-size: clamp(2.2rem, 9vw, 3.8rem) !important;
+    margin-bottom: 5vh !important;
+  }
+
+  .info-row {
+    padding: 3vh 0 !important;
+  }
+
+  .info-num {
+    width: 42px !important;
+    font-size: 1.1rem !important;
+  }
+
+  .info-title {
+    font-size: clamp(1.2rem, 5vw, 1.8rem) !important;
+  }
+
+  .info-arrow {
+    font-size: 1.5rem !important;
+    opacity: 0.8 !important;
+  }
+
+  /* CLOSING SECTION */
+  .final-closing-section {
+    height: auto !important;
+    min-height: 55vh !important;
+    padding: 7vh 5vw !important;
+    gap: 20px !important;
+  }
+
+  .closing-gallery {
+    width: 100% !important;
+    gap: 8px !important;
+    margin-bottom: 3vh !important;
+    padding: 0 2vw !important;
+  }
+
+  .closing-gallery img {
+    width: 31% !important;
+    border-radius: 4px !important;
+  }
+
+  .closing-sub {
+    font-size: 1.05rem !important;
+    margin-bottom: 2vh !important;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-video-container {
+    height: clamp(500px, 88vh, 620px) !important;
+  }
+
+  .cinematic-layout {
+    padding: 24px 14px 20px !important;
+  }
+
+  .oversize-brand {
+    font-size: clamp(2.2rem, 11vw, 3.6rem) !important;
+  }
+
+  .modern-btn {
+    padding: 13px 16px !important;
+    font-size: 0.76rem !important;
+  }
+
+  .reveal-text {
+    font-size: clamp(1.9rem, 9vw, 2.8rem) !important;
+  }
+
+  .story-img {
+    max-width: 260px !important;
+    width: 85% !important;
+  }
+
+  .archive-card {
+    width: clamp(220px, 82vw, 320px) !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -5082,25 +5373,28 @@ function renderLandingPage() {
         const storyImgWrap = document.getElementById('storyImgWrap');
         const storyImg = document.getElementById('storyImg');
         
-        // ZORO STORY IMAGE AUDIO LOGIC
-        if (storyImgWrap) {
-            const zoroAudio = new Audio('images/zoro-welcome.wav');
-            let isZoroAudioPlaying = false;
+        // ZORO STORY IMAGE AUDIO LOGIC (Exact ZORO image beside ONE-OF-ONE section)
+        if (storyImg) {
+            const zoroAudio = new Audio('public/audio/zoro-welcome.mp3');
+            zoroAudio.preload = 'auto';
+            let isHovered = false;
             
-            storyImgWrap.addEventListener('mouseenter', () => {
-                if (!window.matchMedia('(pointer: coarse)').matches && !isZoroAudioPlaying) {
-                    isZoroAudioPlaying = true;
+            storyImg.addEventListener('mouseenter', () => {
+                if (!window.matchMedia('(pointer: coarse)').matches && !isHovered) {
+                    isHovered = true;
                     zoroAudio.currentTime = 0;
-                    zoroAudio.play().catch(() => {
-                        // ignore gracefully if browser blocks autoplay
-                    });
+                    const playPromise = zoroAudio.play();
+                    if (playPromise !== undefined) {
+                        playPromise.catch(() => {
+                            // ignore gracefully if browser blocks unmuted audio before user interaction
+                        });
+                    }
                 }
-            }, { passive: true });
+            });
             
-            storyImgWrap.addEventListener('mouseleave', () => {
-                isZoroAudioPlaying = false;
-                // do not stop audio immediately on leave, let it finish or we could pause it if preferred, but resetting flag is enough
-            }, { passive: true });
+            storyImg.addEventListener('mouseleave', () => {
+                isHovered = false;
+            });
         }
         
         window.addEventListener('scroll', () => {
@@ -5118,10 +5412,16 @@ function renderLandingPage() {
             if (storySection && storyTextWrap && storyImgWrap) {
                 const rect = storySection.getBoundingClientRect();
                 const windowH = window.innerHeight;
+                const isMobile = window.innerWidth <= 768;
                 if (rect.top < windowH && rect.bottom > 0) {
-                    const offset = (windowH - rect.top) * 0.05;
-                    storyTextWrap.style.transform = `translateY(${offset * 0.5}px)`;
-                    storyImgWrap.style.transform = `translateY(${-offset * 0.2}px)`;
+                    if (!isMobile) {
+                        const offset = (windowH - rect.top) * 0.05;
+                        storyTextWrap.style.transform = `translateY(${offset * 0.5}px)`;
+                        storyImgWrap.style.transform = `translateY(${-offset * 0.2}px)`;
+                    } else {
+                        storyTextWrap.style.transform = 'none';
+                        storyImgWrap.style.transform = 'none';
+                    }
                     
                     const progress = Math.max(0, Math.min(1, (windowH * 0.85 - rect.top) / (windowH * 0.6)));
                     
@@ -5134,10 +5434,15 @@ function renderLandingPage() {
                             localP = Math.min(1, (progress - pStart) / 0.4);
                         }
                         const easeOut = Math.sin((localP * Math.PI) / 2);
-                        const x = -100 * (1 - easeOut);
-                        const sc = 0.95 + (0.05 * easeOut);
-                        txt.style.transform = `translateX(${x}px) scale(${sc})`;
-                        txt.style.opacity = easeOut;
+                        if (!isMobile) {
+                            const x = -100 * (1 - easeOut);
+                            const sc = 0.95 + (0.05 * easeOut);
+                            txt.style.transform = `translateX(${x}px) scale(${sc})`;
+                            txt.style.opacity = easeOut;
+                        } else {
+                            txt.style.transform = 'none';
+                            txt.style.opacity = '1';
+                        }
                     });
                 }
             }
