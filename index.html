@@ -589,6 +589,56 @@ body {
 }
 
 /* =========================================================================
+   HERO ZORO CHARACTER PANEL (cursor-reactive)
+========================================================================= */
+.hero-char-panel {
+  /* Absolute within .hero-video-container */
+  position: absolute;
+  /* Sit on the right side, bottom-anchored */
+  right: clamp(10px, 3vw, 70px);
+  bottom: 0;
+  /* Height drives the size — width scales with aspect ratio */
+  height: clamp(500px, 105%, 1020px);
+  aspect-ratio: 941 / 1672;
+  max-width: 90vw;
+  /* Above video/overlay, below text (z-index 10) */
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-char-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center bottom;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
+  will-change: contents;
+}
+
+/* Tablet: pull in a bit so text has room */
+@media (max-width: 900px) {
+  .hero-char-panel {
+    right: clamp(10px, 3vw, 40px);
+    height: clamp(320px, 75%, 600px);
+    opacity: 0.95;
+  }
+}
+
+/* Mobile: smaller, contained so text is always readable, no horizontal scroll */
+@media (max-width: 600px) {
+  .hero-char-panel {
+    right: 5px;
+    height: clamp(260px, 65%, 450px);
+    opacity: 0.9;
+  }
+}
+
+/* =========================================================================
    LARGE EDITORIAL CATEGORY SHOWCASES (HOODIES & JACKETS)
 ========================================================================= */
 .landing-category-showcases {
@@ -2484,7 +2534,603 @@ footer {
     gap: 12px;
   }
 }
+/* =========================================================================
+   CINEMATIC & PREMIUM LANDING PAGE STYLES (NEW DESIGN)
+========================================================================= */
 
+.cinematic-theme {
+  background-color: var(--black);
+  color: var(--white);
+  overflow-x: hidden;
+}
+
+.cinematic-overlay {
+  background: linear-gradient(to right, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 40%, rgba(0,0,0,0) 100%);
+  pointer-events: none;
+}
+
+.cinematic-layout {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+  padding: 8vh 6vw;
+  box-sizing: border-box;
+}
+
+.hero-branding {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 600px;
+}
+
+.display-text {
+  font-size: clamp(4rem, 8vw, 9rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  font-weight: 800;
+  text-transform: uppercase;
+  margin: 0;
+  color: var(--white);
+  mix-blend-mode: exclusion;
+}
+
+.editorial-text {
+  font-size: clamp(1.2rem, 2vw, 1.8rem);
+  line-height: 1.2;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: var(--stone);
+  border-left: 2px solid var(--white);
+  padding-left: 1.5rem;
+  margin: 0;
+}
+
+.cinematic-actions {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: auto;
+  align-self: flex-end;
+}
+
+.modern-btn {
+  padding: 18px 36px;
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  border-radius: 4px;
+  text-transform: uppercase;
+  font-weight: 700;
+  transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.modern-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}
+
+.modern-btn .count {
+  opacity: 0.6;
+  font-weight: 400;
+}
+
+/* MARQUEE SECTION */
+.marquee-section {
+  padding: 8vh 0;
+  overflow: hidden;
+  background: var(--black);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+}
+
+.marquee-set {
+  display: flex;
+  gap: 2vw;
+  padding-right: 2vw;
+}
+
+.marquee-img {
+  height: clamp(300px, 45vh, 600px);
+  width: auto;
+  aspect-ratio: 4/5;
+  object-fit: cover;
+  filter: grayscale(80%) contrast(1.2);
+  transition: filter 0.5s ease;
+  border-radius: 4px;
+}
+
+.marquee-img:hover {
+  filter: grayscale(0%) contrast(1);
+}
+
+/* BRAND STORY */
+.brand-story-section {
+  padding: 10vh 8vw;
+  background: var(--black);
+  color: var(--white);
+  min-height: 50vh;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4vw;
+  overflow: hidden;
+}
+
+.story-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 3vh;
+  will-change: transform;
+}
+
+.reveal-text {
+  font-size: clamp(3.5rem, 5vw, 6.5rem);
+  line-height: 0.95;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin: 0;
+  opacity: 0;
+  transform: translateX(-100px) scale(0.95);
+  will-change: transform, opacity;
+}
+
+@media (max-width: 900px) {
+  .brand-story-section {
+    flex-direction: column;
+    text-align: center;
+    padding: 8vh 5vw;
+  }
+}
+
+/* SERVICES INFO SECTION */
+.services-info-section {
+  padding: 10vh 8vw;
+  background: var(--stone-dark);
+  color: var(--white);
+}
+
+.services-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.service-item {
+  display: flex;
+  align-items: flex-start;
+  padding: 4vh 0;
+  border-bottom: 1px solid rgba(255,255,255,0.15);
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.service-item:hover {
+  color: #B5A2F8; /* Subtle brand nod */
+}
+
+.service-item:hover .service-arrow {
+  transform: translateX(15px);
+  opacity: 1;
+}
+
+.service-num {
+  font-size: 1.2rem;
+  font-family: monospace;
+  opacity: 0.5;
+  width: 100px;
+  flex-shrink: 0;
+}
+
+.service-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.service-title {
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.service-arrow {
+  font-size: 2.5rem;
+  opacity: 0;
+  transition: all 0.3s ease;
+}
+
+/* ARCHIVE SHOWCASE */
+.archive-showcase-section {
+  position: relative;
+  background: var(--white);
+  color: var(--black);
+  padding-bottom: 20vh;
+}
+
+.sticky-container {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.archive-title {
+  position: absolute;
+  top: 10vh;
+  left: 6vw;
+  font-size: clamp(2rem, 3vw, 4rem);
+  font-weight: 800;
+  margin: 0;
+  z-index: 10;
+}
+
+.layered-cards-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.archive-card {
+  position: absolute;
+  width: clamp(300px, 45vw, 600px);
+  aspect-ratio: 4/5;
+  box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.archive-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.archive-card-label {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  background: var(--white);
+  color: var(--black);
+  padding: 8px 16px;
+  font-family: monospace;
+  font-size: 0.9rem;
+  border-radius: 4px;
+}
+
+.archive-card.card-1 {
+  transform: rotate(-4deg) translateX(-15vw);
+  z-index: 1;
+}
+
+.archive-card.card-2 {
+  transform: rotate(6deg) translateX(15vw);
+  z-index: 2;
+}
+
+.archive-card:hover {
+  transform: scale(1.05) translateY(-20px);
+  z-index: 10 !important;
+}
+
+@media (max-width: 900px) {
+  .cinematic-layout {
+    padding: 6vh 4vw;
+  }
+  .cinematic-actions {
+    flex-direction: column;
+    align-self: flex-start;
+    width: 100%;
+  }
+  .modern-btn {
+    width: 100%;
+    justify-content: center;
+  }
+  .archive-card.card-1 {
+    transform: rotate(-2deg) translateY(-10vh);
+  }
+  .archive-card.card-2 {
+    transform: rotate(4deg) translateY(10vh);
+  }
+}/* =========================================================================
+   CINEMATIC REDESIGN (NEW STYLES)
+========================================================================= */
+
+.premium-top-nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 2rem 4vw;
+    z-index: 100;
+    pointer-events: none;
+}
+
+.premium-top-nav a {
+    pointer-events: auto;
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    mix-blend-mode: exclusion;
+    cursor: pointer;
+    margin-right: 2rem;
+    transition: opacity 0.3s;
+}
+
+.premium-top-nav a:hover {
+    opacity: 0.6;
+}
+
+.premium-top-nav .nav-right a {
+    margin-right: 0;
+    margin-left: 2rem;
+}
+
+.oversize-brand {
+    font-size: clamp(5rem, 12vw, 15rem);
+    line-height: 0.8;
+    letter-spacing: -0.05em;
+    font-weight: 800;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--white);
+    mix-blend-mode: exclusion;
+}
+
+.editorial-image-composition {
+    position: relative;
+    width: 100%;
+    height: 150vh;
+    background: var(--stone-dark);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.img-comp-layer {
+    position: absolute;
+    will-change: transform;
+}
+
+.img-comp-layer img {
+    box-shadow: 0 40px 100px rgba(0,0,0,0.5);
+}
+
+.comp-bg {
+    width: 80%;
+    max-width: 1000px;
+    z-index: 1;
+    opacity: 0.5;
+    filter: blur(2px);
+}
+
+.comp-bg img {
+    width: 100%; height: auto; object-fit: cover; aspect-ratio: 16/9;
+}
+
+.comp-fg-1 {
+    width: 40%;
+    max-width: 500px;
+    left: 10%;
+    bottom: 20%;
+    z-index: 2;
+}
+
+.comp-fg-1 img {
+    width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover;
+}
+
+.comp-fg-2 {
+    width: 35%;
+    max-width: 450px;
+    right: 15%;
+    top: 25%;
+    z-index: 3;
+}
+
+.comp-fg-2 img {
+    width: 100%; height: auto; aspect-ratio: 3/4; object-fit: cover;
+}
+
+.white-info-section {
+    background: var(--offwhite);
+    color: var(--black);
+    padding: 15vh 8vw;
+}
+
+.drop-heading {
+    font-size: clamp(3rem, 8vw, 8rem);
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin: 0 0 8vh 0;
+}
+
+.info-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    padding: 4vh 0;
+    border-bottom: 2px solid rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.4s ease;
+}
+
+.info-row:hover {
+    padding-left: 20px;
+    border-bottom-color: var(--black);
+}
+
+.info-row:hover .info-arrow {
+    opacity: 1;
+    transform: translateX(10px);
+}
+
+.info-num {
+    font-size: 1.5rem;
+    font-family: monospace;
+    opacity: 0.4;
+    width: 80px;
+    flex-shrink: 0;
+}
+
+.info-title {
+    font-size: clamp(1.5rem, 4vw, 3rem);
+    font-weight: 700;
+    flex-grow: 1;
+}
+
+.info-arrow {
+    font-size: 2rem;
+    opacity: 0;
+    transition: all 0.4s ease;
+}
+
+.archive-card.card-3 {
+    transform: rotate(-8deg) translateX(5vw) translateY(5vh);
+    z-index: 3;
+}
+
+.final-closing-section {
+    height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--black);
+    color: var(--white);
+    text-align: center;
+    gap: 3vh;
+}
+
+.closing-sub {
+    font-size: 1.5rem;
+    color: var(--stone);
+    margin-bottom: 4vh;
+}
+
+@media (max-width: 900px) {
+    .premium-top-nav {
+        display: none; /* Mobile can use sidebar */
+    }
+    .comp-fg-1 { width: 60%; left: 5%; bottom: 10%; }
+    .comp-fg-2 { width: 50%; right: 5%; top: 10%; }
+    .archive-card.card-3 { transform: rotate(0) translateY(20vh); }
+}.story-image-overlay {
+    flex: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    will-change: transform;
+}
+
+.story-img {
+    width: 100%;
+    max-width: 450px;
+    height: auto;
+    border-radius: 4px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    will-change: transform, opacity;
+    opacity: 0.6;
+    transform: scale(0.95);
+    transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.story-img.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+@media (max-width: 900px) {
+  .story-image-overlay {
+    margin-top: 5vh;
+    justify-content: center;
+  }
+  .story-img {
+    max-width: 80%;
+  }
+}
+
+.closing-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 2vw;
+    margin-bottom: 5vh;
+    width: 100%;
+    max-width: 1200px;
+}
+
+.closing-gallery img {
+    width: 30%;
+    height: auto;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    border-radius: 4px;
+    opacity: 0.8;
+}
+
+.closing-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 10;
+}.hoodie-zoom-wrapper {
+    position: relative;
+    width: 100%;
+    height: 350vh;
+    background: var(--black);
+    z-index: 10;
+}
+
+.hoodie-zoom-sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hoodie-zoom-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 25%;
+    will-change: transform;
+    transform-origin: 50% 65%;
+}
+
+@media (max-width: 900px) {
+    .hoodie-zoom-img {
+        object-position: center 30%;
+        transform-origin: 50% 70%;
+    }
+}
 </style>
 </head>
 <body>
@@ -4261,137 +4907,403 @@ function renderTab(tab) {
    EDITORIAL LANDING PAGE RENDERER (THRFT REFERENCE STYLE)
 ========================================================================= */
 function renderLandingPage() {
-  const activeHoodies = HOODIES.filter(h => h.status !== "sold").length;
-  const activeJackets = PRODUCTS.filter(j => j.status !== "sold").length;
+    const activeHoodies = HOODIES.filter(h => h.status !== "sold").length;
+    const activeJackets = PRODUCTS.filter(j => j.status !== "sold").length;
 
-  mainEl.innerHTML = `
-    <div class="editorial-landing">
-      <!-- HERO VIDEO & EDITORIAL MONOLITH -->
-      <section class="editorial-hero-wrapper" aria-label="Brand Hero Video">
-        <div class="hero-video-container">
-          <video class="hero-video-media" autoplay loop muted playsinline preload="metadata">
-            <source src="images/hero-video.mp4" type="video/mp4">
-          </video>
-          <div class="hero-video-overlay"></div>
-          <div class="hero-content-box">
-            <h1 class="hero-main-title">ZORO.FINDS</h1>
-            <p class="hero-subtitle">Vintage jackets, heavyweight hoodies & rare thrift finds — curated one-of-one pieces.</p>
-            <div class="hero-actions-row">
-              <button type="button" class="hero-cta-btn mono" onclick="goToCollection('JACKETS')">SHOP JACKETS (${activeJackets}) →</button>
-              <button type="button" class="hero-cta-btn secondary mono" onclick="goToCollection('HOODIES')">SHOP HOODIES (${activeHoodies}) →</button>
-            </div>
-          </div>
+    mainEl.innerHTML = `
+        <div class="editorial-landing cinematic-theme">
+            
+            <!-- TOP NAVIGATION (INSPIRED BY REFERENCE) -->
+
+
+            <!-- HERO VIDEO & EDITORIAL MONOLITH -->
+            <section class="editorial-hero-wrapper" aria-label="Brand Hero Video">
+                <div class="hero-video-container">
+                    <video class="hero-video-media" autoplay loop muted playsinline preload="metadata">
+                        <source src="images/hero-video.mp4" type="video/mp4">
+                    </video>
+                    <div class="hero-video-overlay cinematic-overlay"></div>
+                    
+                    <!-- Cursor-reactive Zoro character panel -->
+                    <div id="heroCharPanel" class="hero-char-panel" aria-label="Interactive Zoro character">
+                        <img
+                            id="heroCharImg"
+                            class="hero-char-img"
+                            src="images/zoro/center.png"
+                            alt="Zoro"
+                            loading="eager"
+                            decoding="async"
+                            draggable="false"
+                        />
+                    </div>
+                    
+                    <div class="hero-content-box cinematic-layout">
+                        <div class="hero-branding">
+                            <h1 class="hero-main-title oversize-brand">ZORO.FINDS</h1>
+                            <p class="hero-subtitle editorial-text">ONE-OF-ONE<br>RARE FINDS.</p>
+                        </div>
+                        <div class="hero-actions-row cinematic-actions">
+                            <button type="button" class="hero-cta-btn modern-btn" onclick="goToCollection('JACKETS')">SHOP JACKETS <span class="count">(${activeJackets})</span></button>
+                            <button type="button" class="hero-cta-btn secondary modern-btn" onclick="goToCollection('HOODIES')">SHOP HOODIES <span class="count">(${activeHoodies})</span></button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ABOUT ZORO.FINDS -->
+            <section class="brand-story-section" id="storySection">
+                <div class="story-container" id="storyTextWrap">
+                    <h2 class="reveal-text">ONE-OF-ONE</h2>
+                    <h2 class="reveal-text">RARE FINDS</h2>
+                    <h2 class="reveal-text">VINTAGE<br>STREETWEAR</h2>
+                </div>
+                <div class="story-image-overlay" id="storyImgWrap">
+                    <img src="images/media_1790241997714.png" alt="ZORO Visual" loading="lazy" class="story-img" id="storyImg">
+                </div>
+            </section>
+
+
+
+            <!-- SCROLL MARQUEE SECTION -->
+            <section class="marquee-section">
+                <div class="marquee-track" id="marqueeTrack">
+                    <!-- SET 1 -->
+                    <div class="marquee-set">
+                        <img src="images/zoro%20scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                    </div>
+                    <!-- SET 2 -->
+                    <div class="marquee-set">
+                        <img src="images/zoro%20scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                    </div>
+                    <!-- SET 3 -->
+                    <div class="marquee-set">
+                        <img src="images/zoro%20scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro%20scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                    </div>
+                </div>
+            </section>
+
+            <!-- WHITE INFORMATION SECTION -->
+            <section class="white-info-section">
+                <h2 class="drop-heading">THE DROP</h2>
+                <div class="info-list">
+                    <div class="info-row" onclick="goToCollection('HOODIES')">
+                        <span class="info-num">01</span>
+                        <span class="info-title">HOODIES</span>
+                        <span class="info-arrow">→</span>
+                    </div>
+                    <div class="info-row" onclick="goToCollection('JACKETS')">
+                        <span class="info-num">02</span>
+                        <span class="info-title">JACKETS</span>
+                        <span class="info-arrow">→</span>
+                    </div>
+                    <div class="info-row" onclick="goToCollection('ARCHIVE')">
+                        <span class="info-num">03</span>
+                        <span class="info-title">ONE-OF-ONE PIECES</span>
+                        <span class="info-arrow">→</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-num">04</span>
+                        <span class="info-title">PAN-INDIA SHIPPING</span>
+                        <span class="info-arrow"></span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-num">05</span>
+                        <span class="info-title">COD AVAILABLE</span>
+                        <span class="info-arrow"></span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- REVIEWS SECTION -->
+            <section class="reviews-section" id="reviewsSection">
+                <div class="reviews-inner">
+                    <div class="reviews-header">
+                        <h2 class="reviews-title" style="margin: 0;">YOU FOUND IT. THEY WORE IT.</h2>
+                    </div>
+                    <div class="reviews-grid">
+                        <div class="review-card" onclick="openReviewModal('images/review-1.jpg')"><div class="review-img-wrap"><img src="images/review-1.jpg" loading="lazy"></div></div>
+                        <div class="review-card" onclick="openReviewModal('images/review-2.jpg')"><div class="review-img-wrap"><img src="images/review-2.jpg" loading="lazy"></div></div>
+                        <div class="review-card" onclick="openReviewModal('images/review-3.jpg')"><div class="review-img-wrap"><img src="images/review-3.jpg" loading="lazy"></div></div>
+                        <div class="review-card" onclick="openReviewModal('images/review-4.jpg')"><div class="review-img-wrap"><img src="images/review-4.jpg" loading="lazy"></div></div>
+                        <div class="review-card" onclick="openReviewModal('images/review-5.jpg')"><div class="review-img-wrap"><img src="images/review-5.jpg" loading="lazy"></div></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- SIZING & INFO -->
+            <section class="white-info-section" style="padding-bottom: 20vh;">
+                <h2 class="drop-heading" style="font-size: clamp(2rem, 5vw, 5rem);">SIZING & INFO</h2>
+                <div class="info-list">
+                    <div class="info-row">
+                        <span class="info-num">01</span>
+                        <div class="info-content-flex" style="flex-grow: 1;">
+                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">HOW TO ORDER</span>
+                            <ul style="font-size: 1rem; opacity: 0.7; list-style-type: none; padding: 0; line-height: 1.6;">
+                                ${CONFIG.orderInstructions.map(step => `<li>&bull; ${escapeHtml(step)}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-num">02</span>
+                        <div class="info-content-flex" style="flex-grow: 1;">
+                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">PAYMENT</span>
+                            <div style="font-size: 1rem; opacity: 0.7;">${CONFIG.prepaidAvailable && CONFIG.codAvailable ? "PREPAID + COD AVAILABLE" : CONFIG.prepaidAvailable ? "PREPAID AVAILABLE" : CONFIG.codAvailable ? "COD AVAILABLE" : "CONTACT US"}</div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-num">03</span>
+                        <div class="info-content-flex" style="flex-grow: 1;">
+                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">DISCLAIMER</span>
+                            <div style="font-size: 1rem; opacity: 0.7; max-width: 600px;">${escapeHtml(CONFIG.disclaimer)}</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
-      </section>
+    `;
 
-      <!-- LARGE FASHION CATEGORY DISCOVERY SECTION -->
-      <section class="landing-category-showcases" aria-label="Curated Categories">
-        <div class="section-editorial-header">
-          <h2 class="section-editorial-title">FEATURED CATEGORIES</h2>
-          <span class="section-editorial-sub mono">[ CURATED 1-OF-1 DROPS ]</span>
-        </div>
+    setTimeout(() => {
+        const reveals = document.querySelectorAll('.reveal-text');
+        const marquee = document.getElementById('marqueeTrack');
+        const storySection = document.getElementById('storySection');
+        const storyTextWrap = document.getElementById('storyTextWrap');
+        const storyImgWrap = document.getElementById('storyImgWrap');
+        const storyImg = document.getElementById('storyImg');
+        
+        // ZORO STORY IMAGE AUDIO LOGIC
+        if (storyImgWrap) {
+            const zoroAudio = new Audio('images/zoro-welcome.wav');
+            let isZoroAudioPlaying = false;
+            
+            storyImgWrap.addEventListener('mouseenter', () => {
+                if (!window.matchMedia('(pointer: coarse)').matches && !isZoroAudioPlaying) {
+                    isZoroAudioPlaying = true;
+                    zoroAudio.currentTime = 0;
+                    zoroAudio.play().catch(() => {
+                        // ignore gracefully if browser blocks autoplay
+                    });
+                }
+            }, { passive: true });
+            
+            storyImgWrap.addEventListener('mouseleave', () => {
+                isZoroAudioPlaying = false;
+                // do not stop audio immediately on leave, let it finish or we could pause it if preferred, but resetting flag is enough
+            }, { passive: true });
+        }
+        
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            
+            if (marquee) {
+                const totalWidth = marquee.scrollWidth;
+                const setWidth = totalWidth / 3;
+                if (setWidth > 0) {
+                    const offset = (scrollY * 0.15) % setWidth;
+                    marquee.style.transform = `translateX(-${offset}px)`;
+                }
+            }
+            
+            if (storySection && storyTextWrap && storyImgWrap) {
+                const rect = storySection.getBoundingClientRect();
+                const windowH = window.innerHeight;
+                if (rect.top < windowH && rect.bottom > 0) {
+                    const offset = (windowH - rect.top) * 0.05;
+                    storyTextWrap.style.transform = `translateY(${offset * 0.5}px)`;
+                    storyImgWrap.style.transform = `translateY(${-offset * 0.2}px)`;
+                    
+                    const progress = Math.max(0, Math.min(1, (windowH * 0.85 - rect.top) / (windowH * 0.6)));
+                    
+                    reveals.forEach((txt, idx) => {
+                        const stagger = 0.25;
+                        const pStart = idx * stagger;
+                        const pEnd = pStart + 0.4;
+                        let localP = 0;
+                        if (progress > pStart) {
+                            localP = Math.min(1, (progress - pStart) / 0.4);
+                        }
+                        const easeOut = Math.sin((localP * Math.PI) / 2);
+                        const x = -100 * (1 - easeOut);
+                        const sc = 0.95 + (0.05 * easeOut);
+                        txt.style.transform = `translateX(${x}px) scale(${sc})`;
+                        txt.style.opacity = easeOut;
+                    });
+                }
+            }
+            
+            if (storyImg) {
+                const rect = storyImg.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.85) storyImg.classList.add('visible');
+            }
+        }, { passive: true });
+        
+        window.dispatchEvent(new Event('scroll'));
+        updateCartBadges(); // To update the top nav badge
+    }, 100);
 
-        <div class="category-duo-grid">
-          <!-- HOODIES CATEGORY -->
-          <article class="category-large-card" onclick="goToCollection('HOODIES')" tabindex="0" role="button" aria-label="Shop Vintage Hoodies Collection">
-            <div class="category-card-media">
-              <img class="category-card-img" src="images/landing-hoodies.jpg" alt="Curated Vintage Hoodies Drop" loading="eager">
-              <div class="category-card-overlay"></div>
-              <div class="category-card-tag mono">COLLECTION / 01</div>
-              <div class="category-card-count mono">${activeHoodies} PIECES ACTIVE</div>
-            </div>
-            <div class="category-card-body">
-              <div>
-                <span class="category-num-label mono">[ DROP 02 / HOODIES ]</span>
-                <h3 class="category-name-heading">HOODIES</h3>
-                <p class="category-desc-text">Heavyweight vintage pullovers, graphic zip-ups, demon horn balaclavas & embroidered heritage pieces from Stüssy, Nike, Oakley, GAP, Jordan, Fila & Harajuku labels.</p>
-              </div>
-              <div class="category-footer-row">
-                <span class="category-starting-price mono">FROM ₹999 · 1-OF-1 VINTAGE</span>
-                <button type="button" class="category-action-button mono" onclick="event.stopPropagation(); goToCollection('HOODIES')">SHOP HOODIES <span class="btn-arrow" aria-hidden="true">→</span></button>
-              </div>
-            </div>
-          </article>
+    requestAnimationFrame(initHeroCharacter);
+}
 
-          <!-- JACKETS CATEGORY -->
-          <article class="category-large-card" onclick="goToCollection('JACKETS')" tabindex="0" role="button" aria-label="Shop Vintage Jackets Collection">
-            <div class="category-card-media">
-              <img class="category-card-img" src="images/landing-jackets.jpg" alt="Curated Vintage Jackets Drop" loading="eager">
-              <div class="category-card-overlay"></div>
-              <div class="category-card-tag mono">COLLECTION / 02</div>
-              <div class="category-card-count mono">${activeJackets} PIECES ACTIVE</div>
-            </div>
-            <div class="category-card-body">
-              <div>
-                <span class="category-num-label mono">[ DROP 01 / JACKETS ]</span>
-                <h3 class="category-name-heading">JACKETS</h3>
-                <p class="category-desc-text">Retro 90s nylon windbreakers, varsity collegiate coats, motorsport tracks & colorblock sports zip jackets from Adidas Originals, Lacoste, Duke, Fila & Champion.</p>
-              </div>
-              <div class="category-footer-row">
-                <span class="category-starting-price mono">FROM ₹999 · 1-OF-1 VINTAGE</span>
-                <button type="button" class="category-action-button mono" onclick="event.stopPropagation(); goToCollection('JACKETS')">SHOP JACKETS <span class="btn-arrow" aria-hidden="true">→</span></button>
-              </div>
-            </div>
-          </article>
-        </div>
+/* =========================================================================
+   HERO ZORO CHARACTER — CURSOR-REACTIVE 5-FRAME CONTROLLER
+========================================================================= */
+const ZORO_FRAMES = {
+  center: 'images/zoro/center.png',
+  left:   'images/zoro/left.png',
+  right:  'images/zoro/right.png',
+  up:     'images/zoro/up.png',
+  down:   'images/zoro/down.png'
+};
 
-        <!-- BRAND VALUE PILLARS -->
-        <div class="brand-pillars-bar" aria-label="Brand Pillars">
-          <div class="pillar-item">
-            <span class="pillar-index mono">[ 01 ] AUTHENTIC SOURCING</span>
-            <h4 class="pillar-heading">1-OF-1 ARCHIVE</h4>
-            <p class="pillar-text">Every single piece in the archive is hand-selected and unique. Once a piece is ordered, it is claimed permanently.</p>
-          </div>
-          <div class="pillar-item">
-            <span class="pillar-index mono">[ 02 ] PRECISION SIZING</span>
-            <h4 class="pillar-heading">GUARANTEED FIT</h4>
-            <p class="pillar-text">Every item includes exact pit-to-pit chest and collar-to-hem length measurements in inches for reliable sizing.</p>
-          </div>
-          <div class="pillar-item">
-            <span class="pillar-index mono">[ 03 ] NATIONWIDE DISPATCH</span>
-            <h4 class="pillar-heading">EXPRESS SHIPPING & COD</h4>
-            <p class="pillar-text">Insured door-to-door delivery across all India PIN codes. Direct assistance available via WhatsApp & Instagram.</p>
-          </div>
-        </div>
-      </section>
+const _zoroCache = {};
+Object.keys(ZORO_FRAMES).forEach(function(key) {
+  var img = new Image();
+  img.src = ZORO_FRAMES[key];
+  _zoroCache[key] = img;
+});
 
-      <!-- COMMUNITY REVIEWS SECTION (INTEGRATED ON HOMEPAGE) -->
-      <section class="reviews-section" id="reviewsSection" aria-label="Customer Reviews and Community styling">
-        <div class="reviews-inner">
-          <div class="reviews-header">
-            <h2 class="reviews-title" style="margin: 0;">YOU FOUND IT. THEY WORE IT.</h2>
-          </div>
-          <div class="reviews-grid">
-            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-1.jpg')">
-              <div class="review-img-wrap">
-                <img src="images/review-1.jpg" alt="Customer review screenshot" loading="lazy">
-              </div>
-            </div>
-            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-2.jpg')">
-              <div class="review-img-wrap">
-                <img src="images/review-2.jpg" alt="Customer review screenshot" loading="lazy">
-              </div>
-            </div>
-            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-3.jpg')">
-              <div class="review-img-wrap">
-                <img src="images/review-3.jpg" alt="Customer review screenshot" loading="lazy">
-              </div>
-            </div>
-            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-4.jpg')">
-              <div class="review-img-wrap">
-                <img src="images/review-4.jpg" alt="Customer review screenshot" loading="lazy">
-              </div>
-            </div>
-            <div class="review-card" style="cursor: pointer;" onclick="openReviewModal('images/review-5.jpg')">
-              <div class="review-img-wrap">
-                <img src="images/review-5.jpg" alt="Customer review screenshot" loading="lazy">
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-    </div>
+function initHeroCharacter() {
+  const container = document.querySelector('.hero-video-container');
+  const panel = document.getElementById('heroCharPanel');
+  if (!container || !panel) return;
+
+  if (window.__charCleanup) {
+    window.__charCleanup();
+  }
+
+  const isTouch = window.matchMedia('(pointer: coarse)').matches;
+  if (isTouch) {
+    panel.innerHTML = `<img class="hero-char-img" src="${ZORO_FRAMES.center}" alt="Zoro" style="opacity:1;">`;
+    return;
+  }
+
+  // Set up dual-layer DOM for crossfading
+  panel.innerHTML = `
+    <img id="zoroLayer0" class="hero-char-img" src="${ZORO_FRAMES.center}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:1; transition: opacity 0.35s ease;" />
+    <img id="zoroLayer1" class="hero-char-img" src="${ZORO_FRAMES.center}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:0; transition: opacity 0.35s ease;" />
   `;
+
+  const layers = [
+    document.getElementById('zoroLayer0'),
+    document.getElementById('zoroLayer1')
+  ];
+  let activeLayerIdx = 0;
+  let activePose = 'center';
+
+  let prevCursor = null;
+  let rafId = null;
+  let isVisible = true;
+  let lastMoveTime = performance.now();
+  
+  let targetPose = 'center';
+  let candidatePose = 'center';
+  let candidateCount = 0;
+  const STABILITY_FRAMES = 2; 
+
+  function onPointerMove(e) {
+    if (!isVisible) return;
+    const now = performance.now();
+    
+    // Calculate delta from previous position
+    if (prevCursor) {
+      const dx = e.clientX - prevCursor.x;
+      const dy = e.clientY - prevCursor.y;
+      
+      const dist = Math.hypot(dx, dy);
+      if (dist > 2) { 
+        let angle = Math.atan2(dy, dx) * (180 / Math.PI); // -180 to 180
+        if (angle < 0) angle += 360; // 0 to 360
+        
+        let newTarget = 'center';
+        
+        // Map angle to 4 directions (90-degree slices)
+        if (angle >= 315 || angle < 45) {
+          newTarget = 'right';
+        } else if (angle >= 45 && angle < 135) {
+          newTarget = 'down';
+        } else if (angle >= 135 && angle < 225) {
+          newTarget = 'left';
+        } else if (angle >= 225 && angle < 315) {
+          newTarget = 'up';
+        }
+        
+        targetPose = newTarget;
+      }
+    }
+    
+    prevCursor = { x: e.clientX, y: e.clientY };
+    lastMoveTime = now;
+  }
+
+  function onPointerLeave() {
+    targetPose = 'center';
+    prevCursor = null;
+  }
+
+  function setPose(newPose) {
+    if (newPose === activePose) return;
+    activePose = newPose;
+    
+    const nextLayerIdx = activeLayerIdx === 0 ? 1 : 0;
+    layers[nextLayerIdx].src = ZORO_FRAMES[activePose];
+    layers[nextLayerIdx].style.opacity = 1;
+    layers[activeLayerIdx].style.opacity = 0;
+    activeLayerIdx = nextLayerIdx;
+  }
+
+  function tick(time) {
+    if (isVisible) {
+      // Idle return to center
+      if (time - lastMoveTime > 300 && targetPose !== 'center') {
+        targetPose = 'center';
+      }
+
+      if (targetPose !== activePose) {
+        if (targetPose === candidatePose) {
+          candidateCount++;
+          if (candidateCount >= STABILITY_FRAMES) {
+            setPose(targetPose);
+            candidateCount = 0;
+          }
+        } else {
+          candidatePose = targetPose;
+          candidateCount = 1;
+        }
+      } else {
+        candidateCount = 0;
+      }
+    }
+    rafId = requestAnimationFrame(tick);
+  }
+
+  const io = new IntersectionObserver((entries) => {
+    isVisible = entries[0].isIntersecting;
+  }, { threshold: 0.05 });
+
+  io.observe(container);
+
+  container.addEventListener('mousemove', onPointerMove, { passive: true });
+  container.addEventListener('mouseleave', onPointerLeave, { passive: true });
+  rafId = requestAnimationFrame(tick);
+
+  window.__charCleanup = () => {
+    if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    io.disconnect();
+    container.removeEventListener('mousemove', onPointerMove);
+    container.removeEventListener('mouseleave', onPointerLeave);
+    window.__charCleanup = null;
+  };
 }
 
 /* =========================================================================
