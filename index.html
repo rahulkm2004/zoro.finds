@@ -2651,46 +2651,6 @@ footer {
   filter: grayscale(0%) contrast(1);
 }
 
-/* BRAND STORY */
-.brand-story-section {
-  padding: 10vh 8vw;
-  background: var(--black);
-  color: var(--white);
-  min-height: 50vh;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 4vw;
-  overflow: hidden;
-}
-
-.story-container {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  gap: 3vh;
-  will-change: transform;
-}
-
-.reveal-text {
-  font-size: clamp(3.5rem, 5vw, 6.5rem);
-  line-height: 0.95;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  margin: 0;
-  opacity: 0;
-  transform: translateX(-100px) scale(0.95);
-  will-change: transform, opacity;
-}
-
-@media (max-width: 900px) {
-  .brand-story-section {
-    flex-direction: column;
-    text-align: center;
-    padding: 8vh 5vw;
-  }
-}
-
 /* SERVICES INFO SECTION */
 .services-info-section {
   padding: 10vh 8vw;
@@ -3039,39 +2999,6 @@ footer {
     .comp-fg-1 { width: 60%; left: 5%; bottom: 10%; }
     .comp-fg-2 { width: 50%; right: 5%; top: 10%; }
     .archive-card.card-3 { transform: rotate(0) translateY(20vh); }
-}.story-image-overlay {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    will-change: transform;
-}
-
-.story-img {
-    width: 100%;
-    max-width: 450px;
-    height: auto;
-    border-radius: 4px;
-    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
-    will-change: transform, opacity;
-    opacity: 0.6;
-    transform: scale(0.95);
-    transition: opacity 1.2s ease, transform 1.2s ease;
-}
-
-.story-img.visible {
-    opacity: 1;
-    transform: scale(1);
-}
-
-@media (max-width: 900px) {
-  .story-image-overlay {
-    margin-top: 5vh;
-    justify-content: center;
-  }
-  .story-img {
-    max-width: 80%;
-  }
 }
 
 .closing-gallery {
@@ -3207,55 +3134,6 @@ footer {
     pointer-events: none !important;
     z-index: 5 !important;
   }
-
-  /* BRAND STORY SECTION */
-  .brand-story-section {
-    flex-direction: column !important;
-    text-align: center !important;
-    padding: 7vh 5vw !important;
-    gap: 24px !important;
-    width: 100% !important;
-    max-width: 100vw !important;
-    overflow: hidden !important;
-  }
-
-  .story-container {
-    align-items: center !important;
-    width: 100% !important;
-    gap: 14px !important;
-    transform: none !important;
-  }
-
-  .reveal-text {
-    font-size: clamp(2.2rem, 9.5vw, 3.6rem) !important;
-    line-height: 1 !important;
-    letter-spacing: -0.02em !important;
-    transform: none !important;
-    opacity: 1 !important;
-    word-break: break-word;
-  }
-
-  .story-image-overlay {
-    width: 100% !important;
-    display: flex !important;
-    justify-content: center !important;
-    align-items: center !important;
-    margin-top: 12px !important;
-    transform: none !important;
-  }
-
-  .story-img {
-    max-width: 290px !important;
-    width: 80% !important;
-    height: auto !important;
-    border-radius: 6px !important;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.5) !important;
-    transform: none !important;
-    opacity: 1 !important;
-    cursor: pointer !important;
-    pointer-events: auto !important;
-  }
-
   /* HORIZONTAL SCROLL MARQUEE */
   .marquee-section {
     padding: 5vh 0 !important;
@@ -3586,10 +3464,10 @@ const CONFIG = {
   ],
 
   orderInstructions: [
-    "Select your 1-of-1 curated piece",
-    "Choose your preferred size (exact measurements provided on product page)",
-    "Click ADD TO CART to keep browsing or BUY NOW for instant checkout",
-    "Enter your shipping address and complete your order with Prepaid (UPI/QR) or COD"
+    "PICK YOUR PIECE — Choose the hoodie or jacket you want.",
+    "CHECK THE SIZE — See the exact measurements on the product page.",
+    "ORDER — Add to Cart or Buy Now.",
+    "CHECKOUT — Enter your address and choose Prepaid or COD."
   ],
 
   returnPolicy: "No returns or exchanges. All pieces are one-of-one vintage. Please check all slides and measurements carefully before placing your order.",
@@ -5241,20 +5119,6 @@ function renderLandingPage() {
                 </div>
             </section>
 
-            <!-- ABOUT ZORO.FINDS -->
-            <section class="brand-story-section" id="storySection">
-                <div class="story-container" id="storyTextWrap">
-                    <h2 class="reveal-text">ONE-OF-ONE</h2>
-                    <h2 class="reveal-text">RARE FINDS</h2>
-                    <h2 class="reveal-text">VINTAGE<br>STREETWEAR</h2>
-                </div>
-                <div class="story-image-overlay" id="storyImgWrap">
-                    <img src="images/zoro-character.jpg" alt="ZORO Visual" loading="lazy" class="story-img" id="storyImg">
-                </div>
-            </section>
-
-
-
             <!-- SCROLL MARQUEE SECTION -->
             <section class="marquee-section">
                 <div class="marquee-track" id="marqueeTrack">
@@ -5299,18 +5163,13 @@ function renderLandingPage() {
                         <span class="info-title">JACKETS</span>
                         <span class="info-arrow">→</span>
                     </div>
-                    <div class="info-row" onclick="goToCollection('ARCHIVE')">
-                        <span class="info-num">03</span>
-                        <span class="info-title">ONE-OF-ONE PIECES</span>
-                        <span class="info-arrow">→</span>
-                    </div>
                     <div class="info-row">
-                        <span class="info-num">04</span>
+                        <span class="info-num">03</span>
                         <span class="info-title">PAN-INDIA SHIPPING</span>
                         <span class="info-arrow"></span>
                     </div>
                     <div class="info-row">
-                        <span class="info-num">05</span>
+                        <span class="info-num">04</span>
                         <span class="info-title">COD AVAILABLE</span>
                         <span class="info-arrow"></span>
                     </div>
@@ -5340,10 +5199,25 @@ function renderLandingPage() {
                     <div class="info-row">
                         <span class="info-num">01</span>
                         <div class="info-content-flex" style="flex-grow: 1;">
-                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">HOW TO ORDER</span>
-                            <ul style="font-size: 1rem; opacity: 0.7; list-style-type: none; padding: 0; line-height: 1.6;">
-                                ${CONFIG.orderInstructions.map(step => `<li>&bull; ${escapeHtml(step)}</li>`).join('')}
-                            </ul>
+                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1.25rem;">HOW TO ORDER</span>
+                            <div class="order-steps-grid" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                                <div class="order-step-item">
+                                    <div style="font-weight: 800; font-size: 1.05rem; letter-spacing: 0.05em; margin-bottom: 0.25rem;"><span style="opacity: 0.45; margin-right: 0.75rem; font-family: monospace;">01</span>PICK YOUR PIECE</div>
+                                    <div style="font-size: 0.95rem; opacity: 0.7; line-height: 1.4; padding-left: 2.1rem;">Choose the hoodie or jacket you want.</div>
+                                </div>
+                                <div class="order-step-item">
+                                    <div style="font-weight: 800; font-size: 1.05rem; letter-spacing: 0.05em; margin-bottom: 0.25rem;"><span style="opacity: 0.45; margin-right: 0.75rem; font-family: monospace;">02</span>CHECK THE SIZE</div>
+                                    <div style="font-size: 0.95rem; opacity: 0.7; line-height: 1.4; padding-left: 2.1rem;">See the exact measurements on the product page.</div>
+                                </div>
+                                <div class="order-step-item">
+                                    <div style="font-weight: 800; font-size: 1.05rem; letter-spacing: 0.05em; margin-bottom: 0.25rem;"><span style="opacity: 0.45; margin-right: 0.75rem; font-family: monospace;">03</span>ORDER</div>
+                                    <div style="font-size: 0.95rem; opacity: 0.7; line-height: 1.4; padding-left: 2.1rem;">Add to Cart or Buy Now.</div>
+                                </div>
+                                <div class="order-step-item">
+                                    <div style="font-weight: 800; font-size: 1.05rem; letter-spacing: 0.05em; margin-bottom: 0.25rem;"><span style="opacity: 0.45; margin-right: 0.75rem; font-family: monospace;">04</span>CHECKOUT</div>
+                                    <div style="font-size: 0.95rem; opacity: 0.7; line-height: 1.4; padding-left: 2.1rem;">Enter your address and choose Prepaid or COD.</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="info-row">
@@ -5353,49 +5227,13 @@ function renderLandingPage() {
                             <div style="font-size: 1rem; opacity: 0.7;">${CONFIG.prepaidAvailable && CONFIG.codAvailable ? "PREPAID + COD AVAILABLE" : CONFIG.prepaidAvailable ? "PREPAID AVAILABLE" : CONFIG.codAvailable ? "COD AVAILABLE" : "CONTACT US"}</div>
                         </div>
                     </div>
-                    <div class="info-row">
-                        <span class="info-num">03</span>
-                        <div class="info-content-flex" style="flex-grow: 1;">
-                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">DISCLAIMER</span>
-                            <div style="font-size: 1rem; opacity: 0.7; max-width: 600px;">${escapeHtml(CONFIG.disclaimer)}</div>
-                        </div>
-                    </div>
                 </div>
             </section>
         </div>
     `;
 
     setTimeout(() => {
-        const reveals = document.querySelectorAll('.reveal-text');
         const marquee = document.getElementById('marqueeTrack');
-        const storySection = document.getElementById('storySection');
-        const storyTextWrap = document.getElementById('storyTextWrap');
-        const storyImgWrap = document.getElementById('storyImgWrap');
-        const storyImg = document.getElementById('storyImg');
-        
-        // ZORO STORY IMAGE AUDIO LOGIC (Exact ZORO image beside ONE-OF-ONE section)
-        if (storyImg) {
-            const zoroAudio = new Audio('public/audio/zoro-welcome.mp3');
-            zoroAudio.preload = 'auto';
-            let isHovered = false;
-            
-            storyImg.addEventListener('mouseenter', () => {
-                if (!window.matchMedia('(pointer: coarse)').matches && !isHovered) {
-                    isHovered = true;
-                    zoroAudio.currentTime = 0;
-                    const playPromise = zoroAudio.play();
-                    if (playPromise !== undefined) {
-                        playPromise.catch(() => {
-                            // ignore gracefully if browser blocks unmuted audio before user interaction
-                        });
-                    }
-                }
-            });
-            
-            storyImg.addEventListener('mouseleave', () => {
-                isHovered = false;
-            });
-        }
         
         window.addEventListener('scroll', () => {
             const scrollY = window.scrollY;
@@ -5407,49 +5245,6 @@ function renderLandingPage() {
                     const offset = (scrollY * 0.15) % setWidth;
                     marquee.style.transform = `translateX(-${offset}px)`;
                 }
-            }
-            
-            if (storySection && storyTextWrap && storyImgWrap) {
-                const rect = storySection.getBoundingClientRect();
-                const windowH = window.innerHeight;
-                const isMobile = window.innerWidth <= 768;
-                if (rect.top < windowH && rect.bottom > 0) {
-                    if (!isMobile) {
-                        const offset = (windowH - rect.top) * 0.05;
-                        storyTextWrap.style.transform = `translateY(${offset * 0.5}px)`;
-                        storyImgWrap.style.transform = `translateY(${-offset * 0.2}px)`;
-                    } else {
-                        storyTextWrap.style.transform = 'none';
-                        storyImgWrap.style.transform = 'none';
-                    }
-                    
-                    const progress = Math.max(0, Math.min(1, (windowH * 0.85 - rect.top) / (windowH * 0.6)));
-                    
-                    reveals.forEach((txt, idx) => {
-                        const stagger = 0.25;
-                        const pStart = idx * stagger;
-                        const pEnd = pStart + 0.4;
-                        let localP = 0;
-                        if (progress > pStart) {
-                            localP = Math.min(1, (progress - pStart) / 0.4);
-                        }
-                        const easeOut = Math.sin((localP * Math.PI) / 2);
-                        if (!isMobile) {
-                            const x = -100 * (1 - easeOut);
-                            const sc = 0.95 + (0.05 * easeOut);
-                            txt.style.transform = `translateX(${x}px) scale(${sc})`;
-                            txt.style.opacity = easeOut;
-                        } else {
-                            txt.style.transform = 'none';
-                            txt.style.opacity = '1';
-                        }
-                    });
-                }
-            }
-            
-            if (storyImg) {
-                const rect = storyImg.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.85) storyImg.classList.add('visible');
             }
         }, { passive: true });
         
