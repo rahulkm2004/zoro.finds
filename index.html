@@ -2651,6 +2651,375 @@ footer {
   filter: grayscale(0%) contrast(1);
 }
 
+/* =========================================================================
+   ZORO UNSEEN SECTION — SHORTS / REELS STYLE
+========================================================================= */
+.unseen-section {
+  position: relative;
+  background: var(--black, #000);
+  color: var(--white, #fff);
+  padding: 10vh 6vw;
+  overflow: hidden;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.unseen-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 5vw;
+}
+
+.unseen-header {
+  flex: 1;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.unseen-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.6);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 6px 12px;
+  border-radius: 2px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.unseen-title {
+  font-size: clamp(2.8rem, 6vw, 5.2rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+  margin: 0;
+  color: #fff;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease 0.1s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s;
+}
+
+.unseen-subtitle {
+  font-size: clamp(0.9rem, 1.4vw, 1.15rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.2s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+}
+
+.unseen-section.is-visible .unseen-badge,
+.unseen-section.is-visible .unseen-title,
+.unseen-section.is-visible .unseen-subtitle {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.unseen-desktop-nav {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease 0.3s, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s;
+}
+
+.unseen-section.is-visible .unseen-desktop-nav {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.unseen-counter {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #fff;
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.unseen-counter #unseenActiveIndex {
+  font-size: 2.2rem;
+  color: #fff;
+}
+
+.unseen-counter .unseen-divider,
+.unseen-counter .unseen-total {
+  opacity: 0.4;
+  font-size: 1.1rem;
+}
+
+.unseen-nav-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.unseen-nav-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unseen-nav-btn:hover {
+  background: #fff;
+  color: #000;
+  border-color: #fff;
+  transform: translateY(-2px);
+}
+
+.unseen-pills {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.unseen-pill {
+  width: 24px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  padding: 0;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.unseen-pill.active {
+  background: #fff;
+  width: 40px;
+}
+
+/* STAGE & FEED */
+.unseen-stage-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 390px;
+  height: clamp(540px, 75vh, 700px);
+  aspect-ratio: 9/16;
+  border-radius: 18px;
+  background: #000;
+  box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 0 1px rgba(255, 255, 255, 0.12);
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s, transform 1s cubic-bezier(0.16, 1, 0.3, 1) 0.25s;
+}
+
+.unseen-section.is-visible .unseen-stage-wrapper {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Sound Button floating top-right */
+.unseen-sound-toggle {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 30;
+  background: rgba(10, 10, 10, 0.78);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  font-family: inherit;
+}
+
+.unseen-sound-toggle:hover {
+  background: rgba(30, 30, 30, 0.9);
+  border-color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.04);
+}
+
+.unseen-sound-toggle.is-unmuted {
+  border-color: rgba(255, 255, 255, 0.6);
+  background: rgba(20, 20, 20, 0.88);
+}
+
+.unseen-sound-icon {
+  font-size: 1rem;
+  line-height: 1;
+}
+
+.unseen-sound-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+/* Scroll Feed */
+.unseen-feed {
+  width: 100%;
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.unseen-feed::-webkit-scrollbar {
+  display: none;
+}
+
+.unseen-card {
+  width: 100%;
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  background: #000;
+}
+
+.unseen-video-box {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.unseen-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  background: #000;
+}
+
+.unseen-card-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 24px 20px;
+  background: linear-gradient(180deg, rgba(0,0,0,0.3) 0%, transparent 25%, transparent 60%, rgba(0,0,0,0.85) 100%);
+}
+
+.unseen-card-tag {
+  font-size: 0.72rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+}
+
+.unseen-video-progress {
+  width: 100%;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.unseen-video-progress-bar {
+  width: 0%;
+  height: 100%;
+  background: #fff;
+  transition: width 0.1s linear;
+}
+
+.unseen-mobile-footer {
+  display: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 900px) {
+  .unseen-section {
+    padding: 7vh 4vw;
+  }
+  .unseen-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 28px;
+  }
+  .unseen-header {
+    max-width: 100%;
+    align-items: center;
+  }
+  .unseen-badge {
+    align-self: center;
+  }
+  .unseen-desktop-nav {
+    display: none;
+  }
+  .unseen-stage-wrapper {
+    max-width: 360px;
+    width: 88vw;
+    height: 68vh;
+    max-height: 560px;
+  }
+  .unseen-mobile-footer {
+    display: block;
+    position: absolute;
+    bottom: 8px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    pointer-events: none;
+    z-index: 20;
+  }
+  .unseen-swipe-hint {
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+    color: rgba(255, 255, 255, 0.7);
+    background: rgba(0,0,0,0.6);
+    padding: 4px 10px;
+    border-radius: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .unseen-stage-wrapper {
+    width: 92vw;
+    max-width: 340px;
+    height: 65vh;
+    max-height: 520px;
+    border-radius: 14px;
+  }
+  .unseen-sound-toggle {
+    top: 12px;
+    right: 12px;
+    padding: 6px 10px;
+  }
+  .unseen-sound-label {
+    font-size: 0.6rem;
+  }
+}
+
 /* SERVICES INFO SECTION */
 .services-info-section {
   padding: 10vh 8vw;
@@ -5073,6 +5442,165 @@ function renderTab(tab) {
 }
 
 /* =========================================================================
+   ZORO UNSEEN — SHORTS / REELS FEED CONTROLLER
+========================================================================= */
+let isUnseenAudioUnmuted = false;
+let currentUnseenIndex = 0;
+
+function initZoroUnseen() {
+    const section = document.getElementById('unseenSection');
+    const feed = document.getElementById('unseenFeed');
+    const cards = document.querySelectorAll('.unseen-card');
+    const counter = document.getElementById('unseenActiveIndex');
+    const pills = document.querySelectorAll('.unseen-pill');
+    const soundToggle = document.getElementById('unseenSoundToggle');
+    const soundIcon = document.getElementById('unseenSoundIcon');
+    const soundLabel = document.getElementById('unseenSoundLabel');
+
+    if (!section || !feed || !cards.length) return;
+
+    // Intro Animation: trigger when section enters viewport
+    const introObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                section.classList.add('is-visible');
+            }
+        });
+    }, { threshold: 0.12 });
+    introObserver.observe(section);
+
+    function updateSoundUI() {
+        if (!soundToggle || !soundIcon || !soundLabel) return;
+        if (isUnseenAudioUnmuted) {
+            soundToggle.classList.add('is-unmuted');
+            soundIcon.textContent = '🔊';
+            soundLabel.textContent = 'SOUND ON';
+        } else {
+            soundToggle.classList.remove('is-unmuted');
+            soundIcon.textContent = '🔇';
+            soundLabel.textContent = 'TAP FOR SOUND';
+        }
+    }
+
+    window.toggleUnseenAudio = function(e) {
+        if (e && e.stopPropagation) e.stopPropagation();
+        isUnseenAudioUnmuted = !isUnseenAudioUnmuted;
+        updateSoundUI();
+
+        cards.forEach((card, idx) => {
+            const vid = card.querySelector('video');
+            if (vid) {
+                vid.muted = !isUnseenAudioUnmuted;
+                if (idx === currentUnseenIndex && isUnseenAudioUnmuted) {
+                    vid.volume = 1;
+                    vid.play().catch(() => {});
+                }
+            }
+        });
+    };
+
+    function playActiveVideo(index) {
+        currentUnseenIndex = index;
+        if (counter) counter.textContent = String(index + 1).padStart(2, '0');
+
+        pills.forEach((p, idx) => {
+            p.classList.toggle('active', idx === index);
+        });
+
+        cards.forEach((card, idx) => {
+            const vid = card.querySelector('video');
+            if (!vid) return;
+
+            if (idx === index) {
+                card.classList.add('active');
+                vid.muted = !isUnseenAudioUnmuted;
+                if (isUnseenAudioUnmuted) vid.volume = 1;
+                const playPromise = vid.play();
+                if (playPromise !== undefined) {
+                    playPromise.catch(() => {
+                        vid.muted = true;
+                        vid.play().catch(() => {});
+                    });
+                }
+            } else {
+                card.classList.remove('active');
+                vid.pause();
+            }
+        });
+    }
+
+    // Scroll snap detection via IntersectionObserver
+    const cardObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio >= 0.52) {
+                const idx = parseInt(entry.target.getAttribute('data-index'), 10);
+                if (!isNaN(idx)) {
+                    playActiveVideo(idx);
+                }
+            }
+        });
+    }, {
+        root: feed,
+        threshold: [0.52, 0.75]
+    });
+
+    cards.forEach(card => cardObserver.observe(card));
+
+    // Progress bar and click-to-unmute on video box
+    cards.forEach(card => {
+        const vid = card.querySelector('video');
+        const progressBar = card.querySelector('.unseen-video-progress-bar');
+        if (vid && progressBar) {
+            vid.addEventListener('timeupdate', () => {
+                if (vid.duration) {
+                    const pct = (vid.currentTime / vid.duration) * 100;
+                    progressBar.style.width = pct + '%';
+                }
+            });
+        }
+
+        const box = card.querySelector('.unseen-video-box');
+        if (box) {
+            box.addEventListener('click', (e) => {
+                if (e.target.closest('.unseen-sound-toggle')) return;
+                window.toggleUnseenAudio(e);
+            });
+        }
+    });
+
+    // Navigation buttons
+    window.navigateUnseen = function(dir) {
+        let nextIdx = currentUnseenIndex + dir;
+        if (nextIdx < 0) nextIdx = 0;
+        if (nextIdx >= cards.length) nextIdx = cards.length - 1;
+        window.jumpToUnseen(nextIdx);
+    };
+
+    window.jumpToUnseen = function(index) {
+        if (cards[index]) {
+            const targetTop = cards[index].offsetTop;
+            feed.scrollTo({ top: targetTop, behavior: 'smooth' });
+            playActiveVideo(index);
+        }
+    };
+
+    // Global section observer: pause videos when user leaves ZORO UNSEEN section
+    const sectionObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (!entry.isIntersecting) {
+                cards.forEach(card => {
+                    const vid = card.querySelector('video');
+                    if (vid) vid.pause();
+                });
+            } else {
+                playActiveVideo(currentUnseenIndex);
+            }
+        });
+    }, { threshold: 0.1 });
+    sectionObserver.observe(section);
+}
+
+/* =========================================================================
    EDITORIAL LANDING PAGE RENDERER (THRFT REFERENCE STYLE)
 ========================================================================= */
 function renderLandingPage() {
@@ -5176,6 +5704,112 @@ function renderLandingPage() {
                 </div>
             </section>
 
+            <!-- ZORO UNSEEN SECTION -->
+            <section class="unseen-section" id="unseenSection">
+                <div class="unseen-container">
+                    <div class="unseen-header">
+                        <div class="unseen-badge mono">BEHIND THE SCENES</div>
+                        <h2 class="unseen-title">ZORO UNSEEN</h2>
+                        <p class="unseen-subtitle">WE DO MORE THAN JUST SELL.</p>
+                        
+                        <div class="unseen-desktop-nav">
+                            <div class="unseen-counter mono">
+                                <span id="unseenActiveIndex">01</span> <span class="unseen-divider">/</span> <span class="unseen-total">04</span>
+                            </div>
+                            <div class="unseen-nav-buttons">
+                                <button type="button" class="unseen-nav-btn" id="unseenPrevBtn" onclick="navigateUnseen(-1)" aria-label="Previous Video">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"></polyline></svg>
+                                </button>
+                                <button type="button" class="unseen-nav-btn" id="unseenNextBtn" onclick="navigateUnseen(1)" aria-label="Next Video">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </button>
+                            </div>
+                            <div class="unseen-pills" id="unseenPills">
+                                <button type="button" class="unseen-pill active" onclick="jumpToUnseen(0)" aria-label="Go to video 1"></button>
+                                <button type="button" class="unseen-pill" onclick="jumpToUnseen(1)" aria-label="Go to video 2"></button>
+                                <button type="button" class="unseen-pill" onclick="jumpToUnseen(2)" aria-label="Go to video 3"></button>
+                                <button type="button" class="unseen-pill" onclick="jumpToUnseen(3)" aria-label="Go to video 4"></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unseen-stage-wrapper">
+                        <!-- Sound Control Button (Glass Pill floating top-right) -->
+                        <button type="button" class="unseen-sound-toggle" id="unseenSoundToggle" onclick="toggleUnseenAudio(event)" aria-label="Toggle Sound">
+                            <span class="unseen-sound-icon" id="unseenSoundIcon">🔇</span>
+                            <span class="unseen-sound-label mono" id="unseenSoundLabel">TAP FOR SOUND</span>
+                        </button>
+
+                        <div class="unseen-feed" id="unseenFeed">
+                            <!-- VIDEO 1 -->
+                            <div class="unseen-card active" data-index="0">
+                                <div class="unseen-video-box">
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                        <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.07 PM.mp4" type="video/mp4">
+                                        <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.07%20PM.mp4" type="video/mp4">
+                                        <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.07 PM.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="unseen-card-overlay">
+                                        <div class="unseen-card-tag mono">01 &bull; UNSEEN ARCHIVE</div>
+                                        <div class="unseen-video-progress"><div class="unseen-video-progress-bar"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- VIDEO 2 -->
+                            <div class="unseen-card" data-index="1">
+                                <div class="unseen-video-box">
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                        <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.10 PM.mp4" type="video/mp4">
+                                        <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.10%20PM.mp4" type="video/mp4">
+                                        <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.10 PM.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="unseen-card-overlay">
+                                        <div class="unseen-card-tag mono">02 &bull; CULTURE & PIECES</div>
+                                        <div class="unseen-video-progress"><div class="unseen-video-progress-bar"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- VIDEO 3 -->
+                            <div class="unseen-card" data-index="2">
+                                <div class="unseen-video-box">
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                        <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.12 PM.mp4" type="video/mp4">
+                                        <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.12%20PM.mp4" type="video/mp4">
+                                        <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.12 PM.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="unseen-card-overlay">
+                                        <div class="unseen-card-tag mono">03 &bull; THE STREETS</div>
+                                        <div class="unseen-video-progress"><div class="unseen-video-progress-bar"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- VIDEO 4 -->
+                            <div class="unseen-card" data-index="3">
+                                <div class="unseen-video-box">
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                        <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.17 PM.mp4" type="video/mp4">
+                                        <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.17%20PM.mp4" type="video/mp4">
+                                        <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.17 PM.mp4" type="video/mp4">
+                                    </video>
+                                    <div class="unseen-card-overlay">
+                                        <div class="unseen-card-tag mono">04 &bull; RAW & BTS</div>
+                                        <div class="unseen-video-progress"><div class="unseen-video-progress-bar"></div></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mobile swipe hint / controls -->
+                        <div class="unseen-mobile-footer">
+                            <span class="unseen-swipe-hint mono">SWIPE UP / DOWN &bull; TAP FOR SOUND</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- REVIEWS SECTION -->
             <section class="reviews-section" id="reviewsSection">
                 <div class="reviews-inner">
@@ -5250,6 +5884,7 @@ function renderLandingPage() {
         
         window.dispatchEvent(new Event('scroll'));
         updateCartBadges(); // To update the top nav badge
+        initZoroUnseen();
     }, 100);
 
     requestAnimationFrame(initHeroCharacter);

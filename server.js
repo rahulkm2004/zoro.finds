@@ -644,15 +644,38 @@ const server = http.createServer(async (req, res) => {
   // STATIC FILE HANDLER
   // Serves HTML, CSS, JS, Images, Videos from workspace
   // -------------------------------------------------------------------------
-  let filePath = path.join(__dirname, pathname === '/' ? 'index.html' : pathname);
+  let decodedPath = pathname;
+  try {
+    decodedPath = decodeURIComponent(pathname);
+  } catch (e) {}
+
+  let filePath = path.join(__dirname, decodedPath === '/' ? 'index.html' : decodedPath);
 
   fs.stat(filePath, (err, stats) => {
     if (err || !stats.isFile()) {
       filePath = path.join(__dirname, 'index.html');
+      stats = fs.statSync(filePath);
     }
 
     const ext = path.extname(filePath).toLowerCase();
     const contentType = MIME_TYPES[ext] || 'application/octet-stream';
+
+    // Handle range request for video/audio streaming
+    const range = req.headers.range;
+    if (range && (ext === '.mp4' || ext === '.webm' || ext === '.mov' || ext === '.mp3')) {
+      const parts = range.replace(/bytes=/, "").split("-");
+      const start = parseInt(parts[0], 10);
+      const end = parts[1] ? parseInt(parts[1], 10) : stats.size - 1;
+      const chunksize = (end - start) + 1;
+      const file = fs.createReadStream(filePath, { start, end });
+      res.writeHead(206, {
+        'Content-Range': `bytes ${start}-${end}/${stats.size}`,
+        'Accept-Ranges': 'bytes',
+        'Content-Length': chunksize,
+        'Content-Type': contentType,
+      });
+      return file.pipe(res);
+    }
 
     fs.readFile(filePath, (readErr, content) => {
       if (readErr) {
@@ -661,6 +684,8 @@ const server = http.createServer(async (req, res) => {
       }
       res.writeHead(200, {
         'Content-Type': contentType,
+        'Content-Length': stats.size,
+        'Accept-Ranges': 'bytes',
         'Cache-Control': ext === '.html' ? 'no-cache' : 'public, max-age=3600'
       });
       res.end(content);
