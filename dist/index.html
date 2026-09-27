@@ -5406,6 +5406,22 @@ function goToCollection(categoryName) {
   window.scrollTo({ top: 0, behavior: "instant" });
 }
 
+function scrollToContact() {
+  const doScroll = () => {
+    const el = document.getElementById("contactSection") || document.getElementById("contactSectionInfo");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  };
+
+  if (typeof currentTab !== 'undefined' && currentTab !== "HOME") {
+    goToHome();
+    setTimeout(doScroll, 120);
+  } else {
+    doScroll();
+  }
+}
+
 function setSizeFilter(size) {
   currentSize = size;
   renderActiveCollection();
@@ -5691,14 +5707,14 @@ function renderLandingPage() {
                         <span class="info-title">JACKETS</span>
                         <span class="info-arrow">→</span>
                     </div>
-                    <div class="info-row">
+                    <div class="info-row" onclick="scrollToContact()" role="button" tabindex="0" aria-label="Contact & Queries" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();scrollToContact();}">
                         <span class="info-num">03</span>
-                        <span class="info-title">PAN-INDIA SHIPPING</span>
-                        <span class="info-arrow"></span>
+                        <span class="info-title">CONTACT & QUERIES</span>
+                        <span class="info-arrow">→</span>
                     </div>
-                    <div class="info-row">
+                    <div class="info-row" style="cursor: default;">
                         <span class="info-num">04</span>
-                        <span class="info-title">COD AVAILABLE</span>
+                        <span class="info-title">PAN-INDIA SHIPPING + COD AVAILABLE</span>
                         <span class="info-arrow"></span>
                     </div>
                 </div>
@@ -5859,6 +5875,31 @@ function renderLandingPage() {
                         <div class="info-content-flex" style="flex-grow: 1;">
                             <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">PAYMENT</span>
                             <div style="font-size: 1rem; opacity: 0.7;">${CONFIG.prepaidAvailable && CONFIG.codAvailable ? "PREPAID + COD AVAILABLE" : CONFIG.prepaidAvailable ? "PREPAID AVAILABLE" : CONFIG.codAvailable ? "COD AVAILABLE" : "CONTACT US"}</div>
+                        </div>
+                    </div>
+                    <div class="info-row" id="contactSection" style="scroll-margin-top: 80px; cursor: default;">
+                        <span class="info-num">03</span>
+                        <div class="info-content-flex" style="flex-grow: 1;">
+                            <span class="info-title" style="font-size: 1.5rem; display: block; margin-bottom: 1rem;">CONTACT & QUERIES</span>
+                            <p style="font-size: 0.95rem; opacity: 0.7; line-height: 1.5; margin-bottom: 16px;">
+                                For any questions regarding products, sizing, orders, shipping, or anything else, feel free to reach out to us.
+                            </p>
+                            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 14px; max-width: 560px;">
+                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 16px; background: var(--offwhite); border: 1px solid var(--line); border-radius: 2px;">
+                                    <div>
+                                        <span class="mono" style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone-dark); display: block; margin-bottom: 2px;">INSTAGRAM</span>
+                                        <span style="font-size: 0.88rem; font-weight: 600; color: var(--black);">@zoro.finds</span>
+                                    </div>
+                                    <a href="https://instagram.com/zoro.finds" target="_blank" rel="noopener" class="mono" style="font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; padding: 6px 14px; border: 1px solid var(--line); background: var(--white); border-radius: 2px; transition: all 0.15s ease;">OPEN INSTAGRAM ↗</a>
+                                </div>
+                                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 14px 16px; background: var(--offwhite); border: 1px solid var(--line); border-radius: 2px;">
+                                    <div>
+                                        <span class="mono" style="font-size: 0.65rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--stone-dark); display: block; margin-bottom: 2px;">WHATSAPP</span>
+                                        <span class="mono" style="font-size: 0.88rem; font-weight: 600; color: var(--black);">+91 6362911551</span>
+                                    </div>
+                                    <a href="https://wa.me/916362911551?text=Hi%20ZORO.FINDS%2C%20I%20have%20a%20query%20regarding%20an%20item%2Forder.%20Please%20help%20me." target="_blank" rel="noopener" class="mono" style="font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--black); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; padding: 6px 14px; border: 1px solid var(--line); background: var(--white); border-radius: 2px; transition: all 0.15s ease;">CHAT ON WHATSAPP ↗</a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -6184,7 +6225,7 @@ function renderInfo() {
         <div class="info-heading">Returns</div>
         <div class="info-text" style="font-size: 0.85rem; color: var(--stone-dark); line-height: 1.6;">${escapeHtml(c.returnPolicy)}</div>
       </div>
-      <div class="info-block" style="border-bottom: none;">
+      <div class="info-block" style="border-bottom: none; scroll-margin-top: 80px;" id="contactSectionInfo">
         <div class="info-heading">Contact & Queries</div>
         <p style="font-size: 0.85rem; color: var(--stone-dark); line-height: 1.6; margin-bottom: 16px;">
           For any questions regarding products, sizing, orders, shipping, or anything else, feel free to reach out to us.
