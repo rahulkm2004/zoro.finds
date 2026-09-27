@@ -81,6 +81,7 @@ zoro-finds-archive*.html
 # ─── Raw uploads ───────────────────────────────────────────────────────────────
 hoodies 4/
 hoodies 5/
+jackets_september/
 
 # Local-only maintenance / dev scripts (not needed in production)
 fix_local_db.js
