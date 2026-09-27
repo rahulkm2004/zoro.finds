@@ -227,6 +227,154 @@ body {
   color: var(--black);
 }
 
+/* ---------- HEADER CONTACT POPUP ---------- */
+.header-contact-popup {
+  display: none;
+  position: fixed;
+  top: 66px;
+  right: 24px;
+  width: 310px;
+  max-width: calc(100vw - 24px);
+  background: var(--white);
+  border: 1px solid var(--black);
+  border-radius: 2px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12);
+  z-index: 95;
+  animation: contactPopupFadeIn 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.header-contact-popup.open {
+  display: block;
+}
+
+.contact-popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  background: var(--offwhite);
+}
+
+.contact-popup-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--black);
+}
+
+.contact-popup-close-btn {
+  background: none;
+  border: none;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--stone-dark);
+  cursor: pointer;
+  padding: 4px 6px;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.contact-popup-close-btn:hover {
+  color: var(--black);
+}
+
+.contact-popup-body {
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.contact-popup-card {
+  background: var(--offwhite);
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color 0.15s ease;
+}
+
+.contact-popup-card:hover {
+  border-color: rgba(0, 0, 0, 0.3);
+}
+
+.contact-popup-tag {
+  font-size: 0.6rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--stone-dark);
+  font-weight: 600;
+}
+
+.contact-popup-val {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--black);
+  text-decoration: none;
+  display: inline-block;
+  margin-bottom: 6px;
+  transition: opacity 0.15s ease;
+}
+
+.contact-popup-val:hover {
+  opacity: 0.75;
+}
+
+.contact-popup-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 7px 12px;
+  border-radius: 2px;
+  transition: all 0.15s ease;
+}
+
+.contact-popup-action-btn.wa {
+  background: var(--black);
+  color: var(--white);
+  border: 1px solid var(--black);
+}
+
+.contact-popup-action-btn.wa:hover {
+  background: #25D366;
+  border-color: #25D366;
+  color: var(--white);
+}
+
+.contact-popup-action-btn.ig {
+  background: var(--white);
+  color: var(--black);
+  border: 1px solid var(--line);
+}
+
+.contact-popup-action-btn.ig:hover {
+  border-color: var(--black);
+  background: var(--black);
+  color: var(--white);
+}
+
+@keyframes contactPopupFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
 .nav-reviews-btn {
   background: none;
   border: 1px solid var(--line);
@@ -2162,6 +2310,10 @@ footer {
   .nav-quick-btn {
     display: none;
   }
+  .nav-quick-btn.nav-link-contact {
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
 @media (max-width: 768px) {
@@ -2207,6 +2359,16 @@ footer {
     padding: 7px 12px;
     font-size: 0.68rem;
     gap: 6px;
+  }
+  .nav-quick-btn.nav-link-contact {
+    padding: 6px 8px;
+    font-size: 0.65rem;
+    letter-spacing: 0.08em;
+  }
+  .header-contact-popup {
+    top: 54px;
+    right: 12px;
+    width: min(305px, calc(100vw - 24px));
   }
   .hero-video-container {
     height: clamp(440px, 72vh, 600px);
@@ -2509,6 +2671,16 @@ footer {
     padding: 6px 9px;
     font-size: 0.64rem;
     gap: 4px;
+  }
+  .nav-quick-btn.nav-link-contact {
+    padding: 5px 6px;
+    font-size: 0.58rem;
+    letter-spacing: 0.04em;
+  }
+  .header-contact-popup {
+    top: 50px;
+    right: 8px;
+    width: calc(100vw - 16px);
   }
   .grid {
     gap: 8px;
@@ -3713,7 +3885,7 @@ footer {
     </div>
 
     <div class="header-right">
-      <button type="button" class="nav-quick-btn nav-link-archive" onclick="renderTab('ARCHIVE')">ARCHIVE</button>
+      <button type="button" class="nav-quick-btn nav-link-contact" id="headerContactBtn" onclick="toggleContactPopup(event)" aria-haspopup="dialog" aria-expanded="false" aria-label="Contact & Queries">CONTACT</button>
       <button type="button" class="nav-quick-btn nav-link-info" onclick="renderTab('INFO')">GUIDE</button>
       <button type="button" class="nav-reviews-btn" onclick="goToReviews()" aria-label="Customer Reviews">
         <span class="pulse-dot" aria-hidden="true"></span> REVIEWS ↗
@@ -3721,6 +3893,29 @@ footer {
       <button type="button" class="nav-cart-btn" onclick="openCartDrawer()" aria-label="Open Shopping Bag">
         BAG <span class="cart-counter-pill mono" id="topCartCount">0</span>
       </button>
+    </div>
+  </div>
+
+  <!-- CONTACT POPUP / DROPDOWN -->
+  <div class="header-contact-popup" id="headerContactPopup" role="dialog" aria-label="Contact & Queries" aria-modal="false">
+    <div class="contact-popup-header">
+      <span class="contact-popup-title mono">CONTACT & QUERIES</span>
+      <button type="button" class="contact-popup-close-btn" onclick="closeContactPopup()" aria-label="Close Contact Panel">✕</button>
+    </div>
+    <div class="contact-popup-body">
+      <!-- WHATSAPP -->
+      <div class="contact-popup-card">
+        <span class="contact-popup-tag mono">WHATSAPP</span>
+        <a href="https://wa.me/916362911551?text=Hi%20ZORO.FINDS%2C%20I%20have%20a%20question%20about%20an%20item%2Forder.%20Please%20help%20me." target="_blank" rel="noopener" class="contact-popup-val mono">+91 6362911551</a>
+        <a href="https://wa.me/916362911551?text=Hi%20ZORO.FINDS%2C%20I%20have%20a%20question%20about%20an%20item%2Forder.%20Please%20help%20me." target="_blank" rel="noopener" class="contact-popup-action-btn wa mono">CHAT ON WHATSAPP ↗</a>
+      </div>
+
+      <!-- INSTAGRAM -->
+      <div class="contact-popup-card">
+        <span class="contact-popup-tag mono">INSTAGRAM</span>
+        <a href="https://instagram.com/zoro.finds" target="_blank" rel="noopener" class="contact-popup-val">@zoro.finds</a>
+        <a href="https://instagram.com/zoro.finds" target="_blank" rel="noopener" class="contact-popup-action-btn ig mono">OPEN INSTAGRAM ↗</a>
+      </div>
     </div>
   </div>
 </header>
@@ -5019,9 +5214,49 @@ function getTabBaseItems(tab) {
 }
 
 /* =========================================================================
+   CONTACT POPUP CONTROLS
+========================================================================= */
+function toggleContactPopup(event) {
+  if (event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const popup = document.getElementById("headerContactPopup");
+  if (!popup) return;
+  if (popup.classList.contains("open")) {
+    closeContactPopup();
+  } else {
+    openContactPopup();
+  }
+}
+
+function openContactPopup() {
+  const popup = document.getElementById("headerContactPopup");
+  const btn = document.getElementById("headerContactBtn");
+  if (!popup) return;
+  popup.classList.add("open");
+  if (btn) {
+    btn.classList.add("active");
+    btn.setAttribute("aria-expanded", "true");
+  }
+}
+
+function closeContactPopup() {
+  const popup = document.getElementById("headerContactPopup");
+  const btn = document.getElementById("headerContactBtn");
+  if (!popup) return;
+  popup.classList.remove("open");
+  if (btn) {
+    btn.classList.remove("active");
+    btn.setAttribute("aria-expanded", "false");
+  }
+}
+
+/* =========================================================================
    SIDEBAR & DRAWER CONTROLS
 ========================================================================= */
 function openSidebar() {
+  closeContactPopup();
   sidebarBackdrop.classList.add("open");
   document.body.style.overflow = "hidden";
 }
@@ -5309,6 +5544,7 @@ function updateCartBadges() {
 }
 
 async function openCartDrawer() {
+  closeContactPopup();
   renderCartDrawer();
   cartBackdrop.classList.add("open");
   document.body.style.overflow = "hidden";
@@ -7175,9 +7411,19 @@ cartBackdrop.addEventListener("click", (e) => {
 
 document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
+    closeContactPopup();
     if (modalBackdrop.classList.contains("open")) closeModal();
     if (cartBackdrop && cartBackdrop.classList.contains("open")) closeCartDrawer();
     if (sidebarBackdrop && sidebarBackdrop.classList.contains("open")) closeSidebar();
+  }
+});
+
+document.addEventListener("click", (e) => {
+  const popup = document.getElementById("headerContactPopup");
+  const btn = document.getElementById("headerContactBtn");
+  if (!popup || !popup.classList.contains("open")) return;
+  if (!popup.contains(e.target) && (!btn || !btn.contains(e.target))) {
+    closeContactPopup();
   }
 });
 
