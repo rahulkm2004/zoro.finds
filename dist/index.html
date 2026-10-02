@@ -23,7 +23,11 @@ src="https://www.facebook.com/tr?id=28304052189213734&ev=PageView&noscript=1"
 <!-- End Meta Pixel Code -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</noscript>
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
 /* =========================================================================
@@ -4261,22 +4265,6 @@ let PRODUCTS = [
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "49\"", length: "28\"" }, condition: "10/10",
     description: "Official NFL Seattle Seahawks performance track jacket in deep navy with vibrant Action Green side panels and contrast flatlock stitching. Features premium embroidered Seahawks logo on the chest, neon full front zip, and soft warm fleece lining. Pristine 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
 
-  { id: "ZF-002", name: "Vintage Lacoste Sport Striped Track Jacket — White", price: "₹1,199", originalPrice: "₹1,499",
-    images: [
-      "images/zf002-1.jpg",
-      "images/zf002-2.jpg",
-      "images/zf002-3.jpg",
-      "images/zf002-4.jpg",
-      "images/zf002-5.jpg",
-      "images/zf002-6.jpg",
-      "images/zf002-7.jpg",
-      "images/zf002-8.jpg",
-      "images/zf002-9.jpg",
-      "images/zf002-10.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "48\"", length: "29\"" }, condition: "9/10",
-    description: "Vintage Lacoste Sport full-zip track jacket in crisp white with subtle black horizontal pinstripes. Features signature embroidered green crocodile on the chest, embroidered Lacoste lettering on the back collar, branded zipper hardware, zippered hand pockets, and adjustable hem drawcord. Authentic Pre-owned Jacket.", status: "available" },
-
   { id: "ZF-001", name: "Vintage 90s Adidas Track Jacket — Navy & Grey", price: "₹1,199", originalPrice: "₹1,399",
     images: [
       "images/zf001-1.jpg",
@@ -4349,17 +4337,6 @@ let PRODUCTS = [
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "50\"", length: "28\"" }, condition: "10/10",
     description: "Statement vintage 80s/90s Adidas Trefoil shell track jacket in iconic magenta purple, vibrant teal green, and royal blue geometric colorblocking. Features embroidered teal Trefoil chest logo, turquoise three stripes across shoulders and sleeve cuffs, custom engraved Trefoil metal zipper pull, and high funnel neck. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
 
-  { id: "ZF-009", name: "Vintage 90s Reebok Vector Track Jacket — Electric Cyan", price: "₹1,199", originalPrice: "₹1,299",
-    images: [
-      "images/zf009-1.jpg",
-      "images/zf009-2.jpg",
-      "images/zf009-3.jpg",
-      "images/zf009-4.jpg",
-      "images/zf009-5.jpg"
-    ],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "48\"", length: "28\"" }, condition: "9/10",
-    description: "Vibrant vintage 90s Reebok shell track jacket in bright electric cyan blue. Features tonal embroidered Reebok Vector logo on the chest, vintage blue-banner collar tag, contrast white zipper hardware on side pockets, adjustable hem drawcord, and breathable back ventilation yoke. Authentic Pre-owned Jacket.", status: "available" },
-
   { id: "ZF-010", name: "Vintage 80s/90s Adidas Trefoil Track Jacket — Navy, Lavender & Emerald", price: "₹1,099", originalPrice: "₹1,299",
     images: [
       "images/zf010-1.jpg",
@@ -4425,85 +4402,6 @@ let PRODUCTS = [
     sizes: ["S", "M"], displaySize: "S/M", size: "S/M", measurements: { chest: "40\"", length: "25\"" }, condition: "9/10",
     description: "High-performance vintage K2 Technical Outdoor shell jacket in vibrant hot pink and deep fuchsia colorblocking. Features weatherproof shell, high storm collar with packable hood zip, reflective vertical pocket accents, velcro cuff adjusters, breathable mesh interior lining, and K2 jacquard satin hem lining. Authentic Pre-owned Jacket.", status: "available" },
 
-  { id: "ZF-014", name: "Vintage 90s Adidas Trefoil Track Jacket — Midnight Navy & White", price: "₹1,199", originalPrice: "₹1,299",
-    images: [
-      "images/zf014-1.jpg",
-      "images/zf014-2.jpg",
-      "images/zf014-3.jpg",
-      "images/zf014-4.jpg",
-      "images/zf014-5.jpg",
-      "images/zf014-6.jpg",
-      "images/zf014-7.jpg"
-    ],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "50\"", length: "28\"" }, condition: "9/10",
-    description: "Iconic vintage 90s Adidas Trefoil track jacket in midnight navy with crisp white three-stripe shoulder and sleeve trim. Features embroidered white Trefoil chest logo, custom molded white Trefoil zipper pull, high stand collar with concealed packable hood zip, and contrast white zippered pockets. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-015", name: "Vintage Y2K Eckō Unltd. 3D Geometric Camo Bomber Jacket — Grey", price: "₹1,099", originalPrice: "₹1,199",
-    images: [
-      "images/zf015-1.jpg",
-      "images/zf015-2.jpg",
-      "images/zf015-3.jpg",
-      "images/zf015-4.jpg",
-      "images/zf015-5.jpg",
-      "images/zf015-6.jpg",
-      "images/zf015-7.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "54\"", length: "29\"" }, condition: "9/10",
-    description: "Vintage Y2K Eckō Unltd. bomber track jacket in a striking monochrome 3D isometric geometric cube camo pattern. Features bold embroidered \"ECKŌ UNLTD.\" chest appliqué, custom metal Rhino medallion zipper pull, chunky zipper, ribbed knit collar, cuffs, and hem with red contrast inner piping. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-016", name: "Vintage 80s/90s ASICS Colorblock Half-Zip Anorak — Neon Pink & Black", price: "₹999", originalPrice: "₹1,199",
-    images: [
-      "images/zf016-1.jpg",
-      "images/zf016-2.jpg",
-      "images/zf016-3.jpg",
-      "images/zf016-4.jpg",
-      "images/zf016-5.jpg",
-      "images/zf016-6.jpg",
-      "images/zf016-7.jpg",
-      "images/zf016-8.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "54\"", length: "29\"" }, condition: "9/10",
-    description: "Rare vintage 80s/90s ASICS half-zip pullover anorak windbreaker in bold black, neon hot pink, and white colorblocking. Features centered front kangaroo cargo flap pocket with ASICS graphic embroidery, neon pink zipper, large circular ASICS medallion back graphic, and elasticated cuffs & hem. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-017", name: "Vintage 90s Champion Duke Blue Devils Pullover Windbreaker — Royal Blue", price: "₹1,099", originalPrice: "₹1,199",
-    images: [
-      "images/zf017-1.jpg",
-      "images/zf017-2.jpg",
-      "images/zf017-3.jpg",
-      "images/zf017-4.jpg",
-      "images/zf017-5.jpg",
-      "images/zf017-6.jpg",
-      "images/zf017-7.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "50\"", length: "27\"" }, condition: "10/10",
-    description: "Vintage 90s Champion Duke Blue Devils NCAA pullover shooting windbreaker in royal blue. Features stitched tackle twill arched \"DUKE\" chest lettering, striped rib-knit V-neck collar & cuffs, embroidered Blue Devil mascot sleeve patch, embroidered Champion back logo, side pockets, and adjustable waist cinch toggle. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-018", name: "Vintage Champion Hooded Track Jacket — Navy, White & Red", price: "₹1,199", originalPrice: "₹1,299",
-    images: [
-      "images/zf018-1.jpg",
-      "images/zf018-2.jpg",
-      "images/zf018-3.jpg",
-      "images/zf018-4.jpg",
-      "images/zf018-5.jpg",
-      "images/zf018-6.jpg"
-    ],
-    sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "44\"", length: "26\"" }, condition: "10/10",
-    description: "Vintage Champion athletic hooded ripstop track jacket in midnight navy with white side colorblocking and red contrast piping. Features embroidered Champion \"C\" chest emblem, bold vertical Champion script embroidery along the left sleeve, attached drawstring hood, full front zip, and breathable interior mesh lining. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-019", name: "Vintage ASICS Firenze Marathon Track Jacket — Royal Blue, Red & White", price: "₹999",
-    images: [
-      "images/zf019-1.jpg",
-      "images/zf019-2.jpg",
-      "images/zf019-3.jpg",
-      "images/zf019-4.jpg",
-      "images/zf019-5.jpg",
-      "images/zf019-6.jpg",
-      "images/zf019-7.jpg",
-      "images/zf019-8.jpg"
-    ],
-    sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "44\"", length: "27\"" }, condition: "8/10",
-    description: "Vintage ASICS Firenze Marathon running track jacket in royal blue with red and white colorblock accents. Features embroidered ASICS chest logo, Firenze Marathon chest & sleeve graphics, silver reflective piping, large ASICS back logo, zippered side pockets, and breathable interior mesh lining. Authentic Pre-owned Jacket.", status: "available" },
-
   { id: "ZF-020", name: "Vintage New Balance Outdoor Shell Track Jacket — Black & Red", price: "₹1,299",
     images: [
       "images/zf020-1.jpg",
@@ -4530,20 +4428,6 @@ let PRODUCTS = [
     sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "44\"", length: "24\"" }, condition: "9/10",
     description: "Vintage The North Face technical HyVent 2.5L outdoor shell rain jacket in vibrant magenta pink. Features silver embroidered TNF chest and back logos, HyVent 2.5L sleeve branding, underarm pit zip vents, attached cinch hood, mesh stow pocket with branded tab, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "sold" },
 
-  { id: "ZF-022", name: "Vintage 90s Nike Swoosh Track Jacket — Midnight Navy & White", price: "₹1,099", originalPrice: "₹1,299",
-    images: [
-      "images/zf022-1.jpg",
-      "images/zf022-2.jpg",
-      "images/zf022-3.jpg",
-      "images/zf022-4.jpg",
-      "images/zf022-5.jpg",
-      "images/zf022-6.jpg",
-      "images/zf022-7.jpg",
-      "images/zf022-8.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "52\"", length: "30\"" }, condition: "10/10",
-    description: "Vintage 90s Nike Swoosh athletic track jacket in midnight navy with white and grey stripe sleeve paneling. Features embroidered white Nike Swoosh chest emblem, chunky front zipper with custom rubberized Swoosh pull tab, waffle-knit inner collar lining, zippered hand pockets, and adjustable hem drawcord. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
   { id: "ZF-023", name: "Vintage Champion \"St. Francis Xavier College\" Track Jacket — Navy & Red", price: "₹999", originalPrice: "₹1,199",
     images: [
       "images/zf023-1.jpg",
@@ -4555,41 +4439,6 @@ let PRODUCTS = [
     sizes: ["S"], displaySize: "S", size: "S", measurements: { chest: "40\"", length: "25\"" }, condition: "9/10",
     description: "Vintage Champion Teamwear collegiate track jacket in midnight navy with scarlet red side and sleeve paneling accented by white piping. Features embroidered St. Francis Xavier College chest crest emblem, bright red stand collar, full front zip, and elasticated cuffs. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
 
-  { id: "ZF-024", name: "Vintage Kappa Technical Track Jacket — Black, Cyan & White", price: "₹999",
-    images: [
-      "images/zf024-1.jpg",
-      "images/zf024-2.jpg",
-      "images/zf024-3.jpg",
-      "images/zf024-4.jpg",
-      "images/zf024-5.jpg",
-      "images/zf024-6.jpg",
-      "images/zf024-7.jpg"
-    ],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "27.5\"" }, condition: "8/10",
-    description: "Vintage Kappa technical shell track jacket in black with electric cyan accents and white side paneling featuring a halftone polka-dot gradient mesh print. Features embroidered cyan Kappa Omini chest emblem, Aero-Plus technology, branded zipper pull, breathable cyan mesh inner lining, and adjustable bottom hem bungee toggle. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-025", name: "Vintage Kappa \"Moto Corse\" Racing Track Jacket — White, Black & Pink", price: "₹1,099", originalPrice: "₹1,299",
-    images: [
-      "images/zf025-1.jpg",
-      "images/zf025-2.jpg",
-      "images/zf025-3.jpg",
-      "images/zf025-4.jpg",
-      "images/zf025-5.jpg"
-    ],
-    sizes: ["XS"], displaySize: "XS", size: "XS", measurements: { chest: "37\"", length: "22\"" }, condition: "10/10",
-    description: "Vintage Kappa Moto Corse motorsport track jacket in crisp white with contrast black side/sleeve paneling and vibrant pink racing accents. Features stitched Kappa Moto Corse chest shield badge, embroidered Kappa Omini logo, sleeve number '67' patches, custom metal zipper pull, and black/white striped ribbed collar & hem. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-026", name: "Vintage FILA Colorblock Hooded Anorak Jacket — Soft Pink & Charcoal", price: "₹1,099", originalPrice: "₹1,299",
-    images: [
-      "images/zf026-1.jpg",
-      "images/zf026-2.jpg",
-      "images/zf026-3.jpg",
-      "images/zf026-4.jpg",
-      "images/zf026-5.jpg"
-    ],
-    sizes: ["S"], displaySize: "S", size: "S", measurements: { chest: "43\"", length: "26\"" }, condition: "10/10",
-    description: "Vintage FILA colorblock half-zip hooded anorak jacket in pastel soft pink, white, and charcoal black. Features embroidered FILA logo on centered kangaroo flap pocket, bold screen-printed FILA logo across the back, round custom F-box metal zipper pull, cinch drawstring hood, breathable interior mesh lining, and adjustable bottom hem toggle. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
   { id: "ZF-027", name: "Vintage Adidas Trefoil Asymmetric Colorblock Track Jacket — White, Teal & Magenta", price: "₹1,199", originalPrice: "₹1,399",
     images: [
       "images/zf027-1.jpg",
@@ -4600,29 +4449,6 @@ let PRODUCTS = [
     ],
     sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "48\"", length: "27.5\"" }, condition: "10/10",
     description: "Vintage Adidas Trefoil 'Asymm Track Jkt' in crisp white with asymmetric teal green, magenta pink, and black colorblock paneling. Features classic black 3-stripes down sleeves, embroidered black Trefoil chest logo, custom embossed Trefoil zipper pull, cotton-blend interior lining, and adjustable bottom hem drawstring cinch cord. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-028", name: "Vintage Nike Swoosh Minimalist Track Jacket — Midnight Navy", price: "₹1,099", originalPrice: "₹1,199",
-    images: [
-      "images/zf028-1.jpg",
-      "images/zf028-2.jpg",
-      "images/zf028-3.jpg",
-      "images/zf028-4.jpg",
-      "images/zf028-5.jpg"
-    ],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "27.5\"" }, condition: "10/10",
-    description: "Vintage Nike minimalist athletic track jacket in deep midnight navy with a clean white horizontal chest piping stripe. Features embroidered white Nike Swoosh emblem on left chest, silver metallic zipper pull with debossed Swoosh logo, high stand-up collar, breathable mesh interior lining, zippered side pockets, and elasticated hem. Flawless 10/10 condition. Authentic Pre-owned Jacket.", status: "available" },
-
-  { id: "ZF-029", name: "Vintage Nike Court Tennis Track Jacket — Midnight Navy & White", price: "₹999", originalPrice: "₹1,199",
-    images: [
-      "images/zf029-1.jpg",
-      "images/zf029-2.jpg",
-      "images/zf029-3.jpg",
-      "images/zf029-4.jpg",
-      "images/zf029-5.jpg",
-      "images/zf029-6.jpg"
-    ],
-    sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "46\"", length: "28\"" }, condition: "9/10",
-    description: "Vintage Nike Court performance tennis track jacket in deep midnight navy with a crisp white chest stripe. Features embroidered white Nike Swoosh on left chest, Nike Court tennis tab on lower hem, Nike FIT DRY technology, full front zip, breathable mesh lining, and adjustable bottom hem bungee toggle. Excellent 9/10 condition. Authentic Pre-owned Jacket.", status: "available" },
 
   { id: "ZF-030", name: "Vintage Converse All Star 'V-Hawk Basketball' Track Jacket — Navy & White", price: "₹1,199",
     images: [
@@ -5458,7 +5284,7 @@ function getTabBaseItems(tab) {
     const sold = HOODIES.filter(h => h.status === "sold" || h.status === "SOLD_OUT");
     return [...avail, ...sold];
   }
-  if (tab === "JACKETS") return PRODUCTS;
+  if (tab === "JACKETS") return PRODUCTS.filter(p => !p.isArchive && p.status !== "archived" && p.status !== "ARCHIVED");
   if (tab === "ARCHIVE") {
     // Archive only contains items explicitly marked as archived
     const archH = HOODIES.filter(p => p.isArchive || p.status === "archived");
@@ -6020,6 +5846,9 @@ function initZoroUnseen() {
 
             if (idx === index) {
                 card.classList.add('active');
+                if (vid.preload === 'none') {
+                    vid.preload = 'auto';
+                }
                 vid.muted = !isUnseenAudioUnmuted;
                 if (isUnseenAudioUnmuted) vid.volume = 1;
                 const playPromise = vid.play();
@@ -6123,7 +5952,7 @@ function renderLandingPage() {
             <!-- HERO VIDEO & EDITORIAL MONOLITH -->
             <section class="editorial-hero-wrapper" aria-label="Brand Hero Video">
                 <div class="hero-video-container">
-                    <video class="hero-video-media" autoplay loop muted playsinline preload="metadata">
+                    <video class="hero-video-media" autoplay loop muted playsinline preload="metadata" poster="images/hero-poster.jpg">
                         <source src="images/hero-video.mp4" type="video/mp4">
                     </video>
                     <div class="hero-video-overlay cinematic-overlay"></div>
@@ -6133,7 +5962,7 @@ function renderLandingPage() {
                         <img
                             id="heroCharImg"
                             class="hero-char-img"
-                            src="images/zoro/center.png"
+                            src="images/zoro/center.webp"
                             alt="Zoro"
                             loading="eager"
                             decoding="async"
@@ -6157,29 +5986,29 @@ function renderLandingPage() {
             <!-- SCROLL MARQUEE SECTION -->
             <section class="marquee-section">
                 <div class="marquee-track" id="marqueeTrack">
-                    <!-- SET 1 -->
+                    <!-- SET 1 (Initial Viewport) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" decoding="async">
                     </div>
-                    <!-- SET 2 -->
+                    <!-- SET 2 (Loop Continuation) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
                     </div>
-                    <!-- SET 3 -->
+                    <!-- SET 3 (Loop Continuation) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img">
+                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
                     </div>
                 </div>
             </section>
@@ -6251,7 +6080,7 @@ function renderLandingPage() {
                             <!-- VIDEO 1 -->
                             <div class="unseen-card active" data-index="0">
                                 <div class="unseen-video-box">
-                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="none" poster="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.07 PM-poster.jpg" muted>
                                         <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.07 PM.mp4" type="video/mp4">
                                         <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.07%20PM.mp4" type="video/mp4">
                                         <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.07 PM.mp4" type="video/mp4">
@@ -6266,7 +6095,7 @@ function renderLandingPage() {
                             <!-- VIDEO 2 -->
                             <div class="unseen-card" data-index="1">
                                 <div class="unseen-video-box">
-                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="none" poster="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.10 PM-poster.jpg" muted>
                                         <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.10 PM.mp4" type="video/mp4">
                                         <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.10%20PM.mp4" type="video/mp4">
                                         <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.10 PM.mp4" type="video/mp4">
@@ -6281,7 +6110,7 @@ function renderLandingPage() {
                             <!-- VIDEO 3 -->
                             <div class="unseen-card" data-index="2">
                                 <div class="unseen-video-box">
-                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="none" poster="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.12 PM-poster.jpg" muted>
                                         <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.12 PM.mp4" type="video/mp4">
                                         <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.12%20PM.mp4" type="video/mp4">
                                         <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.12 PM.mp4" type="video/mp4">
@@ -6296,7 +6125,7 @@ function renderLandingPage() {
                             <!-- VIDEO 4 -->
                             <div class="unseen-card" data-index="3">
                                 <div class="unseen-video-box">
-                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="metadata" muted>
+                                    <video class="unseen-video" playsinline webkit-playsinline loop preload="none" poster="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.17 PM-poster.jpg" muted>
                                         <source src="images/zoro unseen/WhatsApp Video 2026-09-25 at 1.07.17 PM.mp4" type="video/mp4">
                                         <source src="images/zoro%20unseen/WhatsApp%20Video%202026-09-25%20at%201.07.17%20PM.mp4" type="video/mp4">
                                         <source src="zoro unseen/WhatsApp Video 2026-09-25 at 1.07.17 PM.mp4" type="video/mp4">
@@ -6400,20 +6229,43 @@ function renderLandingPage() {
 
     setTimeout(() => {
         const marquee = document.getElementById('marqueeTrack');
-        
-        window.addEventListener('scroll', () => {
-            const scrollY = window.scrollY;
-            
+        let setWidth = 0;
+        const updateMarqueeMetrics = () => {
             if (marquee) {
-                const totalWidth = marquee.scrollWidth;
-                const setWidth = totalWidth / 3;
-                if (setWidth > 0) {
-                    const offset = (scrollY * 0.15) % setWidth;
-                    marquee.style.transform = `translateX(-${offset}px)`;
-                }
+                setWidth = marquee.scrollWidth / 3;
             }
+        };
+        updateMarqueeMetrics();
+        window.addEventListener('resize', updateMarqueeMetrics, { passive: true });
+        
+        let marqueeRafId = null;
+        window.addEventListener('scroll', () => {
+            if (marqueeRafId) return;
+            marqueeRafId = requestAnimationFrame(() => {
+                marqueeRafId = null;
+                if (marquee && setWidth > 0) {
+                    const offset = (window.scrollY * 0.15) % setWidth;
+                    marquee.style.transform = `translate3d(-${offset}px, 0, 0)`;
+                }
+            });
         }, { passive: true });
         
+        // Pause hero video when offscreen to conserve CPU & battery
+        const heroContainer = document.querySelector('.hero-video-container');
+        const heroVideo = document.querySelector('.hero-video-media');
+        if (heroContainer && heroVideo) {
+            const heroObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        if (heroVideo.paused) heroVideo.play().catch(() => {});
+                    } else {
+                        if (!heroVideo.paused) heroVideo.pause();
+                    }
+                });
+            }, { threshold: 0.05 });
+            heroObserver.observe(heroContainer);
+        }
+
         window.dispatchEvent(new Event('scroll'));
         updateCartBadges(); // To update the top nav badge
         initZoroUnseen();
@@ -6423,22 +6275,50 @@ function renderLandingPage() {
 }
 
 /* =========================================================================
-   HERO ZORO CHARACTER — CURSOR-REACTIVE 5-FRAME CONTROLLER
+   HERO ZORO CHARACTER — CURSOR-REACTIVE 5-FRAME CONTROLLER (OPTIMIZED)
 ========================================================================= */
 const ZORO_FRAMES = {
-  center: 'images/zoro/center.png',
-  left:   'images/zoro/left.png',
-  right:  'images/zoro/right.png',
-  up:     'images/zoro/up.png',
-  down:   'images/zoro/down.png'
+  center: 'images/zoro/center.webp',
+  left:   'images/zoro/left.webp',
+  right:  'images/zoro/right.webp',
+  up:     'images/zoro/up.webp',
+  down:   'images/zoro/down.webp'
 };
 
 const _zoroCache = {};
-Object.keys(ZORO_FRAMES).forEach(function(key) {
-  var img = new Image();
-  img.src = ZORO_FRAMES[key];
-  _zoroCache[key] = img;
-});
+// Immediately preload center pose so hero character is ready instantly
+const _zoroCenterImg = new Image();
+_zoroCenterImg.src = ZORO_FRAMES.center;
+_zoroCache.center = _zoroCenterImg;
+
+// Defer directional frames until idle to avoid competing with hero render
+const _preloadOtherZoroFrames = () => {
+  ['left', 'right', 'up', 'down'].forEach(function(key) {
+    if (!_zoroCache[key]) {
+      var img = new Image();
+      img.src = ZORO_FRAMES[key];
+      _zoroCache[key] = img;
+    }
+  });
+};
+if (typeof requestIdleCallback === 'function') {
+  requestIdleCallback(_preloadOtherZoroFrames, { timeout: 1500 });
+} else {
+  setTimeout(_preloadOtherZoroFrames, 600);
+}
+
+// ZORO voice interaction (on-demand cached audio player)
+let _zoroVoiceAudio = null;
+function playZoroVoice() {
+  try {
+    if (!_zoroVoiceAudio) {
+      _zoroVoiceAudio = new Audio('images/zoro-welcome.mp3');
+      _zoroVoiceAudio.preload = 'none';
+    }
+    _zoroVoiceAudio.currentTime = 0;
+    _zoroVoiceAudio.play().catch(() => {});
+  } catch (e) {}
+}
 
 function initHeroCharacter() {
   const container = document.querySelector('.hero-video-container');
@@ -6451,9 +6331,17 @@ function initHeroCharacter() {
 
   // Set up dual-layer DOM for crossfading
   panel.innerHTML = `
-    <img id="zoroLayer0" class="hero-char-img" src="${ZORO_FRAMES.center}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:1; transition: opacity 0.35s ease;" />
-    <img id="zoroLayer1" class="hero-char-img" src="${ZORO_FRAMES.center}" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:0; transition: opacity 0.35s ease;" />
+    <img id="zoroLayer0" class="hero-char-img" src="${ZORO_FRAMES.center}" alt="Zoro character" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:1; transition: opacity 0.35s ease;" />
+    <img id="zoroLayer1" class="hero-char-img" src="${ZORO_FRAMES.center}" alt="Zoro character" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center bottom; opacity:0; transition: opacity 0.35s ease;" />
   `;
+
+  let hasTriggeredVoice = false;
+  panel.addEventListener('mouseenter', () => {
+    if (!hasTriggeredVoice) {
+      hasTriggeredVoice = true;
+      playZoroVoice();
+    }
+  });
 
   const layers = [
     document.getElementById('zoroLayer0'),
@@ -6465,12 +6353,20 @@ function initHeroCharacter() {
   let prevCursor = null;
   let rafId = null;
   let isVisible = true;
+  let isRunningRaf = false;
   let lastMoveTime = performance.now();
   
   let targetPose = 'center';
   let candidatePose = 'center';
   let candidateCount = 0;
   const STABILITY_FRAMES = 2; 
+
+  function startRafIfNeeded() {
+    if (!isRunningRaf && isVisible) {
+      isRunningRaf = true;
+      rafId = requestAnimationFrame(tick);
+    }
+  }
 
   function onPointerMove(e) {
     if (!isVisible) return;
@@ -6505,6 +6401,7 @@ function initHeroCharacter() {
     
     prevCursor = { x: e.clientX, y: e.clientY };
     lastMoveTime = now;
+    startRafIfNeeded();
   }
 
   function handleTouch(e) {
@@ -6558,16 +6455,19 @@ function initHeroCharacter() {
 
     prevCursor = { x: touch.clientX, y: touch.clientY };
     lastMoveTime = now;
+    startRafIfNeeded();
   }
 
   function onTouchEnd() {
     prevCursor = null;
     lastMoveTime = performance.now();
+    startRafIfNeeded();
   }
 
   function onPointerLeave() {
     targetPose = 'center';
     prevCursor = null;
+    startRafIfNeeded();
   }
 
   function setPose(newPose) {
@@ -6602,12 +6502,22 @@ function initHeroCharacter() {
       } else {
         candidateCount = 0;
       }
+
+      // If returned to center and user is idle, stop running RAF until next interaction
+      if (activePose === 'center' && targetPose === 'center' && (time - lastMoveTime > 400)) {
+        isRunningRaf = false;
+        return;
+      }
+    } else {
+      isRunningRaf = false;
+      return;
     }
     rafId = requestAnimationFrame(tick);
   }
 
   const io = new IntersectionObserver((entries) => {
     isVisible = entries[0].isIntersecting;
+    if (isVisible) startRafIfNeeded();
   }, { threshold: 0.05 });
 
   io.observe(container);
@@ -6618,10 +6528,11 @@ function initHeroCharacter() {
   container.addEventListener('touchmove', handleTouch, { passive: true });
   container.addEventListener('touchend', onTouchEnd, { passive: true });
   container.addEventListener('touchcancel', onTouchEnd, { passive: true });
-  rafId = requestAnimationFrame(tick);
+  startRafIfNeeded();
 
   window.__charCleanup = () => {
     if (rafId) { cancelAnimationFrame(rafId); rafId = null; }
+    isRunningRaf = false;
     io.disconnect();
     container.removeEventListener('mousemove', onPointerMove);
     container.removeEventListener('mouseleave', onPointerLeave);
@@ -6718,7 +6629,7 @@ function renderCatalogueView(items) {
 
     card.innerHTML = `
       <div class="card-img-wrap">
-        <img src="${imgs[0]}" alt="${escapeHtml(p.name)}" loading="${i < 4 ? 'eager' : 'lazy'}">
+        <img src="${imgs[0]}" alt="${escapeHtml(p.name)}" loading="${i < 4 ? 'eager' : 'lazy'}" decoding="async">
         <div class="card-id mono">${escapeHtml(p.id)}</div>
         ${isSold ? '<div class="sold-tag">Sold Out</div>' : ''}
       </div>
@@ -7788,9 +7699,17 @@ window.addEventListener("hashchange", () => {
   }
 });
 
-async function fetchProductsFromDB() {
-  try {
-    const res = await fetch("/api/products");
+let _fetchingProductsPromise = null;
+let _lastFetchProductsTime = 0;
+async function fetchProductsFromDB(force = false) {
+  const now = Date.now();
+  if (!force && _fetchingProductsPromise) return _fetchingProductsPromise;
+  if (!force && (now - _lastFetchProductsTime < 1500)) return;
+  _lastFetchProductsTime = now;
+
+  _fetchingProductsPromise = (async () => {
+    try {
+      const res = await fetch("/api/products");
     if (!res.ok) return;
     const data = await res.json();
     if (!data.success || !Array.isArray(data.products)) return;
@@ -7837,7 +7756,7 @@ async function fetchProductsFromDB() {
           orderedJackets.push(p);
         }
       });
-      dbMap.forEach(item => orderedJackets.push(item));
+      dbMap.forEach(item => { if (!item.isArchive && item.status !== "archived" && item.status !== "ARCHIVED") orderedJackets.push(item); });
       PRODUCTS = orderedJackets;
     }
     if (dbHoodies.length > 0) {
@@ -7864,7 +7783,11 @@ async function fetchProductsFromDB() {
   } catch (e) {
     // Graceful offline fallback
     console.warn("Using local bundled product catalogue:", e.message);
+  } finally {
+    _fetchingProductsPromise = null;
   }
+  })();
+  return _fetchingProductsPromise;
 }
 
 // Initialize route based on URL and load database catalogue
