@@ -21,6 +21,8 @@ fbq('track', 'PageView');
 src="https://www.facebook.com/tr?id=28304052189213734&ev=PageView&noscript=1"
 /></noscript>
 <!-- End Meta Pixel Code -->
+<link rel="preload" as="image" href="images/hero-poster.webp" type="image/webp">
+<link rel="preload" as="image" href="images/zoro/center.webp" type="image/webp">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;600;700;800;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
@@ -4537,16 +4539,6 @@ let HOODIES = [
     sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "42\"", length: "25\"" }, condition: "9/10",
     description: "Unique Japanese streetwear pullover hoodie in crimson red and cream colorblocking with cute bunny fair-isle knit patterned detailing, drawstring hood, and ribbed trim. Authentic Pre-owned Hoodie.", status: "available" },
 
-  { id: "ZH-049", name: "Camo Woodland Colorblock Pullover Hoodie — Army Green Camo & Charcoal", price: "₹1,199",
-    images: [
-      "images/h49-1.jpg",
-      "images/h49-2.jpg",
-      "images/h49-3.jpg",
-      "images/h49-4.jpg"
-    ],
-    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "26\"" }, condition: "9/10",
-    description: "Streetwear pullover hoodie featuring woodland camo patterned raglan sleeves paired with a charcoal body, drawstring hood, kangaroo pouch pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "available" },
-
   { id: "ZH-050", name: "New Balance Graphic Layered Double-Sleeve Hoodie — Crimson Red & Navy", price: "₹1,199",
     images: [
       "images/h50-1.jpg",
@@ -4760,17 +4752,6 @@ let HOODIES = [
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "45\"", length: "26.5\"" }, condition: "9/10",
     description: "Official Disney Stella Lou character pullover hoodie in soft baby pink. Features 3D bunny ear detail on the hood with mint green inner lining, embroidered Stella Lou character graphic on the left chest with cursive 'StellaLou' script, branded drawstring tips, kangaroo front pocket, and ribbed cuffs & hem. A rare and adorable collector's piece. Authentic Pre-owned Hoodie.", status: "available" },
 
-  { id: "ZH-015", name: "Barbapapa Cartoon Graphic Pullover Hoodie — Cream White", price: "₹999",
-    images: [
-      "images/h15-2.jpg",
-      "images/h15-1.jpg",
-      "images/h15-3.jpg",
-      "images/h15-4.jpg",
-      "images/h15-5.jpg"
-    ],
-    sizes: ["M", "L"], displaySize: "M/L", size: "M/L", measurements: { chest: "44\"", length: "25.5\"" }, condition: "10/10",
-    description: "Vintage Barbapapa cartoon pullover hoodie in off-white cream. Features a charming printed graphic of the Barbapapa family in a pink bathtub on the left chest, white drawstring hood, kangaroo front pocket, and ribbed cuffs & hem. A fun, nostalgic collector's piece for fans of classic European animation. Authentic Pre-owned Hoodie.", status: "available" },
-
   { id: "ZH-017", name: "Vintage Oakley Big Logo Contrast Hood Pullover Hoodie — Black & Burgundy", price: "₹1,299",
     images: [
       "images/h17-1.jpg",
@@ -4852,6 +4833,16 @@ let HOODIES = [
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "24.5\"" }, condition: "9/10",
     description: "Vintage Fila 'Stile Sportivo Italiano' pullover hoodie in off-white. Features continuous Fila jacquard logo tape running across the hood and down both sleeves, embroidered F-box chest patch, crossover hood neckline, kangaroo front pocket, and ribbed hem. Authentic Pre-owned Hoodie.", status: "available" },
+
+  { id: "ZH-049", name: "Camo Woodland Colorblock Pullover Hoodie — Army Green Camo & Charcoal", price: "₹1,199",
+    images: [
+      "images/h49-1.jpg",
+      "images/h49-2.jpg",
+      "images/h49-3.jpg",
+      "images/h49-4.jpg"
+    ],
+    sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "26\"" }, condition: "9/10",
+    description: "Streetwear pullover hoodie featuring woodland camo patterned raglan sleeves paired with a charcoal body, drawstring hood, kangaroo pouch pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "sold" },
 
   { id: "ZH-052", name: "Oriental Botanical Floral & Cockatoo Embroidered Boxy Hoodie — Black & White Striped Trim", price: "₹1,199",
     images: [
@@ -5124,6 +5115,17 @@ let HOODIES = [
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "46\"", length: "25.5\"" }, condition: "10/10",
     description: "Vintage Champion Reverse Weave-era pullover hoodie in classic heather grey. Features bold embroidered navy and red Champion script logo across the chest, embroidered Champion 'C' logo on the left cuff, woven 'Authentic American Athletic Apparel — Rochester, USA' label at the hem, kangaroo front pocket, and ribbed cuffs & hem. A true vintage Champion grail. Authentic Pre-owned Hoodie.", status: "sold" },
 
+  { id: "ZH-015", name: "Barbapapa Cartoon Graphic Pullover Hoodie — Cream White", price: "₹999",
+    images: [
+      "images/h15-2.jpg",
+      "images/h15-1.jpg",
+      "images/h15-3.jpg",
+      "images/h15-4.jpg",
+      "images/h15-5.jpg"
+    ],
+    sizes: ["M", "L"], displaySize: "M/L", size: "M/L", measurements: { chest: "44\"", length: "25.5\"" }, condition: "10/10",
+    description: "Vintage Barbapapa cartoon pullover hoodie in off-white cream. Features a charming printed graphic of the Barbapapa family in a pink bathtub on the left chest, white drawstring hood, kangaroo front pocket, and ribbed cuffs & hem. A fun, nostalgic collector's piece for fans of classic European animation. Authentic Pre-owned Hoodie.", status: "sold" },
+
   { id: "ZH-016", name: "Tribal Gear 1989 Demon Horn Ninja Balaclava Hoodie — Jet Black", price: "₹1,299",
     images: [
       "images/h16-1.jpg",
@@ -5218,7 +5220,7 @@ let HOODIES = [
       "images/h30-5.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "46\"", length: "23.5\"" }, condition: "10/10",
-    description: "O!Oi Studio Korea streetwear pullover hoodie in warm cream beige. Features embroidered baby blue O!Oi chenille letter applique and stitched '©COPYRIGHT SINCE 1990 oi studio co., Ltd.' text across the chest, drawstring hood, kangaroo front pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "sold_out" }
+    description: "O!Oi Studio Korea streetwear pullover hoodie in warm cream beige. Features embroidered baby blue O!Oi chenille letter applique and stitched '©COPYRIGHT SINCE 1990 oi studio co., Ltd.' text across the chest, drawstring hood, kangaroo front pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "sold" }
 ];
 
 /* =========================================================================
@@ -5952,7 +5954,7 @@ function renderLandingPage() {
             <!-- HERO VIDEO & EDITORIAL MONOLITH -->
             <section class="editorial-hero-wrapper" aria-label="Brand Hero Video">
                 <div class="hero-video-container">
-                    <video class="hero-video-media" autoplay loop muted playsinline preload="metadata" poster="images/hero-poster.jpg">
+                    <video class="hero-video-media" autoplay loop muted playsinline preload="metadata" poster="images/hero-poster.webp">
                         <source src="images/hero-video.mp4" type="video/mp4">
                     </video>
                     <div class="hero-video-overlay cinematic-overlay"></div>
@@ -5988,27 +5990,27 @@ function renderLandingPage() {
                 <div class="marquee-track" id="marqueeTrack">
                     <!-- SET 1 (Initial Viewport) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-1.webp" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.webp" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.webp" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.webp" alt="Gallery" class="marquee-img" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.webp" alt="Gallery" class="marquee-img" decoding="async">
                     </div>
                     <!-- SET 2 (Loop Continuation) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-1.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
                     </div>
                     <!-- SET 3 (Loop Continuation) -->
                     <div class="marquee-set">
-                        <img src="images/zoro scroll1/scroll1-1.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-2.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-3.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-4.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
-                        <img src="images/zoro scroll1/scroll1-5.jpeg" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-1.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-2.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-3.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-4.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
+                        <img src="images/zoro scroll1/scroll1-5.webp" alt="Gallery" class="marquee-img" loading="lazy" decoding="async">
                     </div>
                 </div>
             </section>
