@@ -82,6 +82,7 @@ zoro-finds-archive*.html
 hoodies 4/
 hoodies 5/
 jackets_september/
+jacket 2.0/
 
 # Local-only maintenance / dev scripts (not needed in production)
 fix_local_db.js
