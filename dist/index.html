@@ -6812,7 +6812,7 @@ function renderCatalogueView(items) {
   }
 
   items.forEach((p, i) => {
-    const isSold = p.status === "sold";
+    const isSold = p.status === "sold" || p.status === "SOLD_OUT" || p.status === "sold_out";
     const imgs = safeImages(p);
     const card = document.createElement("button");
     card.type = "button";
@@ -7683,7 +7683,7 @@ async function buyNowCurrentProduct() {
 function openModal(p) {
   lastFocused = document.activeElement;
   activeModalProduct = p;
-  const isSold = p.status === "sold";
+  const isSold = p.status === "sold" || p.status === "SOLD_OUT" || p.status === "sold_out";
   const imgs = safeImages(p);
   const m = p.measurements || {};
 
