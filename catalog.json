@@ -3,7 +3,7 @@
     "name": "McGregor Full-Zip Tech Fleece Hoodie — Heather Grey & Dusty Pink",
     "price": "₹1,199",
     "numericPrice": 1199,
-    "status": "available"
+    "status": "sold"
   },
   "ZH-047": {
     "name": "Disney Mickey Mouse Embroidered Pullover Hoodie — Charcoal Grey",
@@ -21,7 +21,7 @@
     "name": "Camo Woodland Colorblock Pullover Hoodie — Army Green Camo & Charcoal",
     "price": "₹1,099",
     "numericPrice": 1099,
-    "status": "available"
+    "status": "sold"
   },
   "ZH-050": {
     "name": "New Balance Graphic Layered Double-Sleeve Hoodie — Crimson Red & Navy",
@@ -39,7 +39,7 @@
     "name": "Oriental Botanical Floral & Cockatoo Embroidered Boxy Hoodie — Black & White Striped Trim",
     "price": "₹1,199",
     "numericPrice": 1199,
-    "status": "sold_out"
+    "status": "sold"
   },
   "ZH-053": {
     "name": "Superdry Japan Sherpa Fleece Lined Full-Zip Hoodie — Marl Navy & Neon Orange",
