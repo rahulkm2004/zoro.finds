@@ -628,5 +628,89 @@
     "price": "₹1,099",
     "numericPrice": 1099,
     "status": "sold"
+  },
+  "ZH-061": {
+    "name": "Vintage Superdry Real JPN Kanji Graphic Pullover Hoodie — Deep Navy & Lime",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-062": {
+    "name": "Vintage GAP Arch Spellout Heavyweight Pullover Hoodie — Deep Navy",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-063": {
+    "name": "Official Porsche Service Stuttgart Crest Embroidered Pullover Hoodie — Midnight Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-064": {
+    "name": "Vintage GAP Arch Spellout Pullover Hoodie — Cerulean Blue",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-065": {
+    "name": "Vintage Reebok Classic Vector Racing Stripe Pullover Hoodie — Sandy Butterscotch & Cyan",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-066": {
+    "name": "Japanese Streetwear Kawaii Capybara Panel Graphic Pullover Hoodie — Warm Optic White",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-067": {
+    "name": "Minimalist Heavyweight Oversized Boxy Blank Hoodie — Oatmeal Heather Cream",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-068": {
+    "name": "The North Face Berkeley California 'Camp Geodesic' Graphic Pullover Hoodie — Marigold Gold",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-069": {
+    "name": "Vintage GAP Arch Spellout Pullover Hoodie — Washed Phantom Black",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-070": {
+    "name": "Vintage GAP Arch Spellout Relaxed Crop-Cut Hoodie — Midnight Navy",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-071": {
+    "name": "Vintage Champion Script Spellout Embroidered Pullover Hoodie — Light Heather Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-072": {
+    "name": "Vintage GAP Arch Spellout Full-Zip Hoodie — Crimson Scarlet Red",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-073": {
+    "name": "Minimalist Clean Blank Drop-Shoulder Pullover Hoodie — Heather Silver Grey",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-074": {
+    "name": "Official Harry Potter Gryffindor Embroidered House Crest Ribbed Hoodie — Rich Crimson & Gold",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
   }
 }
