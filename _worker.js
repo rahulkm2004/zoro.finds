@@ -87,6 +87,17 @@ export default {
       });
     }
 
+    // Block direct access to unreleased Drop 2 product images before 6:00 PM IST
+    if (isDrop2Locked() && /^\/images\/h(6[1-9]|7[0-4])-/.test(pathname)) {
+      return new Response('403 Forbidden: Hoodie Drop 02 media unlocks at 6:00 PM IST on Saturday, 10 October 2026', {
+        status: 403,
+        headers: {
+          'Content-Type': 'text/plain',
+          'Cache-Control': 'no-store, no-cache, must-revalidate'
+        }
+      });
+    }
+
     // =========================================================================
     // API ROUTE: GET /api/config
     // Returns public Razorpay Key ID
