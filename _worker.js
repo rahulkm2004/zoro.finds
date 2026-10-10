@@ -87,17 +87,6 @@ export default {
       });
     }
 
-    // Block direct access to unreleased Drop 2 product images before 6:00 PM IST
-    if (isDrop2Locked() && /^\/images\/h(6[1-9]|7[0-4])-/.test(pathname)) {
-      return new Response('403 Forbidden: Hoodie Drop 02 media unlocks at 6:00 PM IST on Saturday, 10 October 2026', {
-        status: 403,
-        headers: {
-          'Content-Type': 'text/plain',
-          'Cache-Control': 'no-store, no-cache, must-revalidate'
-        }
-      });
-    }
-
     // =========================================================================
     // API ROUTE: GET /api/config
     // Returns public Razorpay Key ID
@@ -488,10 +477,7 @@ export default {
           sizes: typeof row.sizes === 'string' ? JSON.parse(row.sizes) : row.sizes
         }));
 
-        // Scheduled access: exclude unreleased Drop 2 hoodies before 6:00 PM IST
-        if (isDrop2Locked()) {
-          formatted = formatted.filter(p => !DROP_2_PRODUCT_IDS.has(p.id));
-        }
+        // Hoodie Drop 2 is live
 
         return jsonResponse({
           success: true,
@@ -558,20 +544,7 @@ export default {
           for (const item of items) {
             const itemId = typeof item === 'string' ? item : item.id;
 
-            // Scheduled Drop 2 lock enforcement
-            if (isDrop2Locked() && DROP_2_PRODUCT_IDS.has(itemId)) {
-              soldItems.push(itemId);
-              validatedItems.push({
-                id: itemId,
-                name: item.name || itemId,
-                status: 'UNRELEASED',
-                numeric_price: item.numericPrice || 0,
-                available: false,
-                reason: 'UNRELEASED',
-                message: 'Hoodie Drop 02 unlocks at 6:00 PM IST on Saturday, 10 October 2026.'
-              });
-              continue;
-            }
+            // Hoodie Drop 2 is live
 
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?')
               .bind(itemId)
@@ -639,13 +612,7 @@ export default {
         // Check availability in Cloudflare D1
         if (env.DB) {
           for (const item of items) {
-            if (isDrop2Locked() && DROP_2_PRODUCT_IDS.has(item.id)) {
-              return jsonResponse({
-                error: 'Hoodie Drop 02 unlocks at 6:00 PM IST on Saturday, 10 October 2026. This item is not yet released.',
-                unreleased_items: [item.id],
-                unreleased_product_id: item.id
-              }, 400);
-            }
+            // Hoodie Drop 2 is live
 
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price FROM products WHERE id = ?')
               .bind(item.id)
@@ -1142,14 +1109,6 @@ export default {
       if (env.ASSETS) {
         return env.ASSETS.fetch(new Request(adminUrl, request));
       }
-    }
-
-    // Block direct access to unreleased Drop 2 product images before 6:00 PM IST
-    if (isDrop2Locked() && /^\/images\/h(6[1-9]|7[0-4])-/.test(pathname)) {
-      return new Response('403 Forbidden: Hoodie Drop 02 media unlocks at 6:00 PM IST on Saturday, 10 October 2026', {
-        status: 403,
-        headers: { 'Content-Type': 'text/plain' }
-      });
     }
 
     if (env.ASSETS) {
