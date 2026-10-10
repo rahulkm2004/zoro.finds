@@ -6481,8 +6481,8 @@ function initZoroUnseen() {
    EDITORIAL LANDING PAGE RENDERER (THRFT REFERENCE STYLE)
 ========================================================================= */
 function renderLandingPage() {
-    const activeHoodies = HOODIES.filter(h => isProductReleased(h) && h.status !== "sold" && h.status !== "SOLD_OUT").length;
-    const activeJackets = PRODUCTS.filter(j => j.status !== "sold").length;
+    const activeHoodies = HOODIES.filter(h => h.status !== "sold" && h.status !== "SOLD_OUT").length;
+    const activeJackets = PRODUCTS.filter(j => j.status !== "sold" && j.status !== "SOLD_OUT").length;
 
     mainEl.innerHTML = `
         <div class="editorial-landing cinematic-theme">
