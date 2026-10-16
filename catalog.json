@@ -718,5 +718,47 @@
     "price": "₹1,199",
     "numericPrice": 1199,
     "status": "available"
+  },
+  "ZH-075": {
+    "name": "Minimalist Boxy Blank Drop-Shoulder Pullover Hoodie — Warm Mocha Brown",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-076": {
+    "name": "Vintage GAP Arch Spellout Full-Zip Hoodie — Sunshine Yellow & Deep Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-077": {
+    "name": "Vintage Champion Arch Script Embroidered Pullover Hoodie — Faded Slate Blue",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-078": {
+    "name": "Plush Ribbed Corduroy Fleece Heavy Weight Full-Zip Hoodie — Espresso Brown",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-079": {
+    "name": "Studios 2-in-1 Layered Utility Hooded Zip Jacket — Washed Black & Heather Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-080": {
+    "name": "Champion Reverse Weave Minimalist Full-Zip Hoodie — Washed Charcoal Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-081": {
+    "name": "Supreme x Champion Embroidered Box Logo Pullover Hoodie — Goldenrod Yellow",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
   }
 }
