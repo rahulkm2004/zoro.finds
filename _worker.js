@@ -16,6 +16,16 @@ function isRareHoodiesLocked() {
   return Date.now() < RARE_HOODIES_RELEASE_MS;
 }
 
+// Scheduled 9 Limited Jackets Drop (Wednesday, 28 October 2026 at 5:45 PM IST)
+const JACKETS_DROP_RELEASE_MS = 1793189700000; // 2026-10-28T12:15:00.000Z (Asia/Kolkata UTC+05:30)
+const JACKETS_DROP_PRODUCT_IDS = new Set([
+  'ZF-062', 'ZF-063', 'ZF-064', 'ZF-065', 'ZF-066', 'ZF-067', 'ZF-068', 'ZF-069', 'ZF-070'
+]);
+
+function isJacketsDropLocked() {
+  return Date.now() < JACKETS_DROP_RELEASE_MS;
+}
+
 // Helper: JSON response with CORS headers
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -480,6 +490,11 @@ export default {
           formatted = formatted.filter(p => !RARE_HOODIES_PRODUCT_IDS.has(p.id));
         }
 
+        // Scheduled access: exclude unreleased 9 Limited Jackets before 5:45 PM IST
+        if (isJacketsDropLocked()) {
+          formatted = formatted.filter(p => !JACKETS_DROP_PRODUCT_IDS.has(p.id));
+        }
+
         return jsonResponse({
           success: true,
           count: formatted.length,
@@ -560,6 +575,21 @@ export default {
               continue;
             }
 
+            // Scheduled 9 Limited Jackets drop lock enforcement
+            if (isJacketsDropLocked() && JACKETS_DROP_PRODUCT_IDS.has(itemId)) {
+              soldItems.push(itemId);
+              validatedItems.push({
+                id: itemId,
+                name: item.name || itemId,
+                status: 'UNRELEASED',
+                numeric_price: item.numericPrice || 0,
+                available: false,
+                reason: 'UNRELEASED',
+                message: '9 Limited Jackets drop unlocks at 5:45 PM IST on Wednesday, 28 October 2026.'
+              });
+              continue;
+            }
+
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?')
               .bind(itemId)
               .first();
@@ -629,6 +659,14 @@ export default {
             if (isRareHoodiesLocked() && RARE_HOODIES_PRODUCT_IDS.has(item.id)) {
               return jsonResponse({
                 error: '8 Rare Hoodies drop unlocks at 5:40 PM IST on Friday, 16 October 2026. This item is not yet released.',
+                unreleased_items: [item.id],
+                unreleased_product_id: item.id
+              }, 400);
+            }
+
+            if (isJacketsDropLocked() && JACKETS_DROP_PRODUCT_IDS.has(item.id)) {
+              return jsonResponse({
+                error: '9 Limited Jackets drop unlocks at 5:45 PM IST on Wednesday, 28 October 2026. This item is not yet released.',
                 unreleased_items: [item.id],
                 unreleased_product_id: item.id
               }, 400);
@@ -1134,6 +1172,14 @@ export default {
     // Block direct access to unreleased 8 Rare Hoodies images before 5:40 PM IST
     if (isRareHoodiesLocked() && /^\/images\/h(7[5-9]|8[0-1])-/.test(pathname)) {
       return new Response('403 Forbidden: 8 Rare Hoodies media unlocks at 5:40 PM IST on Friday, 16 October 2026', {
+        status: 403,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+
+    // Block direct access to unreleased 9 Limited Jackets images before 5:45 PM IST
+    if (isJacketsDropLocked() && /^\/images\/zf0(6[2-9]|70)-/.test(pathname)) {
+      return new Response('403 Forbidden: 9 Limited Jackets media unlocks at 5:45 PM IST on Wednesday, 28 October 2026', {
         status: 403,
         headers: { 'Content-Type': 'text/plain' }
       });

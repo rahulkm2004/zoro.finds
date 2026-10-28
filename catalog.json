@@ -1,4 +1,58 @@
 {
+  "ZF-062": {
+    "name": "Vintage Crocodile Micro-Check Gingham Full-Zip Bomber Jacket — Slate & Charcoal",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-063": {
+    "name": "Vintage 90s Nike Contrast Piping Track Windbreaker Jacket — Stealth Black & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-064": {
+    "name": "Official MLB New York Yankees Piping Track Windbreaker Jacket — Midnight Black & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-065": {
+    "name": "Minimalist Technical Grid-Fleece Lined Hooded Softshell Jacket — Chalk White",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-066": {
+    "name": "Marvel Captain America Winged \"A\" Longline Bomber Jacket — Stealth Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-067": {
+    "name": "Nike Windrunner Hooded Big Swoosh Track Jacket — Black, White & Espresso",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-068": {
+    "name": "Columbia PFG Lightweight Hooded Packable Windbreaker Jacket — Mist Grey & Royal Blue",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZF-069": {
+    "name": "Retro Colorblock Motorsport Track Windbreaker Jacket — White, Crimson Red & Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-070": {
+    "name": "L.O.G.G. H&M Heather-Lined Hooded Bomber Windbreaker Jacket — Midnight Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
   "ZH-046": {
     "name": "McGregor Full-Zip Tech Fleece Hoodie — Heather Grey & Dusty Pink",
     "price": "₹1,199",
