@@ -1,4 +1,64 @@
 {
+  "ZF-071": {
+    "name": "Vintage Heavyweight Winter Jacket (Q1)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-072": {
+    "name": "Vintage Bomber Winter Jacket (Q2)",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-073": {
+    "name": "Vintage Utility Vest Jacket (Q3)",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-074": {
+    "name": "Vintage Outdoor Shell Winter Jacket (Q4)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-075": {
+    "name": "Vintage Warm Heavy Winter Jacket (Q5)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-076": {
+    "name": "Vintage Fleece Lined Winter Jacket (Q6)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-077": {
+    "name": "Vintage Technical Winter Jacket (Q7)",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-078": {
+    "name": "Vintage Colorblock Winter Jacket (Q8)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-079": {
+    "name": "Vintage Insulated Shell Winter Jacket (Q9)",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-080": {
+    "name": "Premium Vintage Winter Heavy Jacket (Q10)",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
   "ZF-062": {
     "name": "Vintage Crocodile Micro-Check Gingham Full-Zip Bomber Jacket — Slate & Charcoal",
     "price": "₹1,199",

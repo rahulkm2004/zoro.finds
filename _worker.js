@@ -26,6 +26,16 @@ function isJacketsDropLocked() {
   return Date.now() < JACKETS_DROP_RELEASE_MS;
 }
 
+// Scheduled 10 Rare Winter Pieces Drop (Monday, 3 November 2026 at 5:45 PM IST)
+const WINTER_JACKETS_DROP_RELEASE_MS = 1793708100000; // 2026-11-03T12:15:00.000Z (Asia/Kolkata UTC+05:30)
+const WINTER_JACKETS_DROP_PRODUCT_IDS = new Set([
+  'ZF-071', 'ZF-072', 'ZF-073', 'ZF-074', 'ZF-075', 'ZF-076', 'ZF-077', 'ZF-078', 'ZF-079', 'ZF-080'
+]);
+
+function isWinterJacketsDropLocked() {
+  return Date.now() < WINTER_JACKETS_DROP_RELEASE_MS;
+}
+
 // Helper: JSON response with CORS headers
 function jsonResponse(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -495,6 +505,11 @@ export default {
           formatted = formatted.filter(p => !JACKETS_DROP_PRODUCT_IDS.has(p.id));
         }
 
+        // Scheduled access: exclude unreleased 10 Rare Winter Pieces before 5:45 PM IST (3 Nov 2026)
+        if (isWinterJacketsDropLocked()) {
+          formatted = formatted.filter(p => !WINTER_JACKETS_DROP_PRODUCT_IDS.has(p.id));
+        }
+
         return jsonResponse({
           success: true,
           count: formatted.length,
@@ -590,6 +605,21 @@ export default {
               continue;
             }
 
+            // Scheduled 10 Rare Winter Pieces drop lock enforcement
+            if (isWinterJacketsDropLocked() && WINTER_JACKETS_DROP_PRODUCT_IDS.has(itemId)) {
+              soldItems.push(itemId);
+              validatedItems.push({
+                id: itemId,
+                name: item.name || itemId,
+                status: 'UNRELEASED',
+                numeric_price: item.numericPrice || 0,
+                available: false,
+                reason: 'UNRELEASED',
+                message: '10 Rare Winter Pieces drop unlocks at 5:45 PM IST on Tuesday, 3 November 2026.'
+              });
+              continue;
+            }
+
             const product = await env.DB.prepare('SELECT id, product_name, status, numeric_price, price FROM products WHERE id = ?')
               .bind(itemId)
               .first();
@@ -667,6 +697,14 @@ export default {
             if (isJacketsDropLocked() && JACKETS_DROP_PRODUCT_IDS.has(item.id)) {
               return jsonResponse({
                 error: '9 Limited Jackets drop unlocks at 5:45 PM IST on Wednesday, 28 October 2026. This item is not yet released.',
+                unreleased_items: [item.id],
+                unreleased_product_id: item.id
+              }, 400);
+            }
+
+            if (isWinterJacketsDropLocked() && WINTER_JACKETS_DROP_PRODUCT_IDS.has(item.id)) {
+              return jsonResponse({
+                error: '10 Rare Winter Pieces drop unlocks at 5:45 PM IST on Tuesday, 3 November 2026. This item is not yet released.',
                 unreleased_items: [item.id],
                 unreleased_product_id: item.id
               }, 400);
@@ -1180,6 +1218,14 @@ export default {
     // Block direct access to unreleased 9 Limited Jackets images before 5:45 PM IST
     if (isJacketsDropLocked() && /^\/images\/zf0(6[2-9]|70)-/.test(pathname)) {
       return new Response('403 Forbidden: 9 Limited Jackets media unlocks at 5:45 PM IST on Wednesday, 28 October 2026', {
+        status: 403,
+        headers: { 'Content-Type': 'text/plain' }
+      });
+    }
+
+    // Block direct access to unreleased 10 Rare Winter Pieces images before 5:45 PM IST (3 Nov 2026)
+    if (isWinterJacketsDropLocked() && /^\/images\/zf0(7[1-9]|80)-/.test(pathname)) {
+      return new Response('403 Forbidden: 10 Rare Winter Pieces media unlocks at 5:45 PM IST on Tuesday, 3 November 2026', {
         status: 403,
         headers: { 'Content-Type': 'text/plain' }
       });
