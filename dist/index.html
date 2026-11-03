@@ -6264,107 +6264,16 @@ function isRareHoodiesReleased() {
 }
 
 /* =========================================================================
-   SCHEDULED 10 RARE WINTER PIECES DROP CONTROLLER (NOVEMBER 3, 2026 — 5:45 PM IST)
+   10 RARE WINTER PIECES DROP LIVE BANNER
 ========================================================================= */
-const WINTER_JACKETS_DROP_TIME = 1793708100000; // Tuesday, 3 November 2026 17:45:00 IST (12:15:00 UTC)
-const WINTER_JACKETS_DROP_PRODUCT_IDS = new Set([
-  "ZF-071", "ZF-072", "ZF-073", "ZF-074", "ZF-075", "ZF-076", "ZF-077", "ZF-078", "ZF-079", "ZF-080"
-]);
-
-function isWinterJacketsDropReleased() {
-  return Date.now() >= WINTER_JACKETS_DROP_TIME;
-}
-
-let _winterJacketsDropCountdownInterval = null;
-
 function renderWinterJacketsDropBannerHTML() {
-  if (isWinterJacketsDropReleased()) {
-    return `
-      <div class="drop-live-banner mono" role="status" aria-label="10 Rare Winter Pieces Drop Live Status">
-        <div class="drop-live-pill">
-          <span class="drop-live-dot"></span> 10 RARE WINTER PIECES DROP IS NOW LIVE · 10 NEW 1-OF-1 CURATED PIECES UNLOCKED
-        </div>
-      </div>
-    `;
-  }
-
   return `
-    <div class="drop-countdown-hero" id="winterJacketsDropCountdownHero" role="region" aria-label="10 Rare Winter Pieces Drop Countdown">
+    <div class="drop-countdown-hero" role="region" aria-label="10 Rare Winter Pieces Drop Live">
       <div class="drop-countdown-inner">
-        <div class="drop-tag-row">
-          <span class="drop-pulse-pill mono"><span class="drop-pulse-dot"></span> UPCOMING DROP</span>
-          <span class="drop-date-pill mono">TUESDAY, 3 NOVEMBER 2026 · 5:45 PM IST</span>
-        </div>
-        <h2 class="drop-countdown-title">10 RARE WINTER PIECES — DROP UNLOCKS SOON</h2>
-        <p class="drop-countdown-subtitle mono">EXCLUSIVE 1-OF-1 CURATED VINTAGE PIECES DROPPING SOON</p>
-        
-        <div class="drop-countdown-timer mono" id="winterJacketsCountdownTimer" aria-label="Drop Countdown Timer">
-          <div class="timer-unit">
-            <span class="timer-num" id="winterJacketsTimerDays">00</span>
-            <span class="timer-label">DAYS</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="winterJacketsTimerHours">00</span>
-            <span class="timer-label">HOURS</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="winterJacketsTimerMins">00</span>
-            <span class="timer-label">MINUTES</span>
-          </div>
-          <span class="timer-sep">:</span>
-          <div class="timer-unit">
-            <span class="timer-num" id="winterJacketsTimerSecs">00</span>
-            <span class="timer-label">SECONDS</span>
-          </div>
-        </div>
-        <div class="drop-notice-note mono">✦ DROP UNLOCKS AUTOMATICALLY AT 5:45 PM IST · ALL PIECES ARE 1-OF-1</div>
+        <h2 class="drop-countdown-title">10 RARE WINTER PIECES DROP LIVE</h2>
       </div>
     </div>
   `;
-}
-
-function updateWinterJacketsDropTimerDisplay() {
-  const diff = WINTER_JACKETS_DROP_TIME - Date.now();
-  if (diff <= 0) {
-    if (_winterJacketsDropCountdownInterval) {
-      clearInterval(_winterJacketsDropCountdownInterval);
-      _winterJacketsDropCountdownInterval = null;
-    }
-    // Automatically unlock and re-render without page reload or redeploy
-    if (typeof currentTab !== "undefined" && currentTab === "JACKETS") {
-      renderActiveCollection();
-    }
-    fetchProductsFromDB(true);
-    return;
-  }
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const secs = Math.floor((diff % (1000 * 60)) / 1000);
-
-  const daysEl = document.getElementById("winterJacketsTimerDays");
-  const hoursEl = document.getElementById("winterJacketsTimerHours");
-  const minsEl = document.getElementById("winterJacketsTimerMins");
-  const secsEl = document.getElementById("winterJacketsTimerSecs");
-
-  if (daysEl) daysEl.textContent = String(days).padStart(2, "0");
-  if (hoursEl) hoursEl.textContent = String(hours).padStart(2, "0");
-  if (minsEl) minsEl.textContent = String(mins).padStart(2, "0");
-  if (secsEl) secsEl.textContent = String(secs).padStart(2, "0");
-}
-
-function initWinterJacketsDropCountdown() {
-  if (_winterJacketsDropCountdownInterval) {
-    clearInterval(_winterJacketsDropCountdownInterval);
-    _winterJacketsDropCountdownInterval = null;
-  }
-  if (!isWinterJacketsDropReleased()) {
-    updateWinterJacketsDropTimerDisplay();
-    _winterJacketsDropCountdownInterval = setInterval(updateWinterJacketsDropTimerDisplay, 1000);
-  }
 }
 
 /* =========================================================================
@@ -6387,9 +6296,6 @@ function isProductReleased(p) {
   }
   if (id && JACKETS_DROP_PRODUCT_IDS.has(id)) {
     return isJacketsDropReleased();
-  }
-  if (id && WINTER_JACKETS_DROP_PRODUCT_IDS.has(id)) {
-    return isWinterJacketsDropReleased();
   }
   return true;
 }
@@ -6891,9 +6797,7 @@ async function syncAndValidateCart(notifyUser = false) {
 
 async function addToCart(productId, sizeChoice, openDrawer = false, suppressSound = false) {
   if (!isProductReleased(productId)) {
-    if (WINTER_JACKETS_DROP_PRODUCT_IDS.has(productId)) {
-      showToast("This piece drops at 5:45 PM IST on Tuesday, 3 November 2026.");
-    } else if (JACKETS_DROP_PRODUCT_IDS.has(productId)) {
+    if (JACKETS_DROP_PRODUCT_IDS.has(productId)) {
       showToast("This piece drops at 5:45 PM IST on Wednesday, 28 October 2026.");
     } else {
       showToast("This piece drops at 5:40 PM IST on Friday, 16 October 2026.");
@@ -7980,7 +7884,7 @@ function renderCatalogueView(items) {
   if (currentTab === "HOODIES") {
     initRareHoodiesCountdown();
   } else if (currentTab === "JACKETS") {
-    initJacketsDropCountdown();
+    /* Drop is live now - no countdown interval */
   }
   const gridEl = document.getElementById("grid");
 
