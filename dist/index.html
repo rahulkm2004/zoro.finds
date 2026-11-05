@@ -4409,7 +4409,7 @@ let PRODUCTS = [
       "images/zf062-6.jpg"
     ],
     sizes: ["XL"], displaySize: "XL", size: "XL", measurements: { chest: "50\"", length: "27.5\"" }, condition: "9/10 — small, barely noticeable stain near the left front chest",
-    description: "Classic vintage Crocodile full-zip bomber jacket in a fine slate grey and charcoal micro-check gingham pattern. Features iconic embroidered Crocodile chest emblem, ribbed bomber collar, elasticated cuffs and waistband, smooth contrast interior lining, and dual side welt pockets. Authentic Pre-owned Jacket.", status: "available" },
+    description: "Classic vintage Crocodile full-zip bomber jacket in a fine slate grey and charcoal micro-check gingham pattern. Features iconic embroidered Crocodile chest emblem, ribbed bomber collar, elasticated cuffs and waistband, smooth contrast interior lining, and dual side welt pockets. Authentic Pre-owned Jacket.", status: "sold" },
 
   { id: "ZF-063", name: "Vintage 90s Nike Contrast Piping Track Windbreaker Jacket — Stealth Black & White", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -6542,8 +6542,8 @@ function getTabBaseItems(tab) {
   }
   if (tab === "JACKETS") {
     const active = PRODUCTS.filter(p => !p.isArchive && p.status !== "archived" && p.status !== "ARCHIVED" && isProductReleased(p));
-    const avail = active.filter(j => j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out");
-    const sold = active.filter(j => j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out");
+    const avail = active.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-062");
+    const sold = active.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-062");
     return [...avail, ...sold];
   }
   if (tab === "ARCHIVE") {
@@ -9080,8 +9080,8 @@ async function fetchProductsFromDB(force = false) {
       });
       dbMap.forEach(item => { if (!item.isArchive && item.status !== "archived" && item.status !== "ARCHIVED") orderedJackets.push(item); });
       const activeJackets = orderedJackets.filter(j => !j.isArchive && j.status !== "archived" && j.status !== "ARCHIVED");
-      const avail = activeJackets.filter(j => j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out");
-      const sold = activeJackets.filter(j => j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out");
+      const avail = activeJackets.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-062");
+      const sold = activeJackets.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-062");
       PRODUCTS = [...avail, ...sold];
     }
     if (dbHoodies.length > 0) {
