@@ -4334,7 +4334,7 @@ let PRODUCTS = [
       "images/zf075-1.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "26\"" }, condition: "9/10",
-    description: "Curated vintage heavy thermal field parka jacket in deep obsidian black. Features heavyweight thermal construction, premium zip hardware, utility pockets, and relaxed drape. 1-of-1 authentic piece.", status: "available" },
+    description: "Curated vintage heavy thermal field parka jacket in deep obsidian black. Features heavyweight thermal construction, premium zip hardware, utility pockets, and relaxed drape. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZF-076", name: "Vintage Arctic Fleece-Lined Weatherproof Puffer Jacket — Midnight Navy", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -6542,8 +6542,8 @@ function getTabBaseItems(tab) {
   }
   if (tab === "JACKETS") {
     const active = PRODUCTS.filter(p => !p.isArchive && p.status !== "archived" && p.status !== "ARCHIVED" && isProductReleased(p));
-    const avail = active.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-079" || j.id === "ZF-062");
-    const sold = active.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-079" && j.id !== "ZF-062");
+    const avail = active.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-075" || j.id === "ZF-079" || j.id === "ZF-062");
+    const sold = active.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-075" && j.id !== "ZF-079" && j.id !== "ZF-062");
     return [...avail, ...sold];
   }
   if (tab === "ARCHIVE") {
@@ -9080,8 +9080,8 @@ async function fetchProductsFromDB(force = false) {
       });
       dbMap.forEach(item => { if (!item.isArchive && item.status !== "archived" && item.status !== "ARCHIVED") orderedJackets.push(item); });
       const activeJackets = orderedJackets.filter(j => !j.isArchive && j.status !== "archived" && j.status !== "ARCHIVED");
-      const avail = activeJackets.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-079" || j.id === "ZF-062");
-      const sold = activeJackets.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-079" && j.id !== "ZF-062");
+      const avail = activeJackets.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-075" || j.id === "ZF-079" || j.id === "ZF-062");
+      const sold = activeJackets.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-075" && j.id !== "ZF-079" && j.id !== "ZF-062");
       PRODUCTS = [...avail, ...sold];
     }
     if (dbHoodies.length > 0) {
