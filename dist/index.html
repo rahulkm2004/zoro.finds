@@ -5199,7 +5199,7 @@ let HOODIES = [
       "images/h92-6.jpg"
     ],
     sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "40\"", length: "21\"" }, condition: "9/10",
-    description: "Authentic Uniqlo UT x Minecraft collaboration pullover hoodie in vibrant kelly green. Features iconic 8-bit Creeper pixelated front graphic with Minecraft spellout, Creeper face sleeve patch, kangaroo pocket, and comfortable ribbed trims. 1-of-1 authentic piece.", status: "available" },
+    description: "Authentic Uniqlo UT x Minecraft collaboration pullover hoodie in vibrant kelly green. Features iconic 8-bit Creeper pixelated front graphic with Minecraft spellout, Creeper face sleeve patch, kangaroo pocket, and comfortable ribbed trims. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-093", name: "Nike Air Jordan Jumpman Graphic Colorblock Pullover Hoodie — Black & Gym Red", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -5250,7 +5250,7 @@ let HOODIES = [
       "images/h97-8.jpg"
     ],
     sizes: ["M"], displaySize: "M", size: "M", measurements: { chest: "42\"", length: "24.5\"" }, condition: "9/10",
-    description: "Heavyweight vintage Polham thermal full-zip winter hoodie in washed black. Features plush high-pile oatmeal sherpa fleece lining throughout the hood and body, full-length heavy zipper, split kangaroo pockets, and dense ribbed hem and cuffs. 1-of-1 authentic piece.", status: "available" },
+    description: "Heavyweight vintage Polham thermal full-zip winter hoodie in washed black. Features plush high-pile oatmeal sherpa fleece lining throughout the hood and body, full-length heavy zipper, split kangaroo pockets, and dense ribbed hem and cuffs. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-098", name: "Parrso Japanese Aesthetic Chenille Applique Striped Sleeve Hoodie — Pastel Bubblegum Pink", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -5769,7 +5769,7 @@ let HOODIES = [
       "images/h57-4.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "24\"" }, condition: "9/10",
-    description: "Fine art graphic pullover hoodie in soft pale butter cream featuring Vincent Van Gogh's 'Irises 1890' oil painting print across the chest, drawstring hood, kangaroo front pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "available" },
+    description: "Fine art graphic pullover hoodie in soft pale butter cream featuring Vincent Van Gogh's 'Irises 1890' oil painting print across the chest, drawstring hood, kangaroo front pocket, and ribbed hem & cuffs. Authentic Pre-owned Hoodie.", status: "sold" },
 
   { id: "ZH-058", name: "Mishka NYC Bloodshot Eyeball Graphic Full-Zip Hoodie — Faded Charcoal", price: "₹999",
     images: [
@@ -6674,8 +6674,8 @@ function findProductById(id) {
 function getTabBaseItems(tab) {
   if (tab === "HOODIES") {
     const visibleHoodies = HOODIES.filter(h => isProductReleased(h));
-    const avail = visibleHoodies.filter(h => h.status !== "sold" && h.status !== "SOLD_OUT");
-    const sold = visibleHoodies.filter(h => h.status === "sold" || h.status === "SOLD_OUT");
+    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057");
+    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057");
     return [...avail, ...sold];
   }
   if (tab === "JACKETS") {
@@ -9245,8 +9245,8 @@ async function fetchProductsFromDB(force = false) {
         }
       });
       dbMap.forEach(item => orderedHoodies.push(item));
-      const avail = orderedHoodies.filter(h => h.status !== 'sold' && h.status !== 'SOLD_OUT');
-      const sold = orderedHoodies.filter(h => h.status === 'sold' || h.status === 'SOLD_OUT');
+      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057");
+      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057");
       HOODIES = [...avail, ...sold];
     }
 
