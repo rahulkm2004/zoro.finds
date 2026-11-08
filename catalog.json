@@ -1,4 +1,70 @@
 {
+  "ZF-081": {
+    "name": "Vintage Elvström Nautical Striped Trim Windbreaker Bomber Jacket — Deep Marine Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-082": {
+    "name": "Retro Wolf Sport Colorblock Technical Windbreaker Jacket — Neon Magenta & Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-092": {
+    "name": "Uniqlo UT x Minecraft Creeper Pixel Graphic Pullover Hoodie — Kelly Green",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-093": {
+    "name": "Nike Air Jordan Jumpman Graphic Colorblock Pullover Hoodie — Black & Gym Red",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-094": {
+    "name": "Diamond Film Korean Boxy Crop Arizona USA Embossed Hoodie — Heather Oatmeal",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-095": {
+    "name": "Concepts by Claiborne Minimalist Full-Zip Technical Windbreaker — Jet Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-096": {
+    "name": "Uniqlo UT x Disney Graphic Sleeve-Print Boxy Hoodie — Washed Onyx Black",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-097": {
+    "name": "Polham Heavy Thermal Sherpa Fleece-Lined Full-Zip Hoodie — Washed Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-098": {
+    "name": "Parrso Japanese Aesthetic Chenille Applique Striped Sleeve Hoodie — Pastel Bubblegum Pink",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-099": {
+    "name": "Vintage Adidas 3-Stripes Contrast Zip Hoodie — Core Black & Scarlet Red",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-100": {
+    "name": "Vintage GAP Sherpa-Lined Arch Logo Full-Zip Hoodie — Heather Oatmeal Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
   "ZF-071": {
     "name": "Vintage Crimson & Cobalt Heavyweight Colorblock Winter Jacket",
     "price": "₹1,199",
