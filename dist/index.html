@@ -5257,7 +5257,7 @@ let HOODIES = [
       "images/h103-7.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "46\"", length: "25\"" }, condition: "9/10",
-    description: "Modern Korean minimalist boxy pullover hoodie by Hellojini in soft heather oatmeal grey. Features clean blank aesthetic, built-in layered white contrast hem, side slit construction with natural cotton twill taping, flat natural drawstrings, and slouchy drop shoulders. Made in Korea. 1-of-1 authentic piece.", status: "available" },
+    description: "Modern Korean minimalist boxy pullover hoodie by Hellojini in soft heather oatmeal grey. Features clean blank aesthetic, built-in layered white contrast hem, side slit construction with natural cotton twill taping, flat natural drawstrings, and slouchy drop shoulders. Made in Korea. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-104", name: "Thom Browne New York Striped Contrast Trim Full-Zip Hoodie — Midnight Navy & White", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -6785,8 +6785,8 @@ function findProductById(id) {
 function getTabBaseItems(tab) {
   if (tab === "HOODIES") {
     const visibleHoodies = HOODIES.filter(h => isProductReleased(h));
-    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093");
-    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093");
+    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093" || h.id === "ZH-103");
+    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093" && h.id !== "ZH-103");
     return [...avail, ...sold];
   }
   if (tab === "JACKETS") {
@@ -9364,8 +9364,8 @@ async function fetchProductsFromDB(force = false) {
         }
       });
       dbMap.forEach(item => orderedHoodies.push(item));
-      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093");
-      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093");
+      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093" || h.id === "ZH-103");
+      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093" && h.id !== "ZH-103");
       HOODIES = [...avail, ...sold];
     }
 
