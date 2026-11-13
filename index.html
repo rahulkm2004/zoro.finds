@@ -5322,7 +5322,7 @@ let HOODIES = [
       "images/h93-6.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "44\"", length: "27\"" }, condition: "9/10",
-    description: "Curated Nike Air Jordan pullover hoodie featuring bold black and gym red colorblocking. Features giant chest Jumpman silhouette with speckled Nike Air graphic, red \"AIR JORDAN\" down the sleeve, contrast red hood and kangaroo pocket. 1-of-1 authentic piece.", status: "available" },
+    description: "Curated Nike Air Jordan pullover hoodie featuring bold black and gym red colorblocking. Features giant chest Jumpman silhouette with speckled Nike Air graphic, red \"AIR JORDAN\" down the sleeve, contrast red hood and kangaroo pocket. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-094", name: "Diamond Film Korean Boxy Crop Arizona USA Embossed Hoodie — Heather Oatmeal", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -5373,7 +5373,7 @@ let HOODIES = [
       "images/h98-6.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "48\"", length: "24.5\"" }, condition: "9/10",
-    description: "Eye-catching Parrso Original Collection boxy hoodie in cheerful pastel bubblegum pink. Features tactile cream chenille \"ROY2T\" varsity lettering and embroidered character artwork on chest, double-layered contrast hood trim, sporty white sleeve racing stripes with piping, and oversized silhouette. 1-of-1 authentic piece.", status: "available" },
+    description: "Eye-catching Parrso Original Collection boxy hoodie in cheerful pastel bubblegum pink. Features tactile cream chenille \"ROY2T\" varsity lettering and embroidered character artwork on chest, double-layered contrast hood trim, sporty white sleeve racing stripes with piping, and oversized silhouette. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-099", name: "Vintage Adidas 3-Stripes Contrast Zip Hoodie — Core Black & Scarlet Red", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -5462,7 +5462,7 @@ let HOODIES = [
       "images/h87-8.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "46\"", length: "25.5\"" }, condition: "10/10",
-    description: "Y2K gothic streetwear full-zip hoodie by ROMWE in smooth vanilla cream. Features full-zip hood closure with spider graphics, metal LIMITLESS gothic typography across chest, spiderweb and cross motifs along both sleeves, split kangaroo pockets, and cozy fleece interior. Authentic Pre-owned Hoodie.", status: "available" },
+    description: "Y2K gothic streetwear full-zip hoodie by ROMWE in smooth vanilla cream. Features full-zip hood closure with spider graphics, metal LIMITLESS gothic typography across chest, spiderweb and cross motifs along both sleeves, split kangaroo pockets, and cozy fleece interior. Authentic Pre-owned Hoodie.", status: "sold" },
 
   { id: "ZH-088", name: "Vintage Champion Big Chenille C Logo Pullover Hoodie — Periwinkle Royal Violet", price: "₹1,199", originalPrice: "₹2,399", numericPrice: 1199,
     images: [
@@ -6785,8 +6785,8 @@ function findProductById(id) {
 function getTabBaseItems(tab) {
   if (tab === "HOODIES") {
     const visibleHoodies = HOODIES.filter(h => isProductReleased(h));
-    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057");
-    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057");
+    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093");
+    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093");
     return [...avail, ...sold];
   }
   if (tab === "JACKETS") {
@@ -9364,8 +9364,8 @@ async function fetchProductsFromDB(force = false) {
         }
       });
       dbMap.forEach(item => orderedHoodies.push(item));
-      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057");
-      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057");
+      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093");
+      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093");
       HOODIES = [...avail, ...sold];
     }
 
