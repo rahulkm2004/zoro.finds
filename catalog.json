@@ -1000,5 +1000,53 @@
     "price": "₹1,199",
     "numericPrice": 1199,
     "status": "sold"
+  },
+  "ZH-101": {
+    "name": "Vintage FILA Stile Sportivo Tri-Color Colorblock Pullover Hoodie — Deep Navy, Crisp White & Scarlet Red",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-102": {
+    "name": "Vintage Japanese Contrast Two-Tone Full-Zip Fleece Hoodie — Crimson Red & Heather Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-103": {
+    "name": "Hellojini Korean Minimalist Boxy Drop-Shoulder Layered-Hem Pullover Hoodie — Heather Oatmeal Grey",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-104": {
+    "name": "Thom Browne New York Striped Contrast Trim Full-Zip Hoodie — Midnight Navy & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-105": {
+    "name": "Official Disney Collection by KERAIA Mickey Elements Two-Tone Hoodie — Kelly Green & White",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-106": {
+    "name": "Fifty Percent \"MYSTERY Keep Exploring\" Layered-Hem Boxy Pullover Hoodie — Washed Charcoal Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-083": {
+    "name": "CLP Clothing 2-in-1 Reversible Technical Windbreaker Jacket — Shadow Camo & Midnight Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-084": {
+    "name": "Harmont & Blaine Italian Luxury Knit-Collar Windbreaker Harrington Jacket — Deep Slate Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
   }
 }
