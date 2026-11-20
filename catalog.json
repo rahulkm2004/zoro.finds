@@ -1,4 +1,64 @@
 {
+  "ZH-107": {
+    "name": "Under Armour NFL Scouting Combine Technical Quarter-Zip Pullover — Midnight Navy & Heather Grey",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-108": {
+    "name": "Polo Ralph Lauren Vintage Heavyweight Waffle-Lined Fleece Hoodie — Washed Cranberry Crimson",
+    "price": "₹1,399",
+    "numericPrice": 1399,
+    "status": "available"
+  },
+  "ZH-109": {
+    "name": "Nike Valentine Heart Embroidered Swoosh Pullover Fleece Hoodie — Pastel Baby Pink",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-110": {
+    "name": "Vintage Oriental Kanji Calligraphy Back-Print Full-Zip Fleece Hoodie — Pitch Black & Crimson Red",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZH-111": {
+    "name": "Nike Sportswear Vintage Arch Big Swoosh Raglan Pullover Hoodie — Heather Oatmeal Grey",
+    "price": "₹999",
+    "numericPrice": 999,
+    "status": "available"
+  },
+  "ZH-112": {
+    "name": "Calvin Klein Jeans Washed Monogram Boxy Cropped Raw-Hem Hoodie — Sunset Peach Coral",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZH-113": {
+    "name": "Under Armour Lightweight Washed Fleece Full-Zip Hoodie — Faded Charcoal Slate",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-085": {
+    "name": "Vintage DryJoys by FootJoy Houndstooth Golf Windbreaker Harrington Jacket — Forest Green & Jet Black",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-086": {
+    "name": "Vintage Eagle Trekking Technical Packable-Hood Mountain Parka Jacket — Lime Green & Pitch Black",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
+  "ZF-087": {
+    "name": "Vintage Sport Colorblock Track Windbreaker Jacket — Electric Cerulean Blue & Deep Navy",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
   "ZF-081": {
     "name": "Vintage Elvström Nautical Striped Trim Windbreaker Bomber Jacket — Deep Marine Navy",
     "price": "₹1,199",
