@@ -5298,7 +5298,7 @@ let HOODIES = [
       "images/h109-8.jpg"
     ],
     sizes: ["L"], displaySize: "L", size: "L", measurements: { chest: "46\"", length: "26\"" }, condition: "9/10",
-    description: "Curated Nike Valentine edition pullover fleece hoodie in soft pastel baby pink. Features a signature burgundy embroidered heart badge with mini white Swoosh on the chest, roomy jersey-lined hood with tonal drawstring, front kangaroo pouch pocket, drop shoulders, and snug ribbed cuffs and waistband. 1-of-1 authentic piece.", status: "available" },
+    description: "Curated Nike Valentine edition pullover fleece hoodie in soft pastel baby pink. Features a signature burgundy embroidered heart badge with mini white Swoosh on the chest, roomy jersey-lined hood with tonal drawstring, front kangaroo pouch pocket, drop shoulders, and snug ribbed cuffs and waistband. 1-of-1 authentic piece.", status: "sold" },
 
   { id: "ZH-110", name: "Vintage Oriental Kanji Calligraphy Back-Print Full-Zip Fleece Hoodie — Pitch Black & Crimson Red", price: "₹1,199", originalPrice: "₹2,199", numericPrice: 1199,
     images: [
@@ -6917,21 +6917,15 @@ function findProductById(id) {
 
 function getTabBaseItems(tab) {
   if (tab === "HOODIES") {
-    const visibleHoodies = HOODIES.filter(h => isProductReleased(h));
-    const avail = visibleHoodies.filter(h => (h.status !== "sold" && h.status !== "SOLD_OUT") || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093" || h.id === "ZH-103");
-    const sold = visibleHoodies.filter(h => (h.status === "sold" || h.status === "SOLD_OUT") && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093" && h.id !== "ZH-103");
-    return [...avail, ...sold];
+    return HOODIES.filter(h => !h.isArchive && h.status !== "archived" && h.status !== "ARCHIVED" && isProductReleased(h));
   }
   if (tab === "JACKETS") {
-    const active = PRODUCTS.filter(p => !p.isArchive && p.status !== "archived" && p.status !== "ARCHIVED" && isProductReleased(p));
-    const avail = active.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-075" || j.id === "ZF-079" || j.id === "ZF-062" || j.id === "ZF-070" || j.id === "ZF-081");
-    const sold = active.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-075" && j.id !== "ZF-079" && j.id !== "ZF-062" && j.id !== "ZF-070" && j.id !== "ZF-081");
-    return [...avail, ...sold];
+    return PRODUCTS.filter(p => !p.isArchive && p.status !== "archived" && p.status !== "ARCHIVED" && isProductReleased(p));
   }
   if (tab === "ARCHIVE") {
     // Archive only contains items explicitly marked as archived
-    const archH = HOODIES.filter(p => p.isArchive || p.status === "archived");
-    const archJ = PRODUCTS.filter(p => p.isArchive || p.status === "archived");
+    const archH = HOODIES.filter(p => p.isArchive || p.status === "archived" || p.status === "ARCHIVED");
+    const archJ = PRODUCTS.filter(p => p.isArchive || p.status === "archived" || p.status === "ARCHIVED");
     return [...archH, ...archJ];
   }
   return [];
@@ -8833,7 +8827,50 @@ async function handlePlaceOrder(e) {
         color: "#080808"
       },
       modal: {
-        ondismiss: function() {
+        ondismiss: async function() {
+          if (btn) btn.innerHTML = "CHECKING PAYMENT STATUS...";
+          try {
+            const checkRes = await fetch("/api/check-order-status", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: orderData.order_id,
+                customer: customerData,
+                items: cart,
+                session_id: getSessionId(),
+                payment_method: orderData.payment_method || checkoutPaymentMethod
+              })
+            });
+            if (checkRes.ok) {
+              const checkData = await checkRes.json();
+              if (checkData.success && checkData.paid) {
+                if (typeof fbq === 'function') {
+                  fbq('track', 'Purchase', {
+                    content_ids: cart.map(item => item.id),
+                    content_type: 'product',
+                    value: orderData.total_amount,
+                    currency: 'INR'
+                  });
+                }
+                localStorage.removeItem(CART_STORAGE_KEY);
+                updateCartBadges();
+                await fetchProductsFromDB();
+                renderOrderSuccess({
+                  orderId: orderData.order_id,
+                  paymentId: checkData.payment_id || "PAID",
+                  customer: customerData,
+                  items: cart,
+                  paymentMethod: orderData.payment_method || checkoutPaymentMethod,
+                  subtotalAmount: orderData.subtotal_amount,
+                  shippingCharge: orderData.shipping_charge,
+                  totalAmount: orderData.total_amount,
+                  advancePaid: orderData.advance_amount,
+                  remainingAmount: orderData.remaining_amount || 0
+                });
+                return;
+              }
+            }
+          } catch (e) {}
           showToast("Payment window closed. Click Proceed to Pay whenever you are ready.");
           resetBtn();
         }
@@ -9480,36 +9517,17 @@ async function fetchProductsFromDB(force = false) {
 
     if (dbJackets.length > 0) {
       const dbMap = new Map(dbJackets.map(j => [j.id, j]));
-      const orderedJackets = [];
-      PRODUCTS.forEach(p => {
-        if (dbMap.has(p.id)) {
-          orderedJackets.push({ ...p, ...dbMap.get(p.id) });
-          dbMap.delete(p.id);
-        } else {
-          orderedJackets.push(p);
-        }
+      PRODUCTS = PRODUCTS.map(p => {
+        if (dbMap.has(p.id)) return { ...p, ...dbMap.get(p.id) };
+        return p;
       });
-      dbMap.forEach(item => { if (!item.isArchive && item.status !== "archived" && item.status !== "ARCHIVED") orderedJackets.push(item); });
-      const activeJackets = orderedJackets.filter(j => !j.isArchive && j.status !== "archived" && j.status !== "ARCHIVED");
-      const avail = activeJackets.filter(j => (j.status !== "sold" && j.status !== "SOLD_OUT" && j.status !== "sold_out") || j.id === "ZF-075" || j.id === "ZF-079" || j.id === "ZF-062" || j.id === "ZF-070" || j.id === "ZF-081");
-      const sold = activeJackets.filter(j => (j.status === "sold" || j.status === "SOLD_OUT" || j.status === "sold_out") && j.id !== "ZF-075" && j.id !== "ZF-079" && j.id !== "ZF-062" && j.id !== "ZF-070" && j.id !== "ZF-081");
-      PRODUCTS = [...avail, ...sold];
     }
     if (dbHoodies.length > 0) {
       const dbMap = new Map(dbHoodies.map(h => [h.id, h]));
-      const orderedHoodies = [];
-      HOODIES.forEach(p => {
-        if (dbMap.has(p.id)) {
-          orderedHoodies.push({ ...p, ...dbMap.get(p.id) });
-          dbMap.delete(p.id);
-        } else {
-          orderedHoodies.push(p);
-        }
+      HOODIES = HOODIES.map(p => {
+        if (dbMap.has(p.id)) return { ...p, ...dbMap.get(p.id) };
+        return p;
       });
-      dbMap.forEach(item => orderedHoodies.push(item));
-      const avail = orderedHoodies.filter(h => (h.status !== 'sold' && h.status !== 'SOLD_OUT') || h.id === "ZH-092" || h.id === "ZH-097" || h.id === "ZH-057" || h.id === "ZH-098" || h.id === "ZH-087" || h.id === "ZH-093" || h.id === "ZH-103");
-      const sold = orderedHoodies.filter(h => (h.status === 'sold' || h.status === 'SOLD_OUT') && h.id !== "ZH-092" && h.id !== "ZH-097" && h.id !== "ZH-057" && h.id !== "ZH-098" && h.id !== "ZH-087" && h.id !== "ZH-093" && h.id !== "ZH-103");
-      HOODIES = [...avail, ...sold];
     }
 
     // Refresh active view to reflect updated database status

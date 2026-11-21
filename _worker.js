@@ -755,6 +755,8 @@ export default {
             notes: {
               session_id: sessionId || '',
               payment_method: paymentMethod,
+              product_ids: items.map(i => i.id || i).join(','),
+              product_names: items.map(i => (i.name || i.id || '').slice(0, 30)).join(', ').slice(0, 100),
               product_subtotal: '₹' + calculatedSubtotalRupees,
               shipping_charge: '₹' + shippingChargeRupees + (paymentMethod === 'cod' ? ' (COD Fee)' : ' (FREE)'),
               total_order_amount: '₹' + calculatedTotalRupees,
@@ -771,6 +773,45 @@ export default {
 
         if (!rzpResponse.ok) {
           return jsonResponse({ error: rzpOrder.error?.description || 'Razorpay order creation failed' }, rzpResponse.status);
+        }
+
+        // Persist order in D1 as PENDING so details are never lost
+        if (env.DB) {
+          try {
+            const pendingOrderId = 'ORD_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            const pendingOrderNumber = 'ZF-' + Date.now().toString().slice(-6);
+            const pendingNow = new Date().toISOString();
+            await env.DB.prepare(`
+              INSERT INTO orders (
+                id, order_number, customer_name, customer_phone, customer_email,
+                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                payment_method, payment_status, order_status, razorpay_order_id,
+                advance_amount, remaining_amount, admin_email_sent, customer_email_sent, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, ?, 0, 0, ?, ?)
+            `).bind(
+              pendingOrderId,
+              pendingOrderNumber,
+              customer.name || 'Customer',
+              customer.phone || '',
+              customer.email || '',
+              customer.address || '',
+              customer.city || '',
+              customer.state || '',
+              customer.pincode || '',
+              JSON.stringify(items),
+              shippingChargeRupees,
+              calculatedTotalRupees,
+              paymentMethod.toUpperCase(),
+              paymentMethod === 'cod' ? 'PENDING_ADVANCE' : 'PENDING',
+              rzpOrder.id,
+              advanceAmountRupees,
+              remainingAmountRupees,
+              pendingNow,
+              pendingNow
+            ).run();
+          } catch (pendingErr) {
+            console.warn('[Pending Order Warning]:', pendingErr.message);
+          }
         }
 
         return jsonResponse({
@@ -809,12 +850,33 @@ export default {
           return jsonResponse({ success: false, error: 'Razorpay secret key not configured' }, 500);
         }
 
-        const isSignatureValid = await verifyRazorpaySignature(
-          razorpay_order_id,
-          razorpay_payment_id,
-          razorpay_signature,
-          key_secret
-        );
+        let isSignatureValid = false;
+        if (razorpay_signature) {
+          isSignatureValid = await verifyRazorpaySignature(
+            razorpay_order_id,
+            razorpay_payment_id,
+            razorpay_signature,
+            key_secret
+          );
+        }
+
+        // Direct Razorpay API verification fallback
+        const key_id = env.RAZORPAY_KEY_ID;
+        if (!isSignatureValid && key_id && key_secret) {
+          try {
+            const rzpCheck = await fetch(`https://api.razorpay.com/v1/payments/${razorpay_payment_id}`, {
+              headers: { 'Authorization': 'Basic ' + btoa(key_id + ':' + key_secret) }
+            });
+            if (rzpCheck.ok) {
+              const paymentObj = await rzpCheck.json();
+              if (paymentObj.order_id === razorpay_order_id && (paymentObj.status === 'captured' || paymentObj.status === 'authorized')) {
+                isSignatureValid = true;
+              }
+            }
+          } catch (rzpErr) {
+            console.error('[Razorpay Direct Verification Error]:', rzpErr);
+          }
+        }
 
         if (!isSignatureValid) {
           return jsonResponse({ success: false, error: 'Invalid payment signature. Verification failed.' }, 400);
@@ -932,47 +994,40 @@ export default {
             });
           }
 
-          // 2. ATOMIC 1-OF-1 CLAIM PROTECTION:
+          // 2. AUTOMATIC SOLD_OUT STATUS IN D1 (UNCONDITIONAL FOR VERIFIED PAYMENTS):
           for (const item of items) {
-            let updateRes;
+            const itemId = item.id || item;
+            if (!itemId) continue;
             try {
-              updateRes = await env.DB.prepare(
-                "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
-              ).bind(now, now, item.id).run();
+              await env.DB.prepare(
+                "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? COLLATE NOCASE"
+              ).bind(now, now, itemId).run();
             } catch (claimErr) {
               try {
                 await env.DB.prepare("ALTER TABLE products ADD COLUMN sale_source TEXT DEFAULT NULL").run();
                 await env.DB.prepare("ALTER TABLE products ADD COLUMN sold_at TEXT DEFAULT NULL").run();
-                updateRes = await env.DB.prepare(
-                  "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
-                ).bind(now, now, item.id).run();
+                await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? COLLATE NOCASE"
+                ).bind(now, now, itemId).run();
               } catch (alterErr) {
-                updateRes = await env.DB.prepare(
-                  "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
-                ).bind(now, item.id).run();
+                await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? COLLATE NOCASE"
+                ).bind(now, itemId).run();
               }
             }
 
-            if (!updateRes.meta || updateRes.meta.changes === 0) {
-              // EDGE CASE: Payment succeeded on Razorpay, but product was claimed by another customer
-              return jsonResponse({
-                success: false,
-                conflict: true,
-                error: 'Sorry, this item was just claimed by another customer. Your payment has been received and will be automatically refunded.',
-                sold_out_product_id: item.id
-              }, 400);
-            }
-
-            // Convert active reservation to COMPLETED
-            if (sessionId) {
-              await env.DB.prepare(
-                "UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'"
-              ).bind(now, item.id, sessionId).run();
-            } else {
-              await env.DB.prepare(
-                "UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND status = 'ACTIVE'"
-              ).bind(now, item.id).run();
-            }
+            // Convert active reservation to COMPLETED if any
+            try {
+              if (sessionId) {
+                await env.DB.prepare(
+                  "UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND session_id = ? AND status = 'ACTIVE'"
+                ).bind(now, itemId, sessionId).run();
+              } else {
+                await env.DB.prepare(
+                  "UPDATE product_reservations SET status = 'COMPLETED', updated_at = ? WHERE product_id = ? AND status = 'ACTIVE'"
+                ).bind(now, itemId).run();
+              }
+            } catch (resErr) {}
           }
 
           // 3. Insert order into D1 orders table
@@ -1157,6 +1212,267 @@ export default {
         });
       } catch (err) {
         return jsonResponse({ success: false, error: 'Verification error: ' + err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // API ROUTE: POST /api/check-order-status
+    // Checks Razorpay directly if an order has been paid (essential for mobile UPI)
+    // =========================================================================
+    if (request.method === 'POST' && pathname === '/api/check-order-status') {
+      try {
+        const data = await request.json();
+        const { razorpay_order_id, customer, items, payment_method } = data;
+        if (!razorpay_order_id) {
+          return jsonResponse({ success: false, error: 'Missing razorpay_order_id' }, 400);
+        }
+
+        const key_id = env.RAZORPAY_KEY_ID;
+        const key_secret = env.RAZORPAY_KEY_SECRET;
+        if (!key_id || !key_secret) {
+          return jsonResponse({ success: false, error: 'Razorpay credentials missing' }, 500);
+        }
+
+        // Check if order is already confirmed in D1
+        if (env.DB) {
+          const existing = await env.DB.prepare(
+            "SELECT * FROM orders WHERE razorpay_order_id = ? AND order_status = 'CONFIRMED'"
+          ).bind(razorpay_order_id).first();
+          if (existing) {
+            return jsonResponse({
+              success: true,
+              paid: true,
+              order_id: existing.id,
+              order_number: existing.order_number,
+              payment_id: existing.razorpay_payment_id
+            });
+          }
+        }
+
+        // Query Razorpay API directly for payments on this order
+        const rzpRes = await fetch(`https://api.razorpay.com/v1/orders/${razorpay_order_id}/payments`, {
+          headers: { 'Authorization': 'Basic ' + btoa(key_id + ':' + key_secret) }
+        });
+        if (!rzpRes.ok) {
+          return jsonResponse({ success: false, paid: false, error: 'Could not fetch payments from Razorpay' });
+        }
+
+        const paymentsData = await rzpRes.json();
+        const successfulPayment = paymentsData.items?.find(p => p.status === 'captured');
+
+        if (!successfulPayment) {
+          return jsonResponse({ success: true, paid: false, message: 'No captured payment found yet' });
+        }
+
+        // PAYMENT IS CAPTURED! Process order and mark SOLD_OUT immediately
+        const now = new Date().toISOString();
+        const orderId = 'ORD_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+        const orderNumber = 'ZF-' + Date.now().toString().slice(-6);
+        const finalItems = items || [];
+        const finalCust = customer || {};
+        const pMethod = payment_method === 'cod' ? 'COD' : 'ONLINE';
+        const pStatus = pMethod === 'COD' ? 'ADVANCE_PAID' : 'PAID';
+
+        let subtotalAmount = 0;
+        for (const item of finalItems) {
+          let price = 0;
+          if (env.DB) {
+            const product = await env.DB.prepare('SELECT numeric_price FROM products WHERE id = ?')
+              .bind(item.id).first();
+            if (product && typeof product.numeric_price === 'number') price = product.numeric_price;
+          }
+          if (!price && item.numericPrice) price = item.numericPrice;
+          subtotalAmount += price;
+        }
+
+        const shippingCharge = pMethod === 'COD' ? 100 : 0;
+        const totalAmount = subtotalAmount + shippingCharge;
+        const advanceAmount = pMethod === 'COD' ? 199 : totalAmount;
+        const remainingAmount = pMethod === 'COD' ? Math.max(0, totalAmount - 199) : 0;
+
+        if (env.DB) {
+          // 1. Mark purchased product as SOLD_OUT
+          for (const item of finalItems) {
+            const itemId = item.id || item;
+            if (itemId) {
+              try {
+                await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? COLLATE NOCASE"
+                ).bind(now, now, itemId).run();
+              } catch (e) {
+                await env.DB.prepare(
+                  "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? COLLATE NOCASE"
+                ).bind(now, itemId).run();
+              }
+            }
+          }
+
+          // 2. Insert or update order in D1
+          const existingPending = await env.DB.prepare(
+            "SELECT id FROM orders WHERE razorpay_order_id = ?"
+          ).bind(razorpay_order_id).first();
+
+          if (existingPending) {
+            await env.DB.prepare(`
+              UPDATE orders SET
+                order_status = 'CONFIRMED',
+                payment_status = ?,
+                razorpay_payment_id = ?,
+                updated_at = ?
+              WHERE id = ?
+            `).bind(pStatus, successfulPayment.id, now, existingPending.id).run();
+          } else {
+            await env.DB.prepare(`
+              INSERT INTO orders (
+                id, order_number, customer_name, customer_phone, customer_email,
+                shipping_address, city, state, pincode, products, shipping_charge, total_amount,
+                payment_method, payment_status, order_status, razorpay_order_id,
+                razorpay_payment_id, advance_amount, remaining_amount, admin_email_sent, customer_email_sent, created_at, updated_at
+              ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 'CONFIRMED', ?, ?, ?, ?, 0, 0, ?, ?)
+            `).bind(
+              orderId,
+              orderNumber,
+              finalCust.name || 'Customer',
+              finalCust.phone || '',
+              finalCust.email || '',
+              finalCust.address || '',
+              finalCust.city || '',
+              finalCust.state || '',
+              finalCust.pincode || '',
+              JSON.stringify(finalItems),
+              shippingCharge,
+              totalAmount,
+              pMethod,
+              pStatus,
+              razorpay_order_id,
+              successfulPayment.id,
+              advanceAmount,
+              remainingAmount,
+              now,
+              now
+            ).run();
+          }
+
+          // 3. Send Mailjet admin notification email
+          const orderPayload = {
+            id: orderId,
+            order_number: orderNumber,
+            customer_name: finalCust.name || 'Customer',
+            customer_phone: finalCust.phone || '',
+            customer_email: finalCust.email || '',
+            shipping_address: finalCust.address || '',
+            city: finalCust.city || '',
+            state: finalCust.state || '',
+            pincode: finalCust.pincode || '',
+            products: finalItems,
+            subtotal_amount: subtotalAmount,
+            shipping_charge: shippingCharge,
+            total_amount: totalAmount,
+            payment_method: pMethod,
+            payment_status: pStatus,
+            order_status: 'CONFIRMED',
+            razorpay_order_id: razorpay_order_id,
+            razorpay_payment_id: successfulPayment.id,
+            advance_amount: advanceAmount,
+            remaining_amount: remainingAmount,
+            created_at: now
+          };
+
+          try {
+            const emailResult = await sendAdminOrderNotification(orderPayload, env);
+            if (emailResult && emailResult.success) {
+              await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE razorpay_order_id = ?")
+                .bind(now, razorpay_order_id).run();
+            }
+          } catch (e) {
+            console.error('[Admin Email Error]:', e);
+          }
+        }
+
+        return jsonResponse({
+          success: true,
+          paid: true,
+          order_id: orderId,
+          order_number: orderNumber,
+          payment_id: successfulPayment.id
+        });
+      } catch (err) {
+        return jsonResponse({ success: false, error: err.message }, 500);
+      }
+    }
+
+    // =========================================================================
+    // API ROUTE: POST /api/razorpay-webhook and /api/webhook
+    // Asynchronous Razorpay webhook receiver for guaranteed order processing
+    // =========================================================================
+    if (request.method === 'POST' && (pathname === '/api/razorpay-webhook' || pathname === '/api/webhook')) {
+      try {
+        const bodyText = await request.text();
+        const eventData = JSON.parse(bodyText);
+
+        if (eventData.event === 'payment.captured' || eventData.event === 'order.paid') {
+          const paymentEntity = eventData.payload?.payment?.entity || {};
+          const razorpay_order_id = paymentEntity.order_id;
+          const razorpay_payment_id = paymentEntity.id;
+
+          if (razorpay_order_id && env.DB) {
+            const now = new Date().toISOString();
+            const existing = await env.DB.prepare(
+              "SELECT * FROM orders WHERE razorpay_order_id = ?"
+            ).bind(razorpay_order_id).first();
+
+            if (existing) {
+              // 1. Mark products SOLD_OUT
+              let pList = [];
+              try {
+                pList = typeof existing.products === 'string' ? JSON.parse(existing.products) : (existing.products || []);
+              } catch (e) {}
+
+              for (const p of pList) {
+                const pid = p.id || p;
+                if (pid) {
+                  try {
+                    await env.DB.prepare(
+                      "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? COLLATE NOCASE"
+                    ).bind(now, now, pid).run();
+                  } catch (e) {}
+                }
+              }
+
+              // 2. Mark order confirmed
+              await env.DB.prepare(`
+                UPDATE orders SET
+                  order_status = 'CONFIRMED',
+                  payment_status = 'PAID',
+                  razorpay_payment_id = ?,
+                  updated_at = ?
+                WHERE id = ?
+              `).bind(razorpay_payment_id, now, existing.id).run();
+
+              // 3. Send admin notification email if not yet sent
+              if (!existing.admin_email_sent) {
+                try {
+                  const emailRes = await sendAdminOrderNotification({
+                    ...existing,
+                    products: pList,
+                    order_status: 'CONFIRMED',
+                    razorpay_payment_id
+                  }, env);
+                  if (emailRes && emailRes.success) {
+                    await env.DB.prepare("UPDATE orders SET admin_email_sent = 1, admin_email_sent_at = ? WHERE id = ?")
+                      .bind(now, existing.id).run();
+                  }
+                } catch (e) {
+                  console.error('[Webhook Admin Email Error]:', e);
+                }
+              }
+            }
+          }
+        }
+
+        return jsonResponse({ status: 'ok' });
+      } catch (err) {
+        return jsonResponse({ status: 'error', message: err.message }, 400);
       }
     }
 

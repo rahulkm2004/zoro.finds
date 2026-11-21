@@ -172,22 +172,20 @@ export async function onRequestPost(context) {
         });
       }
 
-      // 2. ATOMIC 1-OF-1 CLAIM:
+      // 2. AUTOMATIC SOLD_OUT STATUS IN D1 (UNCONDITIONAL FOR VERIFIED PAYMENTS):
       for (const item of items) {
-        const updateRes = await env.DB.prepare(
-          "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? AND status = 'AVAILABLE'"
-        ).bind(now, item.id).run();
-
-        if (!updateRes.meta || updateRes.meta.changes === 0) {
-          return new Response(JSON.stringify({
-            success: false,
-            error: 'Sorry, this item was just claimed by another customer. Your payment has been received and will be automatically refunded.',
-            sold_out_product_id: item.id,
-            conflict: true
-          }), {
-            status: 400,
-            headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
-          });
+        const itemId = item.id || item;
+        if (!itemId) continue;
+        try {
+          await env.DB.prepare(
+            "UPDATE products SET status = 'SOLD_OUT', sale_source = 'WEBSITE', sold_at = ?, updated_at = ? WHERE id = ? COLLATE NOCASE"
+          ).bind(now, now, itemId).run();
+        } catch (claimErr) {
+          try {
+            await env.DB.prepare(
+              "UPDATE products SET status = 'SOLD_OUT', updated_at = ? WHERE id = ? COLLATE NOCASE"
+            ).bind(now, itemId).run();
+          } catch (alterErr) {}
         }
       }
 
