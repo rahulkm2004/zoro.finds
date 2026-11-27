@@ -1,4 +1,58 @@
 {
+  "ZF-088": {
+    "name": "Vintage Columbia Titanium Omni-Tech Hooded Ski Jacket — Butter Yellow & Onyx Black",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-089": {
+    "name": "Minimalist Quilted-Lined Flight Bomber Jacket — Stone Khaki & Blush Pink",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-090": {
+    "name": "Vintage Adidas Padded Winter Windbreaker Jacket — Onyx Black & Magenta Plaid",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-091": {
+    "name": "Rare Custom-Made Ornate Floral Embroidered Double-Breasted Parka — Jet Black & Gilt Gold",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-092": {
+    "name": "Vintage Crocodile Tartan Plaid Zip Bomber Harrington Jacket — Midnight Navy & Ivory",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-093": {
+    "name": "Vintage Reebok Classic Union Jack Vector Track Jacket — Slate Charcoal, Scarlet & White",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-094": {
+    "name": "Allgender 2-in-1 Layered Hooded MA-1 Bomber Jacket — Sage Olive Green & Emergency Orange",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-095": {
+    "name": "COVER Boxy Funnel-Neck Down Puffer Jacket — Mushroom Grey & Earthy Taupe",
+    "price": "₹1,199",
+    "numericPrice": 1199,
+    "status": "available"
+  },
+  "ZF-096": {
+    "name": "Vintage Columbia Radial Sleeve Bugaboo Ski Parka Jacket — Jet Black, Teal & Neon Magenta",
+    "price": "₹1,099",
+    "numericPrice": 1099,
+    "status": "available"
+  },
   "ZH-107": {
     "name": "Under Armour NFL Scouting Combine Technical Quarter-Zip Pullover — Midnight Navy & Heather Grey",
     "price": "₹1,099",
